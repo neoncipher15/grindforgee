@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="/GrindForge.png" />
-    <script defer src="https://va.vercel-scripts.com/v1/script.debug.js"></script>
+  
 
 
 <title>GrindForge </title>
@@ -244,7 +244,7 @@
 <audio id="alarm" src="https://cdn.pixabay.com/audio/2021/09/01/audio_9c1f5c44d8.mp3"></audio>
 
 <script>
-
+ window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 
 /* ------- DATE & TIME ------- */
 function updateDateTime() {
@@ -339,6 +339,7 @@ function addTaskToUI(text) {
 
 document.addEventListener("DOMContentLoaded", loadTasks);
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 
 </body>
 </html>
