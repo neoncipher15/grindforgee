@@ -4,207 +4,258 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="/GrindForge.png" />
-  
-
-
-<title>GrindForge </title>
+<title>GrindForge</title>
 
 <style>
-    body {
-        margin: 0;
-        font-family: "Poppins", sans-serif;
-        color: #dffcff;
-        overflow: hidden;
-    }
+/* ------------------ GLOBAL ------------------ */
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    color: #dffcff;
+    overflow: hidden;
+}
 
-    /* Background video */
-    #bg-video {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: -1;
-    }
+/* Background video */
+#bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
 
-    /* Date + Time */
-    #datetime-box {
-        position: absolute;
-        top: 40px;
-        left: 40px;
-        padding: 15px 20px;
-        background: rgba(0, 0, 0, 0.45);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
-        font-size: 1.2rem;
-        letter-spacing: 1px;
-        box-shadow: 0 0 18px rgba(78, 205, 196, 0.25);
-    }
-
-    /* Pomodoro container */
-    .timer-box {
-        position: absolute;
-        top: 40px;
-        right: 40px;
-        width: 300px;
-        padding: 25px;
-        background: rgba(0, 0, 0, 0.48);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        text-align: center;
-        box-shadow: 0 0 20px rgba(78,205,196,0.25);
-    }
-
-    .timer-box h1 {
-        font-size: 1.7rem;
-        margin-bottom: 10px;
-    }
-
-    #timer {
-        font-size: 2.7rem;
-        margin: 15px 0;
-        color: #7ff5e8;
-        font-weight: 600;
-    }
-
-    button {
-        margin: 5px;
-        padding: 6px 14px;
-        border: none;
-        border-radius: 10px;
-        background: #4ecdc4;
-        color: #002523;
-        cursor: pointer;
-        font-size: 0.9rem;
-        font-weight: 600;
-        transition: 0.25s ease;
-    }
-    button:hover {
-        transform: scale(1.07);
-        box-shadow: 0 0 12px rgba(78,205,196,0.6);
-    }
-
-    .settings {
-        margin-top: 12px;
-        font-size: 0.95rem;
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        align-items: center;
-    }
-
-    .settings input {
-        width: 55px;
-        padding: 6px 8px;
-        border-radius: 8px;
-        border: none;
-        outline: none;
-        background-color: rgba(255,255,255,0.1);
-        color: #dffcff;
-        text-align: center;
-        font-size: 0.9rem;
-        box-shadow: 0 0 10px rgba(78,205,196,0.35);
-    }
-
-    .settings input:focus {
-        background: rgba(255,255,255,0.16);
-        box-shadow: 0 0 14px rgba(78,205,196,0.55);
-        transform: scale(1.05);
-    }
-
-    .settings input::placeholder {
-        color: #9adbd4;
-    }
-
-    /* Remove number spinners */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    input[type=number] {
-        -moz-appearance: textfield;
-    }
-
-    /* To-Do List */
-   .todo-container {
+/* Date + Time */
+#datetime-box {
     position: absolute;
-    top: 380px; /* moved down */
+    top: 40px;
+    left: 40px;
+    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    box-shadow: 0 0 18px rgba(78, 205, 196, 0.25);
+}
+
+/* ------------------ TIMER BOX ------------------ */
+.timer-box {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 300px;
+    padding: 25px;
+    background: rgba(0, 0, 0, 0.48);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(78,205,196,0.25);
+}
+
+.timer-box h1 {
+    font-size: 1.7rem;
+    margin-bottom: 10px;
+}
+
+#timer {
+    font-size: 2.7rem;
+    margin: 15px 0;
+    color: #7ff5e8;
+    font-weight: 600;
+}
+
+/* Buttons */
+button {
+    margin: 5px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 10px;
+    background: #4ecdc4;
+    color: #002523;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: 0.25s ease;
+}
+button:hover {
+    transform: scale(1.07);
+    box-shadow: 0 0 12px rgba(78,205,196,0.6);
+}
+
+/* Settings */
+.settings {
+    margin-top: 12px;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    align-items: center;
+}
+
+.settings input {
+    width: 55px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background-color: rgba(255,255,255,0.1);
+    color: #dffcff;
+    text-align: center;
+    font-size: 0.9rem;
+    box-shadow: 0 0 10px rgba(78,205,196,0.35);
+}
+
+.settings input::placeholder {
+    color: #9adbd4;
+}
+
+/* Remove number spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] { -moz-appearance: textfield; }
+
+/* ------------------ TO-DO LIST ------------------ */
+.todo-container {
+    position: absolute;
+    top: 380px;
     right: 40px;
     width: 300px;
     padding: 20px;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0,0,0,0.45);
     backdrop-filter: blur(10px);
     border-radius: 18px;
     box-shadow: 0 0 20px rgba(78,205,196,0.25);
 }
 
+.todo-container h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.4rem;
+}
 
-    .todo-container h2 {
-        margin: 0 0 12px 0;
+.todo-input-box {
+    display: flex;
+    gap: 8px;
+}
+
+.todo-input-box input {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.12);
+    border: none;
+    outline: none;
+    color: #dffcff;
+}
+
+.todo-input-box button {
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #4ecdc4;
+    color: #001b1a;
+}
+
+#todo-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 12px;
+}
+
+#todo-list li {
+    padding: 10px;
+    background: rgba(255,255,255,0.09);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    animation: fadeIn 0.25s ease;
+}
+
+#todo-list li button {
+    padding: 5px 8px;
+    background: rgba(255, 70, 70, 0.85);
+    border-radius: 6px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------ MOBILE RESPONSIVE ------------------ */
+@media (max-width: 768px) {
+
+    body {
+        overflow: auto;
+    }
+
+    #datetime-box {
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1rem;
+    }
+
+    .timer-box {
+        position: static;
+        margin: 120px auto 0 auto;
+        width: 85%;
+    }
+
+    .todo-container {
+        position: static;
+        margin: 20px auto;
+        width: 85%;
+    }
+
+    #timer {
+        font-size: 2.3rem;
+    }
+
+    button {
+        padding: 10px 18px;
+        font-size: 1rem;
+    }
+
+    .settings input {
+        width: 60px;
+        padding: 10px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #datetime-box {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+
+    .timer-box h1 {
         font-size: 1.4rem;
     }
 
-    .todo-input-box {
-        display: flex;
-        gap: 8px;
+    #timer {
+        font-size: 2rem;
     }
 
-    .todo-input-box input {
-        flex: 1;
-        padding: 8px 10px;
-        border-radius: 10px;
-        background: rgba(255,255,255,0.12);
-        border: none;
-        outline: none;
-        color: #dffcff;
-        box-shadow: 0 0 10px rgba(78,205,196,0.3);
+    .todo-container h2 {
+        font-size: 1.2rem;
     }
-
-    .todo-input-box button {
-        padding: 8px 12px;
-        border-radius: 10px;
-        background: #4ecdc4;
-        color: #001b1a;
-    }
-
-    #todo-list {
-        list-style: none;
-        padding: 0;
-        margin-top: 12px;
-    }
-
-    #todo-list li {
-        padding: 10px;
-        background: rgba(255,255,255,0.09);
-        border-radius: 10px;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: space-between;
-        animation: fadeIn 0.25s ease;
-    }
-
-    #todo-list li button {
-        padding: 5px 8px;
-        background: rgba(255, 70, 70, 0.85);
-        border-radius: 6px;
-        border: none;
-        color: white;
-        cursor: pointer;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-5px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
+}
 </style>
 </head>
 
 <body>
 
 <!-- Background video -->
-<video id="bg-video" autoplay loop muted>
+<video id="bg-video" autoplay loop muted playsinline>
     <source src="night.mp4" type="video/mp4">
 </video>
 
@@ -240,13 +291,13 @@
     <ul id="todo-list"></ul>
 </div>
 
-<!-- Alarm sound -->
+<!-- Alarm -->
 <audio id="alarm" src="https://cdn.pixabay.com/audio/2021/09/01/audio_9c1f5c44d8.mp3"></audio>
 
 <script>
- window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+window.va = window.va || function(){ (window.vaq = window.vaq || []).push(arguments); };
 
-/* ------- DATE & TIME ------- */
+/* ---- DATE & TIME ---- */
 function updateDateTime() {
     const now = new Date();
     document.getElementById("datetime-box").innerHTML =
@@ -255,7 +306,7 @@ function updateDateTime() {
 setInterval(updateDateTime, 1000);
 updateDateTime();
 
-/* ------- TIMER ------- */
+/* ---- TIMER ---- */
 let timerInterval;
 let timeLeft = 1500;
 let isRunning = false;
@@ -264,7 +315,7 @@ function updateTimerDisplay() {
     const min = Math.floor(timeLeft / 60);
     const sec = timeLeft % 60;
     document.getElementById("timer").innerHTML =
-        `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
 }
 
 function startTimer() {
@@ -297,7 +348,7 @@ function resetTimer() {
 
 updateTimerDisplay();
 
-/* ------- TODO LIST ------- */
+/* ---- TODO LIST ---- */
 function loadTasks() {
     const saved = JSON.parse(localStorage.getItem("tasks") || "[]");
     saved.forEach(task => addTaskToUI(task));
@@ -339,6 +390,8 @@ function addTaskToUI(text) {
 
 document.addEventListener("DOMContentLoaded", loadTasks);
 </script>
+
+<!-- Vercel Analytics -->
 <script defer src="/_vercel/insights/script.js"></script>
 
 </body>
