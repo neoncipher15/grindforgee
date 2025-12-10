@@ -1,407 +1,416 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GrindForge — Pomodoro</title>
 <link rel="icon" type="image/png" href="/GrindForge.png" />
-<title>GrindForge</title>
 
 <style>
-    body {
-        margin: 0;
-        font-family: "Poppins", sans-serif;
-        color: #dffcff;
-        overflow-x: hidden;
-        background: black;
+  /* ---------- base ---------- */
+  :root{
+    --accent:#4ecdc4;
+    --accent-dark:#2ab3aa;
+    --card-bg: rgba(0,0,0,0.48);
+    --glass: rgba(0,0,0,0.45);
+    --muted:#9adbd4;
+    --text:#dffcff;
+    --danger:#ff5a5a;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color:var(--text);
+    background:#000;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+  }
+
+  /* background video */
+  #bg-video{
+    position:fixed; inset:0; width:100%; height:100%;
+    object-fit:cover; z-index:-2;
+  }
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.32); z-index:-1;
+  }
+
+  /* datetime header (desktop: top-left) */
+  #datetime-box{
+    position:absolute;
+    top:32px; left:32px;
+    padding:12px 16px;
+    background:var(--glass);
+    backdrop-filter:blur(8px);
+    border-radius:12px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.5);
+    font-size:15px;
+    letter-spacing:0.2px;
+    white-space:nowrap;
+  }
+
+  /* timer card (desktop: top-right) */
+  .timer-box{
+    position:absolute; top:32px; right:32px;
+    width:320px;
+    padding:22px;
+    background:var(--card-bg);
+    border-radius:18px;
+    backdrop-filter:blur(8px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    text-align:center;
+  }
+  .timer-box h1{
+    margin:0 0 10px 0;
+    font-size:20px;
+  }
+
+  #timer{
+    font-size:42px;
+    font-weight:700;
+    color:var(--accent);
+    margin: 12px 0 10px 0;
+  }
+
+  .timer-controls{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin-bottom:12px;
+  }
+  .timer-controls button{
+    padding:8px 12px;
+    border-radius:10px;
+    border:0;
+    background:var(--accent);
+    color:#042726;
+    cursor:pointer;
+    font-weight:600;
+    transition:transform .16s ease, box-shadow .16s ease;
+  }
+  .timer-controls button:hover{ transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,0.35); }
+  .settings{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    align-items:center;
+    margin-top:6px;
+    font-size:14px;
+  }
+  .settings input{
+    width:60px;
+    padding:7px 8px;
+    border-radius:8px;
+    border:none;
+    outline:none;
+    background:rgba(255,255,255,0.08);
+    color:var(--text);
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.45);
+  }
+  .settings input::placeholder{ color:var(--muted); }
+
+  /* todo (desktop below timer) */
+  .todo-container{
+    position:absolute;
+    top:380px; right:32px;
+    width:320px;
+    padding:18px;
+    background:var(--glass);
+    border-radius:14px;
+    backdrop-filter:blur(8px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.45);
+  }
+  .todo-container h2{ margin:0 0 10px 0; font-size:18px; }
+  .todo-input{
+    display:flex; gap:8px; align-items:center;
+  }
+  .todo-input input{
+    flex:1; padding:9px 10px; border-radius:10px; border:none; outline:none;
+    background:rgba(255,255,255,0.06); color:var(--text);
+  }
+  .todo-input button{
+    padding:8px 12px; border-radius:10px; border:0; background:var(--accent);
+    color:#042726; cursor:pointer; font-weight:600;
+  }
+  ul#todo-list{ list-style:none; padding:0; margin:12px 0 0 0; display:block; }
+  ul#todo-list li{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px;
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.04);
+  }
+  ul#todo-list li .meta{
+    color:var(--muted); font-size:12px; margin-top:6px;
+  }
+  ul#todo-list li button.del{
+    background:var(--danger); color:#fff; border:0; padding:6px 8px; border-radius:8px; cursor:pointer;
+  }
+
+  /* small screens — Option A: stacked center */
+  @media (max-width: 880px){
+    /* datetime centered at top */
+    #datetime-box{
+      position:relative;
+      left:auto; top:20px;
+      margin:14px auto 0 auto;
+      transform:none;
+      text-align:center;
+      display:block;
+      width:min(92%,720px);
+      font-size:15px;
     }
 
-    /* Background video */
-    #bg-video {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: -1;
+    /* layout stacks */
+    .timer-box{
+      position:relative;
+      top:24px; right:auto;
+      margin:18px auto 0 auto;
+      width:min(92%,720px);
     }
 
-    /* Date + Time */
-    #datetime-box {
-        position: absolute;
-        top: 40px;
-        left: 40px;
-        padding: 15px 20px;
-        background: rgba(0, 0, 0, 0.45);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
-        font-size: 1.2rem;
-        letter-spacing: 1px;
-        box-shadow: 0 0 18px rgba(78, 205, 196, 0.25);
-        white-space: nowrap;
+    .todo-container{
+      position:relative;
+      top:28px; right:auto;
+      margin:18px auto 56px auto;
+      width:min(92%,720px);
     }
+  }
 
-    /* Pomodoro container */
-    .timer-box {
-        position: absolute;
-        top: 40px;
-        right: 40px;
-        width: 300px;
-        padding: 25px;
-        background: rgba(0, 0, 0, 0.48);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        text-align: center;
-        box-shadow: 0 0 20px rgba(78,205,196,0.25);
-    }
-
-    .timer-box h1 {
-        font-size: 1.7rem;
-        margin-bottom: 10px;
-    }
-
-    #timer {
-        font-size: 2.7rem;
-        margin: 15px 0;
-        color: #7ff5e8;
-        font-weight: 600;
-    }
-
-    button {
-        margin: 5px;
-        padding: 6px 14px;
-        border: none;
-        border-radius: 10px;
-        background: #4ecdc4;
-        color: #002523;
-        cursor: pointer;
-        font-size: 0.9rem;
-        font-weight: 600;
-        transition: 0.25s ease;
-    }
-    button:hover {
-        transform: scale(1.07);
-        box-shadow: 0 0 12px rgba(78,205,196,0.6);
-    }
-
-    .settings {
-        margin-top: 12px;
-        font-size: 0.95rem;
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        align-items: center;
-    }
-
-    .settings input {
-        width: 55px;
-        padding: 6px 8px;
-        border-radius: 8px;
-        border: none;
-        outline: none;
-        background-color: rgba(255,255,255,0.1);
-        color: #dffcff;
-        text-align: center;
-        font-size: 0.9rem;
-        box-shadow: 0 0 10px rgba(78,205,196,0.35);
-    }
-
-    .settings input:focus {
-        background: rgba(255,255,255,0.16);
-        box-shadow: 0 0 14px rgba(78,205,196,0.55);
-        transform: scale(1.05);
-    }
-
-    .settings input::placeholder {
-        color: #9adbd4;
-    }
-
-    /* Remove number spinners */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    input[type=number] {
-        -moz-appearance: textfield;
-    }
-
-    /* To-Do List */
-    .todo-container {
-        position: absolute;
-        top: 380px;
-        right: 40px;
-        width: 300px;
-        padding: 20px;
-        background: rgba(0, 0, 0, 0.45);
-        backdrop-filter: blur(10px);
-        border-radius: 18px;
-        box-shadow: 0 0 20px rgba(78,205,196,0.25);
-    }
-
-    .todo-container h2 {
-        margin: 0 0 12px 0;
-        font-size: 1.4rem;
-    }
-
-    .todo-input-box {
-        display: flex;
-        gap: 8px;
-    }
-
-    .todo-input-box input {
-        flex: 1;
-        padding: 8px 10px;
-        border-radius: 10px;
-        background: rgba(255,255,255,0.12);
-        border: none;
-        outline: none;
-        color: #dffcff;
-        box-shadow: 0 0 10px rgba(78,205,196,0.3);
-    }
-
-    .todo-input-box button {
-        padding: 8px 12px;
-        border-radius: 10px;
-        background: #4ecdc4;
-        color: #001b1a;
-    }
-
-    #todo-list {
-        list-style: none;
-        padding: 0;
-        margin-top: 12px;
-    }
-
-    #todo-list li {
-        padding: 10px;
-        background: rgba(255,255,255,0.09);
-        border-radius: 10px;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: space-between;
-        animation: fadeIn 0.25s ease;
-    }
-
-    #todo-list li button {
-        padding: 5px 8px;
-        background: rgba(255, 70, 70, 0.85);
-        border-radius: 6px;
-        border: none;
-        color: white;
-        cursor: pointer;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-5px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ------------------ MOBILE RESPONSIVE (OPTION A) ------------------ */
-    @media (max-width: 1024px) {
-        #datetime-box {
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1rem;
-            padding: 12px 16px;
-            white-space: normal;
-            text-align: center;
-        }
-
-        .timer-box {
-            position: relative;
-            top: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            right: auto;
-            margin-bottom: 40px;
-        }
-
-        .todo-container {
-            position: relative;
-            top: 140px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            right: auto;
-            margin-bottom: 50px;
-        }
-    }
-
-    @media (max-width: 600px) {
-        #datetime-box {
-            font-size: 0.9rem;
-            padding: 10px 14px;
-        }
-
-        .timer-box {
-            padding: 20px;
-        }
-
-        #timer {
-            font-size: 2.2rem;
-        }
-
-        .todo-container {
-            padding: 18px;
-        }
-    }
+  /* extra small phones */
+  @media (max-width:420px){
+    #timer{ font-size:34px; }
+    .timer-box{ padding:18px; }
+    .settings input{ width:52px; padding:8px; }
+    .todo-input input{ padding:8px; }
+    button{ padding:8px 10px; font-size:14px; }
+  }
 </style>
 </head>
-
 <body>
 
-<!-- Background video -->
-<video id="bg-video" autoplay loop muted>
-    <source src="night.mp4" type="video/mp4">
-</video>
+  <!-- background video -->
+  <video id="bg-video" autoplay muted loop playsinline>
+    <source src="night.mp4" type="video/mp4" />
+    <!-- fallback -->
+  </video>
+  <div class="overlay"></div>
 
-<!-- Date & Time -->
-<div id="datetime-box"></div>
+  <!-- date/time header (words, no year) -->
+  <div id="datetime-box" aria-hidden="false"></div>
 
-<!-- Pomodoro Timer -->
-<div class="timer-box">
-    <h1>Pomodoro Timer 🌙</h1>
-    <div id="timer">25:00</div>
+  <!-- timer -->
+  <section class="timer-box" aria-label="Pomodoro Timer">
+    <h1>Pomodoro Timer</h1>
 
-    <button onclick="startTimer()">Start</button>
-    <button onclick="pauseTimer()">Pause</button>
-    <button onclick="resetTimer()">Reset</button>
+    <div id="timer" aria-live="polite">25:00</div>
 
-    <div class="settings">
-        Work:
-        <input id="workTime" type="number" value="25">
-        Break:
-        <input id="breakTime" type="number" value="5">
+    <div class="timer-controls">
+      <button id="startBtn">Start</button>
+      <button id="pauseBtn">Pause</button>
+      <button id="resetBtn">Reset</button>
     </div>
-</div>
 
-<!-- To-Do List -->
-<div class="todo-container">
+    <div class="settings" aria-hidden="false">
+      <label style="display:flex;align-items:center;gap:8px;">
+        Work (min)
+        <input id="workTime" type="number" min="1" value="25" />
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;">
+        Break (min)
+        <input id="breakTime" type="number" min="1" value="5" />
+      </label>
+    </div>
+  </section>
+
+  <!-- to-do (quest-style cards) -->
+  <aside class="todo-container" aria-label="To-Do List">
     <h2>To-Do List ✨</h2>
 
-    <div class="todo-input-box">
-        <input id="todo-input" type="text" placeholder="Write a task...">
-        <button onclick="addTask()">Add</button>
+    <div class="todo-input">
+      <input id="todoInput" type="text" placeholder="Write a task..." />
+      <button id="addTaskBtn">Add</button>
     </div>
 
-    <ul id="todo-list"></ul>
-</div>
+    <ul id="todo-list" aria-live="polite"></ul>
+  </aside>
 
-<!-- Alarm sound -->
-<audio id="alarm" src="https://cdn.pixabay.com/audio/2021/09/01/audio_9c1f5c44d8.mp3"></audio>
+  <!-- alarm -->
+  <audio id="alarm" src="https://cdn.pixabay.com/audio/2021/09/01/audio_9c1f5c44d8.mp3" preload="auto"></audio>
 
 <script>
-
-/* ---- DATE & TIME (words) ---- */
-function updateDateTime() {
-    const now = new Date();
-
-    const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-    };
-
-    const dateText = now.toLocaleDateString("en-IN", options);
-    const timeText = now.toLocaleTimeString("en-IN");
-
-    document.getElementById("datetime-box").innerHTML =
-        `${dateText} • ${timeText}`;
+/* ---------------- DATE & TIME (words, no year) ---------------- */
+function updateDateTime(){
+  const now = new Date();
+  // weekday, day month (no year)
+  const options = { weekday: 'long', month: 'long', day: 'numeric' };
+  const dateText = now.toLocaleDateString(undefined, options); // e.g. Wednesday, 11 December
+  const timeText = now.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  document.getElementById('datetime-box').textContent = `${dateText} • ${timeText}`;
 }
-
 setInterval(updateDateTime, 1000);
 updateDateTime();
 
-/* ------- TIMER ------- */
-let timerInterval;
-let timeLeft = 1500;
+/* -------------- Timer logic -------------- */
+const startBtn = document.getElementById('startBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const resetBtn = document.getElementById('resetBtn');
+const timerEl = document.getElementById('timer');
+const alarm = document.getElementById('alarm');
+const workInput = document.getElementById('workTime');
+const breakInput = document.getElementById('breakTime');
+
+let timerInterval = null;
 let isRunning = false;
+let isWork = true;
+let timeLeft = parseInt(workInput.value,10)*60 || 1500;
 
-function updateTimerDisplay() {
-    const min = Math.floor(timeLeft / 60);
-    const sec = timeLeft % 60;
-    document.getElementById("timer").innerHTML =
-        `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+function renderTime(t){
+  const m = Math.floor(t/60);
+  const s = t%60;
+  timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
 }
 
-function startTimer() {
-    if (isRunning) return;
-    isRunning = true;
+// sync time when inputs change (if not running)
+workInput.addEventListener('change', ()=>{
+  if(!isRunning && isWork){
+    timeLeft = parseInt(workInput.value,10)*60 || 1500;
+    renderTime(timeLeft);
+  }
+});
+breakInput.addEventListener('change', ()=>{
+  if(!isRunning && !isWork){
+    timeLeft = parseInt(breakInput.value,10)*60 || 300;
+    renderTime(timeLeft);
+  }
+});
 
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        updateTimerDisplay();
-
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            isRunning = false;
-            document.getElementById("alarm").play();
-        }
-    }, 1000);
+function tick(){
+  if(timeLeft>0){
+    timeLeft--;
+    renderTime(timeLeft);
+    return;
+  }
+  // when reaches zero
+  alarm.play().catch(()=>{/* play may be blocked until user interaction */});
+  // switch modes automatically
+  if(isWork){
+    isWork = false;
+    timeLeft = (parseInt(breakInput.value,10) || 5) * 60;
+  } else {
+    isWork = true;
+    timeLeft = (parseInt(workInput.value,10) || 25) * 60;
+  }
+  renderTime(timeLeft);
 }
 
-function pauseTimer() {
-    clearInterval(timerInterval);
-    isRunning = false;
+function startTimer(){
+  if(isRunning) return;
+  // ensure timeLeft initialized
+  if(!timeLeft) timeLeft = (parseInt(workInput.value,10)||25)*60;
+  isRunning = true;
+  timerInterval = setInterval(tick, 1000);
+}
+function pauseTimer(){
+  clearInterval(timerInterval);
+  timerInterval = null;
+  isRunning = false;
+}
+function resetTimer(){
+  pauseTimer();
+  isWork = true;
+  timeLeft = (parseInt(workInput.value,10) || 25) * 60;
+  renderTime(timeLeft);
 }
 
-function resetTimer() {
-    clearInterval(timerInterval);
-    isRunning = false;
-    timeLeft = document.getElementById("workTime").value * 60;
-    updateTimerDisplay();
+startBtn.addEventListener('click', startTimer);
+pauseBtn.addEventListener('click', pauseTimer);
+resetBtn.addEventListener('click', resetTimer);
+
+// initial render
+renderTime(timeLeft);
+
+/* -------------- To-Do list (localStorage) -------------- */
+const todoInput = document.getElementById('todoInput');
+const addTaskBtn = document.getElementById('addTaskBtn');
+const todoList = document.getElementById('todo-list');
+
+function loadTasks(){
+  const raw = localStorage.getItem('gf_tasks');
+  if(!raw) return;
+  const arr = JSON.parse(raw);
+  arr.forEach(t => createTaskItem(t));
+}
+function saveTasks(){
+  const items = [...todoList.querySelectorAll('li span.desc')].map(s=>s.textContent);
+  localStorage.setItem('gf_tasks', JSON.stringify(items));
+}
+function createTaskItem(text){
+  const li=document.createElement('li');
+  const wrapper = document.createElement('div');
+  wrapper.style.display='flex';
+  wrapper.style.flexDirection='column';
+  wrapper.style.gap='4px';
+
+  const title = document.createElement('span');
+  title.className='desc';
+  title.textContent = text;
+  title.style.fontWeight = 600;
+
+  const meta = document.createElement('span');
+  meta.className='meta';
+  meta.textContent = 'Quest';
+  meta.style.fontSize='12px';
+  meta.style.color='var(--muted)';
+
+  wrapper.appendChild(title);
+  wrapper.appendChild(meta);
+
+  const del = document.createElement('button');
+  del.className='del';
+  del.textContent='✕';
+  del.onclick = ()=>{ li.remove(); saveTasks(); };
+
+  li.appendChild(wrapper);
+  li.appendChild(del);
+  todoList.appendChild(li);
 }
 
-updateTimerDisplay();
+addTaskBtn.addEventListener('click', ()=>{
+  const v = todoInput.value.trim();
+  if(!v) return;
+  createTaskItem(v);
+  todoInput.value='';
+  saveTasks();
+});
+todoInput.addEventListener('keydown', (e)=>{
+  if(e.key==='Enter') addTaskBtn.click();
+});
 
-/* ------- TODO LIST ------- */
-function loadTasks() {
-    const saved = JSON.parse(localStorage.getItem("tasks") || "[]");
-    saved.forEach(task => addTaskToUI(task));
-}
+loadTasks();
 
-function saveTasks() {
-    const tasks = [...document.querySelectorAll("#todo-list li span")].map(t => t.innerText);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
+/* ------------- remove number spinners for Firefox (redundant safety) ------------- */
+(function removeSpinners(){
+  const css = 'input[type=number] {-moz-appearance: textfield;}';
+  const s = document.createElement('style'); s.appendChild(document.createTextNode(css));
+  document.head.appendChild(s);
+})();
 
-function addTask() {
-    const input = document.getElementById("todo-input");
-    const text = input.value.trim();
-    if (text === "") return;
+/* ------------- Vercel analytics (static html) ------------- */
+(function installVercel(){
+  try{
+    const s = document.createElement('script');
+    s.defer = true;
+    s.src = '/_vercel/insights/script.js';
+    document.head.appendChild(s);
+  }catch(e){}
+})();
 
-    addTaskToUI(text);
-    input.value = "";
-    saveTasks();
-}
-
-function addTaskToUI(text) {
-    const ul = document.getElementById("todo-list");
-
-    const li = document.createElement("li");
-    const span = document.createElement("span");
-    span.innerText = text;
-
-    const del = document.createElement("button");
-    del.innerText = "✕";
-    del.onclick = () => {
-        li.remove();
-        saveTasks();
-    };
-
-    li.appendChild(span);
-    li.appendChild(del);
-    ul.appendChild(li);
-}
-
-document.addEventListener("DOMContentLoaded", loadTasks);
 </script>
-
-<script defer src="/_vercel/insights/script.js"></script>
-
 </body>
 </html>
