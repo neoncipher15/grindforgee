@@ -7,407 +7,448 @@
 <link rel="icon" type="image/png" href="/GrindForge.png" />
 
 <style>
-  /* ---------- base ---------- */
-  :root{
-    --accent:#4ecdc4;
-    --accent-dark:#2ab3aa;
-    --card-bg: rgba(0,0,0,0.48);
-    --glass: rgba(0,0,0,0.45);
-    --muted:#9adbd4;
-    --text:#dffcff;
-    --danger:#ff5a5a;
-  }
+:root{
+  --accent:#4ecdc4;
+  --accent-2:#38b3aa;
+  --bg:#030612;
+  --card: rgba(4,6,10,0.6);
+  --glass: rgba(0,0,0,0.45);
+  --muted:#9adbd4;
+  --text:#dffcff;
+  --danger:#ff5a5a;
+  --success:#6ef0c9;
+  --shadow: rgba(2,6,10,0.6);
+  --radius:14px;
+  --gap:12px;
+}
 
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    color:var(--text);
-    background:#000;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    overflow-x:hidden;
-  }
+/* reset & base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:var(--text);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  /* background video */
-  #bg-video{
-    position:fixed; inset:0; width:100%; height:100%;
-    object-fit:cover; z-index:-2;
-  }
-  .overlay{
-    position:fixed; inset:0; background:rgba(0,0,0,0.32); z-index:-1;
-  }
+/* bg video */
+#bg-video{position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2}
+.overlay{position:fixed; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.36)); z-index:-1}
 
-  /* datetime header (desktop: top-left) */
-  #datetime-box{
-    position:absolute;
-    top:32px; left:32px;
-    padding:12px 16px;
-    background:var(--glass);
-    backdrop-filter:blur(8px);
-    border-radius:12px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.5);
-    font-size:15px;
-    letter-spacing:0.2px;
-    white-space:nowrap;
-  }
+/* container positions on desktop */
+.container-desktop{
+  display:flex;
+  gap:24px;
+  padding:28px;
+  align-items:flex-start;
+  justify-content:flex-end;
+}
 
-  /* timer card (desktop: top-right) */
-  .timer-box{
-    position:absolute; top:32px; right:32px;
-    width:320px;
-    padding:22px;
-    background:var(--card-bg);
-    border-radius:18px;
-    backdrop-filter:blur(8px);
-    box-shadow:0 10px 30px rgba(0,0,0,0.5);
-    text-align:center;
-  }
-  .timer-box h1{
-    margin:0 0 10px 0;
-    font-size:20px;
-  }
+/* left column: datetime + quotes */
+.left-col{
+  position:fixed;
+  top:28px;
+  left:28px;
+  width:320px;
+  display:flex;
+  flex-direction:column;
+  gap:var(--gap);
+}
+.box{
+  background:var(--card);
+  backdrop-filter: blur(8px);
+  padding:14px;
+  border-radius:var(--radius);
+  box-shadow: 0 12px 30px var(--shadow);
+}
 
-  #timer{
-    font-size:42px;
-    font-weight:700;
-    color:var(--accent);
-    margin: 12px 0 10px 0;
-  }
+/* date/time header */
+#datetime-box{
+  font-size:15px;
+  letter-spacing:0.2px;
+  white-space:nowrap;
+}
 
-  .timer-controls{
-    display:flex;
-    gap:10px;
-    justify-content:center;
-    margin-bottom:12px;
-  }
-  .timer-controls button{
-    padding:8px 12px;
-    border-radius:10px;
-    border:0;
-    background:var(--accent);
-    color:#042726;
-    cursor:pointer;
-    font-weight:600;
-    transition:transform .16s ease, box-shadow .16s ease;
-  }
-  .timer-controls button:hover{ transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,0.35); }
-  .settings{
-    display:flex;
-    gap:10px;
-    justify-content:center;
-    align-items:center;
-    margin-top:6px;
-    font-size:14px;
-  }
-  .settings input{
-    width:60px;
-    padding:7px 8px;
-    border-radius:8px;
-    border:none;
-    outline:none;
-    background:rgba(255,255,255,0.08);
-    color:var(--text);
-    text-align:center;
-    box-shadow:0 2px 8px rgba(0,0,0,0.45);
-  }
-  .settings input::placeholder{ color:var(--muted); }
+/* hours completed + sessions (small stat) */
+.stats-row{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  align-items:center;
+  font-size:13px;
+  color:var(--muted);
+}
+.stat-pill{
+  background: rgba(255,255,255,0.03);
+  padding:6px 9px;
+  border-radius:10px;
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+}
 
-  /* todo (desktop below timer) */
-  .todo-container{
-    position:absolute;
-    top:380px; right:32px;
-    width:320px;
-    padding:18px;
-    background:var(--glass);
-    border-radius:14px;
-    backdrop-filter:blur(8px);
-    box-shadow:0 10px 30px rgba(0,0,0,0.45);
-  }
-  .todo-container h2{ margin:0 0 10px 0; font-size:18px; }
-  .todo-input{
-    display:flex; gap:8px; align-items:center;
-  }
-  .todo-input input{
-    flex:1; padding:9px 10px; border-radius:10px; border:none; outline:none;
-    background:rgba(255,255,255,0.06); color:var(--text);
-  }
-  .todo-input button{
-    padding:8px 12px; border-radius:10px; border:0; background:var(--accent);
-    color:#042726; cursor:pointer; font-weight:600;
-  }
-  ul#todo-list{ list-style:none; padding:0; margin:12px 0 0 0; display:block; }
-  ul#todo-list li{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:10px;
-    padding:10px;
-    margin-bottom:10px;
-    border-radius:10px;
-    background:rgba(255,255,255,0.04);
-  }
-  ul#todo-list li .meta{
-    color:var(--muted); font-size:12px; margin-top:6px;
-  }
-  ul#todo-list li button.del{
-    background:var(--danger); color:#fff; border:0; padding:6px 8px; border-radius:8px; cursor:pointer;
-  }
+/* quotes */
+.quotes h3{ margin:0 0 8px 0; font-size:16px}
+.quote-text{ font-size:14px; color: #dffcff; opacity:0.95; min-height:44px; }
+.quote-actions{ display:flex; gap:8px; margin-top:8px;}
+.small-btn{
+  border:0; padding:8px 10px; border-radius:10px; cursor:pointer;
+  background:var(--accent); color:#042726; font-weight:600;
+}
 
-  /* small screens — Option A: stacked center */
-  @media (max-width: 880px){
-    /* datetime centered at top */
-    #datetime-box{
-      position:relative;
-      left:auto; top:20px;
-      margin:14px auto 0 auto;
-      transform:none;
-      text-align:center;
-      display:block;
-      width:min(92%,720px);
-      font-size:15px;
-    }
+/* Timer card (right column) */
+.timer-area{ margin-left:auto; margin-right:28px; display:flex; flex-direction:column; gap:var(--gap); align-items:flex-end;}
+.timer-box{
+  width:340px; padding:22px 20px; text-align:center;
+  background:var(--card); border-radius:18px; box-shadow:0 14px 40px var(--shadow);
+}
+.timer-box h1{ margin:0 0 6px 0; font-size:20px}
+#timer{ font-size:44px; font-weight:700; color:var(--accent); margin:12px 0; }
+.timer-controls{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; }
+.timer-controls button{ padding:8px 12px; border-radius:10px; border:0; cursor:pointer; background:var(--accent); color:#042726; font-weight:700 }
+.timer-controls button:hover{ transform:translateY(-2px) }
+.settings{ display:flex; gap:10px; justify-content:center; align-items:center; margin-top:8px; font-size:14px }
+.settings input{ width:70px; padding:8px; border-radius:8px; border:0; background:rgba(255,255,255,0.05); color:var(--text); text-align:center }
 
-    /* layout stacks */
-    .timer-box{
-      position:relative;
-      top:24px; right:auto;
-      margin:18px auto 0 auto;
-      width:min(92%,720px);
-    }
+/* session & progress row below timer */
+.progress-row{ display:flex; justify-content:space-between; gap:12px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted) }
 
-    .todo-container{
-      position:relative;
-      top:28px; right:auto;
-      margin:18px auto 56px auto;
-      width:min(92%,720px);
-    }
-  }
+/* todo / quests card */
+.todo-container{ width:340px; padding:18px; background:var(--glass); border-radius:14px; box-shadow:0 14px 36px var(--shadow) }
+.todo-container h2{ margin:0 0 10px 0; font-size:18px }
+.todo-input{ display:flex; gap:8px; margin-bottom:12px }
+.todo-input input{ flex:1; padding:10px 12px; border-radius:10px; border:0; background:rgba(255,255,255,0.04); color:var(--text) }
+.todo-input button{ padding:9px 12px; border-radius:10px; border:0; background:var(--accent); color:#042726; font-weight:700 }
+ul#todo-list{ list-style:none; padding:0; margin:0; display:block }
+li.quest{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:10px; margin-bottom:10px; border-radius:10px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+}
+.quest .left{ display:flex; gap:10px; align-items:center; }
+.checkbox{
+  width:28px; height:28px; border-radius:8px; border:2px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; cursor:pointer;
+  background:rgba(255,255,255,0.01);
+}
+.checkbox.done{ background:var(--success); border-color: rgba(110,240,201,0.9) }
+.quest .desc{ font-weight:700 }
+.quest .meta{ font-size:12px; color:var(--muted) }
+.quest button.del{ padding:6px 8px; border-radius:8px; border:0; background:var(--danger); color:#fff; cursor:pointer }
 
-  /* extra small phones */
-  @media (max-width:420px){
-    #timer{ font-size:34px; }
-    .timer-box{ padding:18px; }
-    .settings input{ width:52px; padding:8px; }
-    .todo-input input{ padding:8px; }
-    button{ padding:8px 10px; font-size:14px; }
-  }
+/* done styling */
+.quest.done .desc{ text-decoration:line-through; opacity:0.55; color:#bfeee5 }
+.quest.done .meta{ opacity:0.6 }
+
+/* responsive: stack centered on small screens (Option A) */
+@media (max-width: 880px){
+  .left-col{ position:static; width:100%; margin:12px auto 0; display:flex; justify-content:center; }
+  .container-desktop{ flex-direction:column; align-items:center; padding:18px }
+  .timer-area{ align-items:center; margin:0 auto }
+  .timer-box, .todo-container, .box{ width:min(94%,540px) }
+  #datetime-box{ width:min(94%,540px); text-align:center }
+  .left-col{ margin:12px auto 0 }
+  .overlay{ background:linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.34)) }
+}
+
+/* extra small screens */
+@media (max-width:420px){
+  #timer{ font-size:34px }
+  .timer-box{ padding:16px }
+  .todo-input input{ padding:9px }
+  button{ font-size:14px }
+}
 </style>
 </head>
 <body>
 
-  <!-- background video -->
-  <video id="bg-video" autoplay muted loop playsinline>
-    <source src="night.mp4" type="video/mp4" />
-    <!-- fallback -->
-  </video>
-  <div class="overlay"></div>
+<video id="bg-video" autoplay muted loop playsinline>
+  <source src="night.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
 
-  <!-- date/time header (words, no year) -->
-  <div id="datetime-box" aria-hidden="false"></div>
+<!-- layout wrapper -->
+<div class="container-desktop">
 
-  <!-- timer -->
-  <section class="timer-box" aria-label="Pomodoro Timer">
-    <h1>Pomodoro Timer</h1>
+  <!-- left column: datetime + quotes + stats -->
+  <div class="left-col">
+    <div class="box" id="dateBox">
+      <div id="datetime-box" aria-live="polite">Loading date…</div>
 
-    <div id="timer" aria-live="polite">25:00</div>
-
-    <div class="timer-controls">
-      <button id="startBtn">Start</button>
-      <button id="pauseBtn">Pause</button>
-      <button id="resetBtn">Reset</button>
+      <div class="stats-row" style="margin-top:10px">
+        <div class="stat-pill" id="hoursCompleted">Hours: 0.0</div>
+        <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
+      </div>
     </div>
 
-    <div class="settings" aria-hidden="false">
-      <label style="display:flex;align-items:center;gap:8px;">
-        Work (min)
-        <input id="workTime" type="number" min="1" value="25" />
-      </label>
-      <label style="display:flex;align-items:center;gap:8px;">
-        Break (min)
-        <input id="breakTime" type="number" min="1" value="5" />
-      </label>
+    <div class="box quotes" style="margin-top:12px">
+      <h3>Quote</h3>
+      <div class="quote-text" id="quoteText">“Stay focused — distractions are the enemy of progress.”</div>
+      <div class="quote-actions">
+        <button class="small-btn" id="newQuoteBtn">New quote</button>
+        <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
+      </div>
+      <div style="margin-top:8px; font-size:12px; color:var(--muted)">Saved quotes persist locally — press "New quote" to rotate.</div>
     </div>
-  </section>
+  </div>
 
-  <!-- to-do (quest-style cards) -->
-  <aside class="todo-container" aria-label="To-Do List">
-    <h2>To-Do List ✨</h2>
+  <!-- right area: timer + todo stacked -->
+  <div class="timer-area" style="margin-left:auto;">
 
-    <div class="todo-input">
-      <input id="todoInput" type="text" placeholder="Write a task..." />
-      <button id="addTaskBtn">Add</button>
-    </div>
+    <!-- Timer card -->
+    <section class="timer-box" aria-label="Pomodoro Timer">
+      <h1>Pomodoro Timer</h1>
+      <div id="timer" aria-live="polite">25:00</div>
 
-    <ul id="todo-list" aria-live="polite"></ul>
-  </aside>
+      <div class="timer-controls">
+        <button id="startBtn">Start</button>
+        <button id="pauseBtn">Pause</button>
+        <button id="resetBtn">Reset</button>
+      </div>
 
-  <!-- alarm -->
-  <audio id="alarm" src="https://cdn.pixabay.com/audio/2021/09/01/audio_9c1f5c44d8.mp3" preload="auto"></audio>
+      <div class="settings">
+        <label>Work
+          <input id="workTime" type="number" min="1" value="25" />
+        </label>
+        <label>Break
+          <input id="breakTime" type="number" min="1" value="5" />
+        </label>
+      </div>
+
+      <div class="progress-row" style="margin-top:12px">
+        <div id="modeLabel">Mode: Work</div>
+        <div id="sessionLabel">Completed: 0</div>
+      </div>
+    </section>
+
+    <!-- To-do / quests -->
+    <aside class="todo-container" aria-label="To-Do">
+      <h2>To-Do List ✨</h2>
+
+      <div class="todo-input">
+        <input id="todoInput" type="text" placeholder="Write a task..." />
+        <button id="addTaskBtn">Add</button>
+      </div>
+
+      <ul id="todo-list" aria-live="polite"></ul>
+    </aside>
+  </div>
+</div>
+
+<!-- alarm -->
+<audio id="alarm" src="https://cdn.pixabay.com/audio/2021/09/01/audio_9c1f5c44d8.mp3" preload="auto"></audio>
 
 <script>
-/* ---------------- DATE & TIME (words, no year) ---------------- */
+/* ================= UTILS ================ */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+/* ========== DATE & TIME (words, no year) ========== */
 function updateDateTime(){
   const now = new Date();
-  // weekday, day month (no year)
-  const options = { weekday: 'long', month: 'long', day: 'numeric' };
-  const dateText = now.toLocaleDateString(undefined, options); // e.g. Wednesday, 11 December
+  const dateOpt = { weekday:'long', month:'long', day:'numeric' }; // no year
+  const dateText = now.toLocaleDateString(undefined, dateOpt); // e.g. Wednesday, 11 December
   const timeText = now.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-  document.getElementById('datetime-box').textContent = `${dateText} • ${timeText}`;
+  $('#datetime-box').textContent = `${dateText} • ${timeText}`;
 }
 setInterval(updateDateTime, 1000);
 updateDateTime();
 
-/* -------------- Timer logic -------------- */
-const startBtn = document.getElementById('startBtn');
-const pauseBtn = document.getElementById('pauseBtn');
-const resetBtn = document.getElementById('resetBtn');
-const timerEl = document.getElementById('timer');
-const alarm = document.getElementById('alarm');
-const workInput = document.getElementById('workTime');
-const breakInput = document.getElementById('breakTime');
+/* ========== STORAGE KEYS ========== */
+const S_TASKS = 'gf_tasks_v2';
+const S_STATS = 'gf_stats_v1';
+const S_QUOTES = 'gf_quotes_v1';
+
+/* ========== QUOTES ========== */
+const defaultQuotes = [
+  "Focus is a skill — practice it daily.",
+  "You don't have to be perfect, just persistent.",
+  "Small progress each day adds up to big results.",
+  "Work in silence, let success make the noise.",
+  "One task at a time. Win the moment."
+];
+
+function loadQuotes(){
+  const raw = localStorage.getItem(S_QUOTES);
+  if(!raw) return defaultQuotes.slice();
+  try{ return JSON.parse(raw) }catch(e){ return defaultQuotes.slice(); }
+}
+let quotes = loadQuotes();
+function showRandomQuote(){
+  const q = quotes[Math.floor(Math.random() * quotes.length)];
+  $('#quoteText').textContent = `“${q}”`;
+}
+$('#newQuoteBtn').addEventListener('click', showRandomQuote);
+$('#saveQuoteBtn').addEventListener('click', ()=>{
+  const q = prompt('Add a new quote:');
+  if(q && q.trim()){ quotes.unshift(q.trim()); localStorage.setItem(S_QUOTES, JSON.stringify(quotes)); alert('Saved!'); showRandomQuote(); }
+});
+showRandomQuote();
+
+/* ========== STATS: sessions & completed seconds ========== */
+let stats = { completedSeconds: 0, sessionsCompleted: 0 };
+(function loadStats(){
+  const r = localStorage.getItem(S_STATS);
+  if(r){
+    try{ stats = JSON.parse(r) }catch(e){}
+  }
+  updateStatsUI();
+})();
+
+function saveStats(){ localStorage.setItem(S_STATS, JSON.stringify(stats)); updateStatsUI(); }
+
+function updateStatsUI(){
+  // hours: decimal and hh:mm
+  const totalSec = stats.completedSeconds || 0;
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const decimal = (totalSec / 3600).toFixed(2);
+  $('#hoursCompleted').textContent = `Hours: ${decimal}`;
+  $('#sessionsCompleted').textContent = `Sessions: ${stats.sessionsCompleted || 0}`;
+  $('#sessionLabel').textContent = `Completed: ${stats.sessionsCompleted || 0}`;
+}
+
+/* ========== TIMER LOGIC ========== */
+const startBtn = $('#startBtn');
+const pauseBtn = $('#pauseBtn');
+const resetBtn = $('#resetBtn');
+const timerEl = $('#timer');
+const alarm = $('#alarm');
+const workInput = $('#workTime');
+const breakInput = $('#breakTime');
 
 let timerInterval = null;
 let isRunning = false;
 let isWork = true;
-let timeLeft = parseInt(workInput.value,10)*60 || 1500;
+let timeLeft = (parseInt(workInput.value,10) || 25) * 60;
 
 function renderTime(t){
   const m = Math.floor(t/60);
   const s = t%60;
   timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
 }
-
-// sync time when inputs change (if not running)
-workInput.addEventListener('change', ()=>{
-  if(!isRunning && isWork){
-    timeLeft = parseInt(workInput.value,10)*60 || 1500;
-    renderTime(timeLeft);
-  }
-});
-breakInput.addEventListener('change', ()=>{
-  if(!isRunning && !isWork){
-    timeLeft = parseInt(breakInput.value,10)*60 || 300;
-    renderTime(timeLeft);
-  }
-});
+function setModeLabel(){ $('#modeLabel').textContent = `Mode: ${isWork? 'Work':'Break'}`; }
 
 function tick(){
   if(timeLeft>0){
-    timeLeft--;
-    renderTime(timeLeft);
-    return;
+    timeLeft--; renderTime(timeLeft); return;
   }
-  // when reaches zero
-  alarm.play().catch(()=>{/* play may be blocked until user interaction */});
-  // switch modes automatically
+  // session ended
+  try{ alarm.currentTime = 0; alarm.play().catch(()=>{}); }catch(e){}
   if(isWork){
-    isWork = false;
-    timeLeft = (parseInt(breakInput.value,10) || 5) * 60;
-  } else {
-    isWork = true;
-    timeLeft = (parseInt(workInput.value,10) || 25) * 60;
+    // add completed seconds & session count
+    const workMin = parseInt(workInput.value,10) || 25;
+    stats.completedSeconds = (stats.completedSeconds || 0) + workMin * 60;
+    stats.sessionsCompleted = (stats.sessionsCompleted || 0) + 1;
+    saveStats();
   }
+  // switch mode
+  isWork = !isWork;
+  setModeLabel();
+  // set next timeLeft
+  timeLeft = (isWork ? (parseInt(workInput.value,10)||25) : (parseInt(breakInput.value,10)||5)) * 60;
   renderTime(timeLeft);
 }
 
 function startTimer(){
   if(isRunning) return;
-  // ensure timeLeft initialized
-  if(!timeLeft) timeLeft = (parseInt(workInput.value,10)||25)*60;
   isRunning = true;
+  if(!timeLeft) timeLeft = (parseInt(workInput.value,10)||25) * 60;
   timerInterval = setInterval(tick, 1000);
 }
-function pauseTimer(){
-  clearInterval(timerInterval);
-  timerInterval = null;
-  isRunning = false;
-}
-function resetTimer(){
-  pauseTimer();
-  isWork = true;
-  timeLeft = (parseInt(workInput.value,10) || 25) * 60;
-  renderTime(timeLeft);
-}
+function pauseTimer(){ clearInterval(timerInterval); timerInterval=null; isRunning=false; }
+function resetTimer(){ pauseTimer(); isWork=true; timeLeft = (parseInt(workInput.value,10)||25)*60; renderTime(timeLeft); setModeLabel(); }
 
 startBtn.addEventListener('click', startTimer);
 pauseBtn.addEventListener('click', pauseTimer);
 resetBtn.addEventListener('click', resetTimer);
 
-// initial render
-renderTime(timeLeft);
+// sync inputs if not running
+workInput.addEventListener('change', ()=>{
+  if(!isRunning && isWork){ timeLeft = (parseInt(workInput.value,10)||25)*60; renderTime(timeLeft); }
+});
+breakInput.addEventListener('change', ()=>{
+  if(!isRunning && !isWork){ timeLeft = (parseInt(breakInput.value,10)||5)*60; renderTime(timeLeft); }
+});
 
-/* -------------- To-Do list (localStorage) -------------- */
-const todoInput = document.getElementById('todoInput');
-const addTaskBtn = document.getElementById('addTaskBtn');
-const todoList = document.getElementById('todo-list');
+renderTime(timeLeft); setModeLabel();
+
+/* ========== TODO LIST (with tick + persistence) ========== */
+const TODO_KEY = S_TASKS;
+const todoInput = $('#todoInput'), addTaskBtn = $('#addTaskBtn'), todoList = $('#todo-list');
 
 function loadTasks(){
-  const raw = localStorage.getItem('gf_tasks');
-  if(!raw) return;
-  const arr = JSON.parse(raw);
-  arr.forEach(t => createTaskItem(t));
+  const raw = localStorage.getItem(TODO_KEY);
+  if(!raw) return [];
+  try{ return JSON.parse(raw) }catch(e){ return [] }
 }
-function saveTasks(){
-  const items = [...todoList.querySelectorAll('li span.desc')].map(s=>s.textContent);
-  localStorage.setItem('gf_tasks', JSON.stringify(items));
+function saveTasksToStorage(items){
+  localStorage.setItem(TODO_KEY, JSON.stringify(items));
 }
-function createTaskItem(text){
-  const li=document.createElement('li');
-  const wrapper = document.createElement('div');
-  wrapper.style.display='flex';
-  wrapper.style.flexDirection='column';
-  wrapper.style.gap='4px';
+function refreshTasksUI(){
+  const items = loadTasks();
+  todoList.innerHTML = '';
+  // show not done first, then done
+  const notDone = items.filter(it=>!it.done);
+  const done = items.filter(it=>it.done);
+  notDone.concat(done).forEach(it => {
+    const li = document.createElement('li'); li.className = 'quest' + (it.done? ' done' : '');
+    const left = document.createElement('div'); left.className='left';
+    const box = document.createElement('div'); box.className='checkbox'; 
+    if(it.done) box.classList.add('done'); box.innerHTML = it.done ? '✓' : '';
+    box.addEventListener('click', ()=>{
+      it.done = !it.done;
+      saveItemChange(it.id, it);
+      refreshTasksUI();
+    });
+    const textWrap = document.createElement('div'); textWrap.style.display='flex'; textWrap.style.flexDirection='column';
+    const desc = document.createElement('span'); desc.className='desc'; desc.textContent = it.text;
+    const meta = document.createElement('span'); meta.className='meta'; meta.textContent = it.done ? 'Completed' : 'Quest';
+    textWrap.appendChild(desc); textWrap.appendChild(meta);
+    left.appendChild(box); left.appendChild(textWrap);
 
-  const title = document.createElement('span');
-  title.className='desc';
-  title.textContent = text;
-  title.style.fontWeight = 600;
+    const del = document.createElement('button'); del.className='del'; del.textContent='✕';
+    del.addEventListener('click', ()=>{ deleteTask(it.id); refreshTasksUI(); });
 
-  const meta = document.createElement('span');
-  meta.className='meta';
-  meta.textContent = 'Quest';
-  meta.style.fontSize='12px';
-  meta.style.color='var(--muted)';
-
-  wrapper.appendChild(title);
-  wrapper.appendChild(meta);
-
-  const del = document.createElement('button');
-  del.className='del';
-  del.textContent='✕';
-  del.onclick = ()=>{ li.remove(); saveTasks(); };
-
-  li.appendChild(wrapper);
-  li.appendChild(del);
-  todoList.appendChild(li);
+    li.appendChild(left); li.appendChild(del); todoList.appendChild(li);
+  });
 }
+function saveItemChange(id, newItem){
+  const items = loadTasks();
+  const i = items.findIndex(it=>it.id===id);
+  if(i>=0){ items[i] = newItem; saveTasksToStorage(items); }
+}
+function deleteTask(id){
+  let items = loadTasks(); items = items.filter(it=>it.id!==id);
+  saveTasksToStorage(items);
+}
+function addTask(text){
+  const items = loadTasks();
+  const item = { id: Date.now().toString(36), text:text, done:false, createdAt: Date.now() };
+  items.push(item); saveTasksToStorage(items); refreshTasksUI();
+}
+addTaskBtn.addEventListener('click', ()=>{ const v=todoInput.value.trim(); if(!v) return; addTask(v); todoInput.value=''; });
+todoInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') addTaskBtn.click(); });
 
-addTaskBtn.addEventListener('click', ()=>{
-  const v = todoInput.value.trim();
-  if(!v) return;
-  createTaskItem(v);
-  todoInput.value='';
-  saveTasks();
-});
-todoInput.addEventListener('keydown', (e)=>{
-  if(e.key==='Enter') addTaskBtn.click();
-});
+refreshTasksUI();
 
-loadTasks();
+/* ========== helper: load persisted quotes/stats already handled above ========== */
 
-/* ------------- remove number spinners for Firefox (redundant safety) ------------- */
-(function removeSpinners(){
-  const css = 'input[type=number] {-moz-appearance: textfield;}';
-  const s = document.createElement('style'); s.appendChild(document.createTextNode(css));
+/* ========== utilities to ensure number spinners removed (Firefox) ========== */
+(function removeSpinnerCSS(){
+  const s = document.createElement('style');
+  s.textContent = 'input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0} input[type=number]{-moz-appearance:textfield}';
   document.head.appendChild(s);
 })();
 
-/* ------------- Vercel analytics (static html) ------------- */
+/* ========== install Vercel analytics script safely (static method) ========== */
 (function installVercel(){
   try{
-    const s = document.createElement('script');
-    s.defer = true;
-    s.src = '/_vercel/insights/script.js';
-    document.head.appendChild(s);
+    const s = document.createElement('script'); s.defer=true; s.src='/_vercel/insights/script.js'; document.head.appendChild(s);
   }catch(e){}
 })();
 
