@@ -50,13 +50,37 @@ body{
 
 /* quotes */
 .quotes h3{ margin:0 0 8px 0; font-size:16px}
-.quote-text{ font-size:14px; color: #dffcff; opacity:0.95; min-height:44px; }
+.quote-text{ font-size:14px; color:#dffcff; opacity:0.95; min-height:44px; }
 .quote-actions{ display:flex; gap:8px; margin-top:8px;}
 .small-btn{ border:0; padding:8px 10px; border-radius:10px; cursor:pointer; background:var(--accent); color:#042726; font-weight:600;}
 
+/* journal box (left column) */
+.journal-box{
+  margin-top:10px;
+  padding:10px;
+  border-radius:10px;
+  background:rgba(0,0,0,0.35);
+}
+#endDayJournal{
+  width:100%;
+  resize:vertical;
+  border-radius:8px;
+  padding:8px;
+  font-family:"Poppins", system-ui;
+  font-size:13px;
+  background:rgba(255,255,255,0.04);
+  color:var(--text);
+  border:1px solid rgba(78,205,196,0.45);
+  box-sizing:border-box;
+}
+#endDayJournal:focus{
+  outline:none;
+  box-shadow:0 0 6px var(--accent);
+}
+
 /* End Day button */
 #endDayBtn{
-  margin-top:400px;
+  margin-top:14px;
   width:100%;
   padding:10px 12px;
   border-radius:10px;
@@ -112,7 +136,7 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 .quest.done .desc{ text-decoration:line-through; opacity:0.55; color:#bfeee5 }
 .quest.done .meta{ opacity:0.6 }
 
-/* End Day overlay */
+/* End Day overlay (animation kept) */
 #endDayOverlay{
   position:fixed;
   inset:0;
@@ -150,7 +174,7 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
   animation:endCircle 1.6s ease-out forwards;
 }
 .end-day-circle::after{
-  content:''; 
+  content:'';
   position:absolute;
   inset:14px;
   border-radius:50%;
@@ -198,37 +222,6 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
   color:var(--muted);
 }
 
-/* journal area */
-#endDayJournal{
-  width:100%;
-  resize:vertical;
-  margin-top:12px;
-  border-radius:10px;
-  padding:10px;
-  font-family:"Poppins", monospace;
-  font-size:14px;
-  background:rgba(255,255,255,0.05);
-  color:var(--text);
-  border:1px solid rgba(78,205,196,0.4);
-}
-#endDayJournal:focus{
-  outline:none;
-  box-shadow:0 0 8px var(--accent);
-}
-#saveJournalBtn{
-  margin-top:10px;
-  padding:10px 15px;
-  border:none;
-  border-radius:10px;
-  background:var(--accent);
-  color:#042726;
-  font-weight:700;
-  cursor:pointer;
-}
-#saveJournalBtn:hover{
-  filter:brightness(1.1);
-}
-
 /* responsive: stacked center */
 @media (max-width: 880px){
   .left-col{ position:static; width:100%; margin:12px auto 0; display:flex; justify-content:center; }
@@ -271,6 +264,13 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
         <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
       </div>
       <div style="margin-top:8px; font-size:12px; color:var(--muted)">Saved quotes persist locally.</div>
+
+      <!-- Journal box above End Day -->
+      <div class="journal-box">
+        <h4 style="margin:8px 0 6px 0;font-size:14px;">Daily Journal</h4>
+        <textarea id="endDayJournal" placeholder="Write your thoughts about today..." rows="5"></textarea>
+        <button id="saveJournalBtn" class="small-btn" style="margin-top:8px;width:100%;">Save Journal</button>
+      </div>
 
       <!-- End Day button -->
       <button id="endDayBtn">
@@ -319,7 +319,7 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 
 <audio id="alarm" preload="auto"></audio>
 
-<!-- End Day Overlay -->
+<!-- End Day Overlay (animation only, no journal) -->
 <div id="endDayOverlay">
   <div class="end-day-content">
     <div class="end-day-circle">
@@ -328,11 +328,6 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
     <div class="end-day-title">Day Complete</div>
     <div class="end-day-sub">Here is what you achieved today:</div>
     <div id="endDaySummary"></div>
-
-    <!-- Journal area -->
-    <textarea id="endDayJournal" placeholder="Write your journal entry here..." rows="6"></textarea>
-    <button id="saveJournalBtn">Save Journal</button>
-
     <div class="end-day-hint">Press Esc or click anywhere to close.</div>
   </div>
 </div>
@@ -635,15 +630,19 @@ document.addEventListener('DOMContentLoaded', function() {
   function saveJournal() {
     try {
       localStorage.setItem(S_JOURNAL, endDayJournal.value.trim());
-      // You could swap this for a subtle inline "Saved!" if you want
-      alert('Journal saved.');
+      saveJournalBtn.textContent = 'Saved ✔';
+      setTimeout(() => saveJournalBtn.textContent = 'Save Journal', 1200);
     } catch(e) {
       alert('Failed to save journal.');
     }
   }
-  saveJournalBtn.addEventListener('click', saveJournal);
+  saveJournalBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    saveJournal();
+  });
+  loadJournal();
 
-  // ---- End Day logic ----
+  // ---- End Day overlay logic (animation) ----
   function typeWriterText(text, element, speed){
     element.textContent = '';
     let i = 0;
@@ -657,7 +656,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function openEndDayOverlay(){
-    // pull latest stats from storage to be safe
     loadStats();
     const hours = (stats.completedSeconds / 3600).toFixed(2);
     const sessions = stats.sessionsCompleted || 0;
@@ -665,11 +663,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const summaryText = `Today you completed ${sessions} session${sessions === 1 ? '' : 's'}\n` +
                         `and studied ${hours} hour${hours === '1.00' ? '' : 's'}.`;
 
+    saveJournal(); // auto-save journal when ending day
+
     endDayOverlay.classList.add('active');
     typeWriterText(summaryText, endDaySummary, 40);
-
-    // load journal content when overlay opens
-    loadJournal();
   }
 
   function closeEndDayOverlay(){
