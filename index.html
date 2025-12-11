@@ -30,31 +30,24 @@ body{
   -webkit-tap-highlight-color: transparent;
 }
 
-/* background video */
 #bg-video{position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2}
 .overlay{position:fixed; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.36)); z-index:-1}
 
-/* layout desktop */
 .container-desktop{ display:flex; gap:24px; padding:28px; align-items:flex-start; justify-content:flex-end; }
 
-/* left column */
 .left-col{ position:fixed; top:28px; left:28px; width:320px; display:flex; flex-direction:column; gap:var(--gap); }
 .box{ background:var(--card); backdrop-filter: blur(8px); padding:14px; border-radius:var(--radius); box-shadow: 0 12px 30px var(--shadow);}
 
-/* date/time */
 #datetime-box{ font-size:15px; letter-spacing:0.2px; white-space:nowrap; }
 
-/* stats */
 .stats-row{ display:flex; gap:10px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted); }
 .stat-pill{ background: rgba(255,255,255,0.03); padding:6px 9px; border-radius:10px; display:inline-flex; gap:8px; align-items:center; }
 
-/* quotes */
 .quotes h3{ margin:0 0 8px 0; font-size:16px}
 .quote-text{ font-size:14px; color: #dffcff; opacity:0.95; min-height:44px; }
 .quote-actions{ display:flex; gap:8px; margin-top:8px;}
 .small-btn{ border:0; padding:8px 10px; border-radius:10px; cursor:pointer; background:var(--accent); color:#042726; font-weight:600;}
 
-/* timer area */
 .timer-area{ margin-left:auto; margin-right:28px; display:flex; flex-direction:column; gap:var(--gap); align-items:flex-end; }
 .timer-box{ width:340px; padding:22px 20px; text-align:center; background:var(--card); border-radius:18px; box-shadow:0 14px 40px var(--shadow); }
 .timer-box h1{ margin:0 0 6px 0; font-size:20px}
@@ -62,38 +55,35 @@ body{
 .timer-controls{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; }
 .timer-controls button{ padding:8px 12px; border-radius:10px; border:0; cursor:pointer; background:var(--accent); color:#042726; font-weight:700 }
 .timer-controls button[disabled]{ opacity:0.6; transform:none; cursor:not-allowed }
-.timer-controls button:hover{ transform:translateY(-2px) }
+.timer-controls button:not([disabled]):hover{ transform:translateY(-2px) }
 .settings{ display:flex; gap:10px; justify-content:center; align-items:center; margin-top:8px; font-size:14px }
+.settings label{ display:flex; flex-direction:column; align-items:center; gap:4px; }
 .settings input{ width:70px; padding:8px; border-radius:8px; border:0; background:rgba(255,255,255,0.05); color:var(--text); text-align:center }
 
-/* progress & session labels */
 .progress-row{ display:flex; justify-content:space-between; gap:12px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted) }
 
-/* todo */
 .todo-container{ width:340px; padding:18px; background:var(--glass); border-radius:14px; box-shadow:0 14px 36px var(--shadow) }
 .todo-container h2{ margin:0 0 10px 0; font-size:18px }
 .todo-input{ display:flex; gap:8px; margin-bottom:12px }
 .todo-input input{ flex:1; padding:10px 12px; border-radius:10px; border:0; background:rgba(255,255,255,0.04); color:var(--text) }
 .todo-input button{ padding:9px 12px; border-radius:10px; border:0; background:var(--accent); color:#042726; font-weight:700 }
-ul#todo-list{ list-style:none; padding:0; margin:0; display:block }
+ul#todo-list{ list-style:none; padding:0; margin:0; display:block; max-height:300px; overflow-y:auto; }
 li.quest{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px; margin-bottom:10px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
-.quest .left{ display:flex; gap:10px; align-items:center; }
+.quest .left{ display:flex; gap:10px; align-items:center; flex:1; }
 .checkbox{ width:28px; height:28px; border-radius:8px; border:2px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; cursor:pointer; background:rgba(255,255,255,0.01); }
 .checkbox.done{ background:var(--success); border-color: rgba(110,240,201,0.9) }
-.quest .desc{ font-weight:700 }
+.quest .desc{ font-weight:700; flex:1; }
 .quest .meta{ font-size:12px; color:var(--muted) }
-.quest button.del{ padding:6px 8px; border-radius:8px; border:0; background:var(--danger); color:#fff; cursor:pointer }
+.quest button.del{ padding:6px 8px; border-radius:8px; border:0; background:var(--danger); color:#fff; cursor:pointer; flex-shrink:0; }
 .quest.done .desc{ text-decoration:line-through; opacity:0.55; color:#bfeee5 }
 .quest.done .meta{ opacity:0.6 }
 
-/* responsive: stacked center */
 @media (max-width: 880px){
   .left-col{ position:static; width:100%; margin:12px auto 0; display:flex; justify-content:center; }
   .container-desktop{ flex-direction:column; align-items:center; padding:18px }
   .timer-area{ align-items:center; margin:0 auto }
   .timer-box, .todo-container, .box{ width:min(94%,540px) }
   #datetime-box{ width:min(94%,540px); text-align:center }
-  .left-col{ margin:12px auto 0 }
   .overlay{ background:linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.34)) }
 }
 @media (max-width:420px){
@@ -112,18 +102,16 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 <div class="overlay"></div>
 
 <div class="container-desktop">
-
-  <!-- left column -->
   <div class="left-col">
     <div class="box" id="dateBox">
       <div id="datetime-box" aria-live="polite">Loading date...</div>
-      <div class="stats-row" style="margin-top:10px">
+      <div class="stats-row">
         <div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
         <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
       </div>
     </div>
 
-    <div class="box quotes" style="margin-top:12px">
+    <div class="box quotes">
       <h3>Quote</h3>
       <div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
       <div class="quote-actions">
@@ -134,15 +122,14 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
     </div>
   </div>
 
-  <!-- right area -->
-  <div class="timer-area" style="margin-left:auto;">
+  <div class="timer-area">
     <section class="timer-box" aria-label="Pomodoro Timer">
       <h1>Pomodoro Timer</h1>
       <div id="timer" aria-live="polite">25:00</div>
 
       <div class="timer-controls">
         <button id="startBtn">Start</button>
-        <button id="pauseBtn">Pause</button>
+        <button id="pauseBtn" disabled>Pause</button>
         <button id="resetBtn">Reset</button>
       </div>
 
@@ -155,7 +142,7 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
         </label>
       </div>
 
-      <div class="progress-row" style="margin-top:12px">
+      <div class="progress-row">
         <div id="modeLabel">Mode: Work</div>
         <div id="sessionLabel">Completed: 0</div>
       </div>
@@ -163,118 +150,87 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 
     <aside class="todo-container" aria-label="To-Do">
       <h2>To-Do List ✨</h2>
-
       <div class="todo-input">
         <input id="todoInput" type="text" placeholder="Write a task..." />
         <button id="addTaskBtn">Add</button>
       </div>
-
       <ul id="todo-list" aria-live="polite"></ul>
     </aside>
   </div>
 </div>
 
-<!-- online alarm (direct mp3) -->
 <audio id="alarm" preload="auto"></audio>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  /* ---------- helper selectors ---------- */
-  const $ = s => document.querySelector(s);
-  const $$ = s => Array.from(document.querySelectorAll(s));
+document.addEventListener('DOMContentLoaded', function() {
+  // Elements - get them after DOM is ready
+  const alarm = document.getElementById('alarm');
+  const startBtn = document.getElementById('startBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const timerEl = document.getElementById('timer');
+  const workInput = document.getElementById('workTime');
+  const breakInput = document.getElementById('breakTime');
+  const modeLabel = document.getElementById('modeLabel');
+  const sessionLabel = document.getElementById('sessionLabel');
+  const newQuoteBtn = document.getElementById('newQuoteBtn');
+  const saveQuoteBtn = document.getElementById('saveQuoteBtn');
+  const quoteTextEl = document.getElementById('quoteText');
+  const todoInput = document.getElementById('todoInput');
+  const addTaskBtn = document.getElementById('addTaskBtn');
+  const todoList = document.getElementById('todo-list');
+  const hoursCompletedPill = document.getElementById('hoursCompleted');
+  const sessionsCompletedPill = document.getElementById('sessionsCompleted');
+  const datetimeBox = document.getElementById('datetime-box');
 
-  /* ---------- Config & Storage Keys ---------- */
+  // Storage keys
   const S_TASKS = 'gf_tasks_v2';
   const S_STATS = 'gf_stats_v2';
   const S_QUOTES = 'gf_quotes_v1';
-  const ONLINE_ALARM_URL = 'https://cdn.pixabay.com/audio/2022/03/15/audio_0b1aefdd20.mp3';
+  
+  alarm.src = 'https://cdn.pixabay.com/audio/2022/03/15/audio_0b1aefdd20.mp3';
+  alarm.volume = 0.7;
 
-  /* ---------- Elements ---------- */
-  const alarm = $('#alarm');
-  alarm.src = ONLINE_ALARM_URL;
-  alarm.volume = 0.9;
-
-  const startBtn = $('#startBtn');
-  const pauseBtn = $('#pauseBtn');
-  const resetBtn = $('#resetBtn');
-  const timerEl = $('#timer');
-  const workInput = $('#workTime');
-  const breakInput = $('#breakTime');
-  const modeLabel = $('#modeLabel');
-  const sessionLabel = $('#sessionLabel');
-
-  const newQuoteBtn = $('#newQuoteBtn');
-  const saveQuoteBtn = $('#saveQuoteBtn');
-  const quoteTextEl = $('#quoteText');
-
-  const todoInput = $('#todoInput');
-  const addTaskBtn = $('#addTaskBtn');
-  const todoList = $('#todo-list');
-
-  const hoursCompletedPill = $('#hoursCompleted');
-  const sessionsCompletedPill = $('#sessionsCompleted');
-
-  /* ---------- State ---------- */
+  // State
   let audioUnlocked = false;
   let timerInterval = null;
   let isRunning = false;
   let isWork = true;
-  let timeLeft = (parseInt(workInput.value,10) || 25) * 60;
+  let timeLeft = 25 * 60;
 
-  /* ---------- Utilities ---------- */
-  function getTodayStr(){
+  // Utilities
+  function getTodayStr() {
     const d = new Date();
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
 
-  function safeParseInt(v, fallback){
-    const n = parseInt(v,10);
+  function safeParseInt(v, fallback) {
+    const n = parseInt(v, 10);
     return Number.isFinite(n) ? n : fallback;
   }
 
-  /* ---------- Audio unlock ---------- */
-  function unlockAudioOnUserGesture(){
-    if(audioUnlocked) return;
-    try{
-      const p = alarm.play();
-      if(p && typeof p.then === 'function'){
-        p.then(() => {
-          alarm.pause();
-          alarm.currentTime = 0;
-          audioUnlocked = true;
-        }).catch((err) => {});
-      } else {
-        alarm.pause();
-        alarm.currentTime = 0;
-        audioUnlocked = true;
-      }
-    }catch(err){}
+  // Audio unlock
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    alarm.play().then(() => {
+      alarm.pause();
+      alarm.currentTime = 0;
+      audioUnlocked = true;
+    }).catch(() => {});
   }
 
-  const oneTimeHandler = (e) => {
-    unlockAudioOnUserGesture();
-    document.removeEventListener('click', oneTimeHandler);
-    document.removeEventListener('touchstart', oneTimeHandler);
-    document.removeEventListener('keydown', oneTimeHandler);
-  };
-  document.addEventListener('click', oneTimeHandler, { once: true });
-  document.addEventListener('touchstart', oneTimeHandler, { once: true });
-  document.addEventListener('keydown', oneTimeHandler, { once: true });
-
-  /* ---------- Date & Time ---------- */
-  function updateDateTime(){
+  // Date/Time
+  function updateDateTime() {
     const now = new Date();
     const dateOpt = { weekday:'long', month:'long', day:'numeric' };
     const dateText = now.toLocaleDateString(undefined, dateOpt);
-    const timeText = now.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-    const dt = $('#datetime-box');
-    if(dt) dt.textContent = `${dateText} • ${timeText}`;
-    checkDailyReset();
+    const timeText = now.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' });
+    datetimeBox.textContent = `${dateText} • ${timeText}`;
   }
   setInterval(updateDateTime, 1000);
   updateDateTime();
 
-  /* ---------- Quotes ---------- */
+  // Quotes
   const defaultQuotes = [
     "Focus is a skill - practice it daily.",
     "You don't have to be perfect, just persistent.",
@@ -282,234 +238,250 @@ document.addEventListener('DOMContentLoaded', () => {
     "Work in silence, let success make the noise.",
     "One task at a time. Win the moment."
   ];
-  function loadQuotes(){
-    try{
-      const raw = localStorage.getItem(S_QUOTES);
-      return raw ? JSON.parse(raw) : defaultQuotes.slice();
-    }catch(e){ return defaultQuotes.slice(); }
-  }
-  let quotes = loadQuotes();
-  function showRandomQuote(){
-    if(!quoteTextEl) return;
-    const q = quotes[Math.floor(Math.random()*quotes.length)];
+  
+  let quotes = defaultQuotes.slice();
+  function showRandomQuote() {
+    const q = quotes[Math.floor(Math.random() * quotes.length)];
     quoteTextEl.textContent = `"${q}"`;
   }
-  if(newQuoteBtn) newQuoteBtn.addEventListener('click', showRandomQuote);
-  if(saveQuoteBtn) saveQuoteBtn.addEventListener('click', ()=> {
+  
+  newQuoteBtn.addEventListener('click', showRandomQuote);
+  saveQuoteBtn.addEventListener('click', function() {
     const q = prompt('Add a new quote:');
-    if(q && q.trim()){
+    if (q && q.trim()) {
       quotes.unshift(q.trim());
-      try{ localStorage.setItem(S_QUOTES, JSON.stringify(quotes)); }catch(e){}
-      alert('Saved!');
+      localStorage.setItem(S_QUOTES, JSON.stringify(quotes));
       showRandomQuote();
     }
   });
   showRandomQuote();
 
-  /* ---------- Stats ---------- */
-  let stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
-  function loadStats(){
-    try{
-      const raw = localStorage.getItem(S_STATS);
-      if(!raw) { stats.lastDate = getTodayStr(); saveStats(); return; }
-      const parsed = JSON.parse(raw);
-      if(parsed.lastDate !== getTodayStr()){
-        stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
-        saveStats();
-      } else {
-        stats = parsed;
-      }
-    }catch(e){
-      stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
-      saveStats();
-    }
-    updateStatsUI();
-  }
-  function saveStats(){
-    stats.lastDate = getTodayStr();
-    try{ localStorage.setItem(S_STATS, JSON.stringify(stats)); }catch(e){}
-    updateStatsUI();
-  }
-  function resetStatsForNewDay(){
-    stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
-    saveStats();
-  }
-  function updateStatsUI(){
+  // Stats
+  let stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: getTodayStr() };
+  
+  function updateStatsUI() {
     const totalSec = stats.completedSeconds || 0;
-    const decimal = (totalSec/3600).toFixed(2);
-    if(hoursCompletedPill) hoursCompletedPill.textContent = `Hours: ${decimal}`;
-    if(sessionsCompletedPill) sessionsCompletedPill.textContent = `Sessions: ${stats.sessionsCompleted || 0}`;
-    if(sessionLabel) sessionLabel.textContent = `Completed: ${stats.sessionsCompleted || 0}`;
+    const decimal = (totalSec / 3600).toFixed(2);
+    hoursCompletedPill.textContent = `Hours: ${decimal}`;
+    sessionsCompletedPill.textContent = `Sessions: ${stats.sessionsCompleted || 0}`;
+    sessionLabel.textContent = `Completed: ${stats.sessionsCompleted || 0}`;
   }
-  function checkDailyReset(){
-    const today = getTodayStr();
-    if(stats.lastDate !== today){
-      resetStatsForNewDay();
-    }
+  
+  function loadStats() {
+    try {
+      const raw = localStorage.getItem(S_STATS);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.lastDate === getTodayStr()) {
+          stats = parsed;
+        }
+      }
+    } catch(e) {}
+    updateStatsUI();
   }
   loadStats();
 
-  /* ---------- Timer Logic ---------- */
-  function renderTime(t){
-    const m = Math.floor(t/60), s = t%60;
-    if(timerEl) timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-  }
-  function setModeLabel(){
-    if(modeLabel) modeLabel.textContent = `Mode: ${isWork ? 'Work' : 'Break'}`;
+  // Timer functions
+  function renderTime() {
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    timerEl.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
   }
 
-  function endOfWorkSessionActions(workMinutes){
-    stats.completedSeconds = (stats.completedSeconds || 0) + (workMinutes * 60);
-    stats.sessionsCompleted = (stats.sessionsCompleted || 0) + 1;
-    saveStats();
+  function setModeLabel() {
+    modeLabel.textContent = `Mode: ${isWork ? 'Work' : 'Break'}`;
   }
 
-  function tryPlayAlarm(){
-    try{
-      alarm.currentTime = 0;
-      const p = alarm.play();
-      if(p && typeof p.then === 'function') p.catch(()=>{});
-    }catch(e){}
+  function playAlarm() {
+    unlockAudio();
+    alarm.currentTime = 0;
+    alarm.play().catch(() => {});
   }
 
-  function tick(){
-    if(timeLeft > 0){
+  function tick() {
+    if (timeLeft > 0) {
       timeLeft--;
-      renderTime(timeLeft);
-      if(timeLeft === 0){
-        if(isWork){
-          const workMin = safeParseInt(workInput.value, 25);
-          endOfWorkSessionActions(workMin);
-        }
-        tryPlayAlarm();
-        isWork = !isWork;
-        setModeLabel();
-        timeLeft = (isWork ? safeParseInt(workInput.value,25) : safeParseInt(breakInput.value,5)) * 60;
-        renderTime(timeLeft);
+      renderTime();
+    }
+    
+    if (timeLeft <= 0) {
+      if (isWork) {
+        const workMin = safeParseInt(workInput.value, 25);
+        stats.completedSeconds += workMin * 60;
+        stats.sessionsCompleted++;
+        localStorage.setItem(S_STATS, JSON.stringify(stats));
+        updateStatsUI();
       }
-      return;
+      
+      playAlarm();
+      isWork = !isWork;
+      setModeLabel();
+      timeLeft = isWork ? safeParseInt(workInput.value, 25) * 60 : safeParseInt(breakInput.value, 5) * 60;
+      renderTime();
     }
   }
 
-  function updateControlsState(){
-    if(startBtn) startBtn.disabled = isRunning;
-    if(pauseBtn) pauseBtn.disabled = !isRunning;
-    if(resetBtn) resetBtn.disabled = false;
+  function updateControls() {
+    startBtn.disabled = isRunning;
+    pauseBtn.disabled = !isRunning;
   }
 
-  function startTimer(){
-    unlockAudioOnUserGesture();
-    if(isRunning) return;
+  function startTimer() {
+    unlockAudio();
+    if (isRunning) return;
+    
     isRunning = true;
-    updateControlsState();
-    if(!Number.isFinite(timeLeft) || timeLeft <= 0){
-      timeLeft = (isWork ? safeParseInt(workInput.value,25) : safeParseInt(breakInput.value,5)) * 60;
-    }
-    renderTime(timeLeft);
+    updateControls();
+    
+    renderTime();
     timerInterval = setInterval(tick, 1000);
   }
-  function pauseTimer(){
-    if(timerInterval) clearInterval(timerInterval);
-    timerInterval = null;
+
+  function pauseTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
     isRunning = false;
-    updateControlsState();
+    updateControls();
   }
-  function resetTimer(){
+
+  function resetTimer() {
     pauseTimer();
     isWork = true;
-    timeLeft = safeParseInt(workInput.value,25) * 60;
-    renderTime(timeLeft);
+    timeLeft = safeParseInt(workInput.value, 25) * 60;
     setModeLabel();
-    updateControlsState();
+    renderTime();
   }
 
-  if(startBtn) startBtn.addEventListener('click', startTimer);
-  if(pauseBtn) pauseBtn.addEventListener('click', pauseTimer);
-  if(resetBtn) resetBtn.addEventListener('click', resetTimer);
+  // Event listeners
+  startBtn.addEventListener('click', startTimer);
+  pauseBtn.addEventListener('click', pauseTimer);
+  resetBtn.addEventListener('click', resetTimer);
 
-  if(workInput) workInput.addEventListener('change', ()=>{
-    const val = safeParseInt(workInput.value,25);
-    if(!isRunning && isWork){
-      timeLeft = val * 60;
-      renderTime(timeLeft);
-    }
-  });
-  if(breakInput) breakInput.addEventListener('change', ()=>{
-    const val = safeParseInt(breakInput.value,5);
-    if(!isRunning && !isWork){
-      timeLeft = val * 60;
-      renderTime(timeLeft);
+  workInput.addEventListener('change', function() {
+    if (!isRunning && isWork) {
+      timeLeft = safeParseInt(workInput.value, 25) * 60;
+      renderTime();
     }
   });
 
-  renderTime(timeLeft);
+  breakInput.addEventListener('change', function() {
+    if (!isRunning && !isWork) {
+      timeLeft = safeParseInt(breakInput.value, 5) * 60;
+      renderTime();
+    }
+  });
+
+  // Initial setup
+  renderTime();
   setModeLabel();
-  updateControlsState();
+  updateControls();
 
-  /* ---------- To-Do List ---------- */
-  function loadTasks(){
-    try{
+  // Todo list
+  function loadTasks() {
+    try {
       const raw = localStorage.getItem(S_TASKS);
       return raw ? JSON.parse(raw) : [];
-    }catch(e){ return []; }
+    } catch(e) {
+      return [];
+    }
   }
-  function saveTasks(items){
-    try{ localStorage.setItem(S_TASKS, JSON.stringify(items)); }catch(e){}
+
+  function saveTasks(items) {
+    try {
+      localStorage.setItem(S_TASKS, JSON.stringify(items));
+    } catch(e) {}
   }
-  function refreshTasksUI(){
+
+  function refreshTasksUI() {
     const items = loadTasks();
     todoList.innerHTML = '';
+    
     const undone = items.filter(it => !it.done);
     const done = items.filter(it => it.done);
-    undone.concat(done).forEach(it => {
+    
+    [...undone, ...done].forEach(item => {
       const li = document.createElement('li');
-      li.className = 'quest' + (it.done ? ' done' : '');
-      const left = document.createElement('div'); left.className='left';
-      const box = document.createElement('div'); box.className='checkbox';
-      if(it.done) box.classList.add('done');
-      box.innerHTML = it.done ? '✓' : '';
-      box.addEventListener('click', ()=>{
-        it.done = !it.done;
-        const arr = loadTasks().map(x => x.id === it.id ? it : x);
-        saveTasks(arr);
+      li.className = `quest ${item.done ? 'done' : ''}`;
+      
+      const left = document.createElement('div');
+      left.className = 'left';
+      
+      const checkbox = document.createElement('div');
+      checkbox.className = `checkbox ${item.done ? 'done' : ''}`;
+      checkbox.innerHTML = item.done ? '✓' : '';
+      checkbox.addEventListener('click', () => {
+        item.done = !item.done;
+        saveTasks(loadTasks().map(x => x.id === item.id ? item : x));
         refreshTasksUI();
       });
-      const textWrap = document.createElement('div'); textWrap.style.display='flex'; textWrap.style.flexDirection='column';
-      const desc = document.createElement('span'); desc.className='desc'; desc.textContent = it.text;
-      const meta = document.createElement('span'); meta.className='meta'; meta.textContent = it.done ? 'Completed' : 'Quest';
-      textWrap.appendChild(desc); textWrap.appendChild(meta);
-      left.appendChild(box); left.appendChild(textWrap);
-      const del = document.createElement('button'); del.className='del'; del.textContent='✕';
-      del.addEventListener('click', ()=>{
-        let arr = loadTasks(); arr = arr.filter(x => x.id !== it.id); saveTasks(arr); refreshTasksUI();
+      
+      const desc = document.createElement('span');
+      desc.className = 'desc';
+      desc.textContent = item.text;
+      
+      const meta = document.createElement('span');
+      meta.className = 'meta';
+      meta.textContent = item.done ? 'Completed' : 'Quest';
+      
+      left.appendChild(checkbox);
+      left.appendChild(desc);
+      left.appendChild(meta);
+      
+      const delBtn = document.createElement('button');
+      delBtn.className = 'del';
+      delBtn.textContent = '✕';
+      delBtn.addEventListener('click', () => {
+        saveTasks(loadTasks().filter(x => x.id !== item.id));
+        refreshTasksUI();
       });
-      li.appendChild(left); li.appendChild(del); todoList.appendChild(li);
+      
+      li.appendChild(left);
+      li.appendChild(delBtn);
+      todoList.appendChild(li);
     });
   }
-  function addTask(text){
-    const items = loadTasks();
-    const item = { id: Date.now().toString(36), text: text, done:false, createdAt: Date.now() };
-    items.push(item); saveTasks(items); refreshTasksUI();
+
+  function addTask() {
+    const text = todoInput.value.trim();
+    if (!text) return;
+    
+    const tasks = loadTasks();
+    const newTask = {
+      id: Date.now().toString(36),
+      text: text,
+      done: false,
+      createdAt: Date.now()
+    };
+    tasks.push(newTask);
+    saveTasks(tasks);
+    todoInput.value = '';
+    refreshTasksUI();
   }
-  if(addTaskBtn) addTaskBtn.addEventListener('click', ()=>{
-    const v = todoInput.value.trim();
-    if(!v) return;
-    addTask(v);
-    todoInput.value='';
-    unlockAudioOnUserGesture();
+
+  addTaskBtn.addEventListener('click', addTask);
+  todoInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') addTask();
   });
-  if(todoInput) todoInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') addTaskBtn.click(); });
 
   refreshTasksUI();
 
-  /* ---------- Helpers ---------- */
-  (function removeSpinnerCSS(){
-    const s = document.createElement('style');
-    s.textContent = 'input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0} input[type=number]{-moz-appearance:textfield}';
-    document.head.appendChild(s);
-  })();
+  // Remove number spinners
+  const style = document.createElement('style');
+  style.textContent = `
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  `;
+  document.head.appendChild(style);
 
-  console.log('GrindForge initialized');
+  console.log('GrindForge fully loaded and working');
 });
 </script>
 </body>
