@@ -5,16 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>GrindForge — Pomodoro</title>
 <link rel="icon" type="image/png" href="/GrindForge.png" />
-
 <style>
-.donation{
-  position: absolute;
-  bottom: 5px;          /* 1px from the bottom */
-  left: 50%;            /* move to horizontal center */
-  transform: translateX(-50%);  /* center perfectly */
-  margin: 0;
-}
-
 :root{
   --accent:#4ecdc4;
   --accent-2:#38b3aa;
@@ -30,7 +21,6 @@
   --gap:12px;
 }
 
-/* reset & base */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -44,77 +34,33 @@ body{
   -webkit-tap-highlight-color: transparent;
 }
 
-/* bg video */
+/* background video */
 #bg-video{position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2}
 .overlay{position:fixed; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.36)); z-index:-1}
 
-/* container positions on desktop */
-.container-desktop{
-  display:flex;
-  gap:24px;
-  padding:28px;
-  align-items:flex-start;
-  justify-content:flex-end;
-}
+/* layout desktop */
+.container-desktop{ display:flex; gap:24px; padding:28px; align-items:flex-start; justify-content:flex-end; }
 
-/* left column: datetime + quotes */
-.left-col{
-  position:fixed;
-  top:28px;
-  left:28px;
-  width:320px;
-  display:flex;
-  flex-direction:column;
-  gap:var(--gap);
-}
-.box{
-  background:var(--card);
-  backdrop-filter: blur(8px);
-  padding:14px;
-  border-radius:var(--radius);
-  box-shadow: 0 12px 30px var(--shadow);
-}
+/* left column */
+.left-col{ position:fixed; top:28px; left:28px; width:320px; display:flex; flex-direction:column; gap:var(--gap); }
+.box{ background:var(--card); backdrop-filter: blur(8px); padding:14px; border-radius:var(--radius); box-shadow: 0 12px 30px var(--shadow);}
 
-/* date/time header */
-#datetime-box{
-  font-size:15px;
-  letter-spacing:0.2px;
-  white-space:nowrap;
-}
+/* date/time */
+#datetime-box{ font-size:15px; letter-spacing:0.2px; white-space:nowrap; }
 
-/* hours completed + sessions (small stat) */
-.stats-row{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-  align-items:center;
-  font-size:13px;
-  color:var(--muted);
-}
-.stat-pill{
-  background: rgba(255,255,255,0.03);
-  padding:6px 9px;
-  border-radius:10px;
-  display:inline-flex;
-  gap:8px;
-  align-items:center;
-}
+/* stats */
+.stats-row{ display:flex; gap:10px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted); }
+.stat-pill{ background: rgba(255,255,255,0.03); padding:6px 9px; border-radius:10px; display:inline-flex; gap:8px; align-items:center; }
 
 /* quotes */
 .quotes h3{ margin:0 0 8px 0; font-size:16px}
 .quote-text{ font-size:14px; color: #dffcff; opacity:0.95; min-height:44px; }
 .quote-actions{ display:flex; gap:8px; margin-top:8px;}
-.small-btn{
-  border:0; padding:8px 10px; border-radius:10px; cursor:pointer;
-  background:var(--accent); color:#042726; font-weight:600;
-}
+.small-btn{ border:0; padding:8px 10px; border-radius:10px; cursor:pointer; background:var(--accent); color:#042726; font-weight:600;}
 
-/* Timer card (right column) */
-.timer-area{ margin-left:auto; margin-right:28px; display:flex; flex-direction:column; gap:var(--gap); align-items:flex-end;}
-.timer-box{
-  width:340px; padding:22px 20px; text-align:center;
-  background:var(--card); border-radius:18px; box-shadow:0 14px 40px var(--shadow);
-}
+/* timer area */
+.timer-area{ margin-left:auto; margin-right:28px; display:flex; flex-direction:column; gap:var(--gap); align-items:flex-end; }
+.timer-box{ width:340px; padding:22px 20px; text-align:center; background:var(--card); border-radius:18px; box-shadow:0 14px 40px var(--shadow); }
 .timer-box h1{ margin:0 0 6px 0; font-size:20px}
 #timer{ font-size:44px; font-weight:700; color:var(--accent); margin:12px 0; }
 .timer-controls{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; }
@@ -123,36 +69,27 @@ body{
 .settings{ display:flex; gap:10px; justify-content:center; align-items:center; margin-top:8px; font-size:14px }
 .settings input{ width:70px; padding:8px; border-radius:8px; border:0; background:rgba(255,255,255,0.05); color:var(--text); text-align:center }
 
-/* session & progress row below timer */
+/* progress & session labels */
 .progress-row{ display:flex; justify-content:space-between; gap:12px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted) }
 
-/* todo / quests card */
+/* todo */
 .todo-container{ width:340px; padding:18px; background:var(--glass); border-radius:14px; box-shadow:0 14px 36px var(--shadow) }
 .todo-container h2{ margin:0 0 10px 0; font-size:18px }
 .todo-input{ display:flex; gap:8px; margin-bottom:12px }
 .todo-input input{ flex:1; padding:10px 12px; border-radius:10px; border:0; background:rgba(255,255,255,0.04); color:var(--text) }
 .todo-input button{ padding:9px 12px; border-radius:10px; border:0; background:var(--accent); color:#042726; font-weight:700 }
 ul#todo-list{ list-style:none; padding:0; margin:0; display:block }
-li.quest{
-  display:flex; justify-content:space-between; align-items:center; gap:12px;
-  padding:10px; margin-bottom:10px; border-radius:10px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-}
+li.quest{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px; margin-bottom:10px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
 .quest .left{ display:flex; gap:10px; align-items:center; }
-.checkbox{
-  width:28px; height:28px; border-radius:8px; border:2px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; cursor:pointer;
-  background:rgba(255,255,255,0.01);
-}
+.checkbox{ width:28px; height:28px; border-radius:8px; border:2px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; cursor:pointer; background:rgba(255,255,255,0.01); }
 .checkbox.done{ background:var(--success); border-color: rgba(110,240,201,0.9) }
 .quest .desc{ font-weight:700 }
 .quest .meta{ font-size:12px; color:var(--muted) }
 .quest button.del{ padding:6px 8px; border-radius:8px; border:0; background:var(--danger); color:#fff; cursor:pointer }
-
-/* done styling */
 .quest.done .desc{ text-decoration:line-through; opacity:0.55; color:#bfeee5 }
 .quest.done .meta{ opacity:0.6 }
 
-/* responsive: stack centered on small screens (Option A) */
+/* responsive: stacked center */
 @media (max-width: 880px){
   .left-col{ position:static; width:100%; margin:12px auto 0; display:flex; justify-content:center; }
   .container-desktop{ flex-direction:column; align-items:center; padding:18px }
@@ -162,8 +99,6 @@ li.quest{
   .left-col{ margin:12px auto 0 }
   .overlay{ background:linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.34)) }
 }
-
-/* extra small screens */
 @media (max-width:420px){
   #timer{ font-size:34px }
   .timer-box{ padding:16px }
@@ -179,16 +114,14 @@ li.quest{
 </video>
 <div class="overlay"></div>
 
-<!-- layout wrapper -->
 <div class="container-desktop">
 
-  <!-- left column: datetime + quotes + stats -->
+  <!-- left column -->
   <div class="left-col">
     <div class="box" id="dateBox">
       <div id="datetime-box" aria-live="polite">Loading date…</div>
-
       <div class="stats-row" style="margin-top:10px">
-        <div class="stat-pill" id="hoursCompleted">Hours: 0.0</div>
+        <div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
         <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
       </div>
     </div>
@@ -200,14 +133,12 @@ li.quest{
         <button class="small-btn" id="newQuoteBtn">New quote</button>
         <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
       </div>
-      <div style="margin-top:8px; font-size:12px; color:var(--muted)">Saved quotes persist locally — press "New quote" to rotate.</div>
+      <div style="margin-top:8px; font-size:12px; color:var(--muted)">Saved quotes persist locally.</div>
     </div>
   </div>
 
-  <!-- right area: timer + todo stacked -->
+  <!-- right area -->
   <div class="timer-area" style="margin-left:auto;">
-
-    <!-- Timer card -->
     <section class="timer-box" aria-label="Pomodoro Timer">
       <h1>Pomodoro Timer</h1>
       <div id="timer" aria-live="polite">25:00</div>
@@ -216,6 +147,8 @@ li.quest{
         <button id="startBtn">Start</button>
         <button id="pauseBtn">Pause</button>
         <button id="resetBtn">Reset</button>
+        <!-- small sound unlock button (optional) -->
+        <button id="enableSoundBtn" style="background:rgba(255,255,255,0.06); color:var(--text); font-weight:600;">Enable Sound</button>
       </div>
 
       <div class="settings">
@@ -233,7 +166,6 @@ li.quest{
       </div>
     </section>
 
-    <!-- To-do / quests -->
     <aside class="todo-container" aria-label="To-Do">
       <h2>To-Do List ✨</h2>
 
@@ -247,31 +179,56 @@ li.quest{
   </div>
 </div>
 
-<!-- alarm -->
-<audio id="alarm" src="/audio.mp3" preload="auto"></audio>
+<!-- online alarm (public audio file) -->
+<audio id="alarm" preload="auto"></audio>
 
 <script>
-/* ================= UTILS ================ */
-const $ = sel => document.querySelector(sel);
-const $$ = sel => Array.from(document.querySelectorAll(sel));
+/* ---------------- UTILS ---------------- */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
 
-/* ========== DATE & TIME (words, no year) ========== */
+/* ---------- Config & Storage Keys ---------- */
+const S_TASKS = 'gf_tasks_v2';
+const S_STATS = 'gf_stats_v2';
+const S_QUOTES = 'gf_quotes_v1';
+const ONLINE_ALARM_URL = 'https://cdn.pixabay.com/audio/2022/03/15/audio_0b1aefdd20.mp3'; // online alarm
+
+/* ---------- Init alarm element with online source ---------- */
+const alarm = $('#alarm');
+alarm.src = ONLINE_ALARM_URL;
+alarm.volume = 0.9;
+
+/* audio unlocked flag */
+let audioUnlocked = false;
+function unlockAudioOnUserGesture(){
+  if(audioUnlocked) return;
+  // try to play then pause immediately to unlock
+  alarm.play().then(()=> {
+    alarm.pause();
+    alarm.currentTime = 0;
+    audioUnlocked = true;
+    // subtle feedback - no sound played because we paused immediately
+  }).catch(()=> {
+    // some browsers block; still mark as unlocked only after a real user gesture
+    audioUnlocked = false;
+  });
+}
+
+/* ---------- Date & Time (words, no year) ---------- */
 function updateDateTime(){
   const now = new Date();
   const dateOpt = { weekday:'long', month:'long', day:'numeric' }; // no year
-  const dateText = now.toLocaleDateString(undefined, dateOpt); // e.g. Wednesday, 11 December
+  const dateText = now.toLocaleDateString(undefined, dateOpt);
   const timeText = now.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit', second:'2-digit' });
   $('#datetime-box').textContent = `${dateText} • ${timeText}`;
+
+  // also check for day rollover to reset daily stats
+  checkDailyReset();
 }
 setInterval(updateDateTime, 1000);
 updateDateTime();
 
-/* ========== STORAGE KEYS ========== */
-const S_TASKS = 'gf_tasks_v2';
-const S_STATS = 'gf_stats_v1';
-const S_QUOTES = 'gf_quotes_v1';
-
-/* ========== QUOTES ========== */
+/* ---------- Quotes ---------- */
 const defaultQuotes = [
   "Focus is a skill — practice it daily.",
   "You don't have to be perfect, just persistent.",
@@ -279,17 +236,14 @@ const defaultQuotes = [
   "Work in silence, let success make the noise.",
   "One task at a time. Win the moment."
 ];
-
 function loadQuotes(){
-  const raw = localStorage.getItem(S_QUOTES);
-  if(!raw) return defaultQuotes.slice();
-  try{ return JSON.parse(raw) }catch(e){ return defaultQuotes.slice(); }
+  try{
+    const raw = localStorage.getItem(S_QUOTES);
+    return raw ? JSON.parse(raw) : defaultQuotes.slice();
+  }catch(e){ return defaultQuotes.slice(); }
 }
 let quotes = loadQuotes();
-function showRandomQuote(){
-  const q = quotes[Math.floor(Math.random() * quotes.length)];
-  $('#quoteText').textContent = `“${q}”`;
-}
+function showRandomQuote(){ const q = quotes[Math.floor(Math.random()*quotes.length)]; $('#quoteText').textContent = `“${q}”`; }
 $('#newQuoteBtn').addEventListener('click', showRandomQuote);
 $('#saveQuoteBtn').addEventListener('click', ()=>{
   const q = prompt('Add a new quote:');
@@ -297,37 +251,69 @@ $('#saveQuoteBtn').addEventListener('click', ()=>{
 });
 showRandomQuote();
 
-/* ========== STATS: sessions & completed seconds ========== */
-let stats = { completedSeconds: 0, sessionsCompleted: 0 };
-(function loadStats(){
-  const r = localStorage.getItem(S_STATS);
-  if(r){
-    try{ stats = JSON.parse(r) }catch(e){}
+/* --------- Stats (daily reset) --------- */
+/*
+ Stats structure:
+ {
+   completedSeconds: number,
+   sessionsCompleted: number,
+   lastDate: "YYYY-MM-DD"
+ }
+*/
+let stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
+
+function getTodayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function loadStats(){
+  try{
+    const raw = localStorage.getItem(S_STATS);
+    if(!raw) { stats.lastDate = getTodayStr(); saveStats(); return; }
+    const parsed = JSON.parse(raw);
+    // If stored lastDate differs from today, reset counts for new day
+    if(parsed.lastDate !== getTodayStr()){
+      stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
+      saveStats();
+    } else {
+      stats = parsed;
+    }
+  }catch(e){
+    stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
+    saveStats();
   }
   updateStatsUI();
-})();
-
-function saveStats(){ localStorage.setItem(S_STATS, JSON.stringify(stats)); updateStatsUI(); }
-
+}
+function saveStats(){
+  stats.lastDate = getTodayStr();
+  localStorage.setItem(S_STATS, JSON.stringify(stats));
+  updateStatsUI();
+}
+function resetStatsForNewDay(){
+  stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
+  saveStats();
+}
 function updateStatsUI(){
-  // hours: decimal and hh:mm
   const totalSec = stats.completedSeconds || 0;
-  const h = Math.floor(totalSec / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const decimal = (totalSec / 3600).toFixed(2);
+  const decimal = (totalSec/3600).toFixed(2);
   $('#hoursCompleted').textContent = `Hours: ${decimal}`;
   $('#sessionsCompleted').textContent = `Sessions: ${stats.sessionsCompleted || 0}`;
   $('#sessionLabel').textContent = `Completed: ${stats.sessionsCompleted || 0}`;
 }
+function checkDailyReset(){
+  // Called repeatedly by date-time tick. If day changed since stats.lastDate, reset.
+  const today = getTodayStr();
+  if(stats.lastDate !== today){
+    resetStatsForNewDay();
+  }
+}
+loadStats();
 
-/* ========== TIMER LOGIC ========== */
-const startBtn = $('#startBtn');
-const pauseBtn = $('#pauseBtn');
-const resetBtn = $('#resetBtn');
+/* ---------- Timer Logic ---------- */
+const startBtn = $('#startBtn'), pauseBtn = $('#pauseBtn'), resetBtn = $('#resetBtn');
 const timerEl = $('#timer');
-const alarm = $('#alarm');
-const workInput = $('#workTime');
-const breakInput = $('#breakTime');
+const workInput = $('#workTime'), breakInput = $('#breakTime');
 
 let timerInterval = null;
 let isRunning = false;
@@ -335,47 +321,67 @@ let isWork = true;
 let timeLeft = (parseInt(workInput.value,10) || 25) * 60;
 
 function renderTime(t){
-  const m = Math.floor(t/60);
-  const s = t%60;
+  const m = Math.floor(t/60), s = t%60;
   timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
 }
-function setModeLabel(){ $('#modeLabel').textContent = `Mode: ${isWork? 'Work':'Break'}`; }
+function setModeLabel(){ $('#modeLabel').textContent = `Mode: ${isWork ? 'Work' : 'Break'}`; }
+
+function endOfWorkSessionActions(workMinutes){
+  // increment stats only when a work session finishes (before switching to break)
+  stats.completedSeconds = (stats.completedSeconds || 0) + (workMinutes * 60);
+  stats.sessionsCompleted = (stats.sessionsCompleted || 0) + 1;
+  saveStats();
+}
 
 function tick(){
   if(timeLeft>0){
     timeLeft--; renderTime(timeLeft); return;
   }
   // session ended
-  try{ alarm.currentTime = 0; alarm.play().catch(()=>{}); }catch(e){}
+  // if it was work -> record stats
   if(isWork){
-    // add completed seconds & session count
     const workMin = parseInt(workInput.value,10) || 25;
-    stats.completedSeconds = (stats.completedSeconds || 0) + workMin * 60;
-    stats.sessionsCompleted = (stats.sessionsCompleted || 0) + 1;
-    saveStats();
+    endOfWorkSessionActions(workMin);
   }
-  // switch mode
+
+  // attempt to play alarm (if unlocked)
+  try{
+    alarm.currentTime = 0;
+    const playPromise = alarm.play();
+    if(playPromise && typeof playPromise.then === 'function'){
+      playPromise.catch(()=>{/* may be blocked if audio not unlocked; handled elsewhere */});
+    }
+  }catch(e){ /* ignore */ }
+
+  // flip mode & set new time
   isWork = !isWork;
   setModeLabel();
-  // set next timeLeft
   timeLeft = (isWork ? (parseInt(workInput.value,10)||25) : (parseInt(breakInput.value,10)||5)) * 60;
   renderTime(timeLeft);
 }
 
 function startTimer(){
+  if(!audioUnlocked){
+    // attempt to unlock audio on the first user gesture (start) — makes alarm reliable later
+    unlockAudioOnUserGesture();
+    audioUnlocked = true; // optimistic: user interacted
+  }
   if(isRunning) return;
   isRunning = true;
   if(!timeLeft) timeLeft = (parseInt(workInput.value,10)||25) * 60;
   timerInterval = setInterval(tick, 1000);
 }
-function pauseTimer(){ clearInterval(timerInterval); timerInterval=null; isRunning=false; }
-function resetTimer(){ pauseTimer(); isWork=true; timeLeft = (parseInt(workInput.value,10)||25)*60; renderTime(timeLeft); setModeLabel(); }
+function pauseTimer(){ clearInterval(timerInterval); timerInterval = null; isRunning = false; }
+function resetTimer(){ pauseTimer(); isWork = true; timeLeft = (parseInt(workInput.value,10)||25)*60; renderTime(timeLeft); setModeLabel(); }
 
 startBtn.addEventListener('click', startTimer);
 pauseBtn.addEventListener('click', pauseTimer);
 resetBtn.addEventListener('click', resetTimer);
 
-// sync inputs if not running
+/* Make Start/Add/Enable Sound be considered a "user gesture" to unlock audio */
+$('#addTaskBtn').addEventListener('click', ()=> unlockAudioOnUserGesture());
+$('#enableSoundBtn').addEventListener('click', ()=> { unlockAudioOnUserGesture(); audioUnlocked = true; alert('Sound enabled — alarm will play when sessions end.'); });
+
 workInput.addEventListener('change', ()=>{
   if(!isRunning && isWork){ timeLeft = (parseInt(workInput.value,10)||25)*60; renderTime(timeLeft); }
 });
@@ -385,32 +391,32 @@ breakInput.addEventListener('change', ()=>{
 
 renderTime(timeLeft); setModeLabel();
 
-/* ========== TODO LIST (with tick + persistence) ========== */
-const TODO_KEY = S_TASKS;
+/* ---------- To-Do List (tick mark, persistence) ---------- */
 const todoInput = $('#todoInput'), addTaskBtn = $('#addTaskBtn'), todoList = $('#todo-list');
 
 function loadTasks(){
-  const raw = localStorage.getItem(TODO_KEY);
-  if(!raw) return [];
-  try{ return JSON.parse(raw) }catch(e){ return [] }
+  try{
+    const raw = localStorage.getItem(S_TASKS);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
 }
-function saveTasksToStorage(items){
-  localStorage.setItem(TODO_KEY, JSON.stringify(items));
+function saveTasks(items){
+  localStorage.setItem(S_TASKS, JSON.stringify(items));
 }
 function refreshTasksUI(){
   const items = loadTasks();
   todoList.innerHTML = '';
-  // show not done first, then done
-  const notDone = items.filter(it=>!it.done);
-  const done = items.filter(it=>it.done);
-  notDone.concat(done).forEach(it => {
-    const li = document.createElement('li'); li.className = 'quest' + (it.done? ' done' : '');
+  // show undone first then done
+  const undone = items.filter(it => !it.done);
+  const done = items.filter(it => it.done);
+  undone.concat(done).forEach(it => {
+    const li = document.createElement('li'); li.className = 'quest' + (it.done ? ' done' : '');
     const left = document.createElement('div'); left.className='left';
-    const box = document.createElement('div'); box.className='checkbox'; 
-    if(it.done) box.classList.add('done'); box.innerHTML = it.done ? '✓' : '';
+    const box = document.createElement('div'); box.className='checkbox'; if(it.done) box.classList.add('done'); box.innerHTML = it.done ? '✓' : '';
     box.addEventListener('click', ()=>{
       it.done = !it.done;
-      saveItemChange(it.id, it);
+      const arr = loadTasks().map(x => x.id === it.id ? it : x);
+      saveTasks(arr);
       refreshTasksUI();
     });
     const textWrap = document.createElement('div'); textWrap.style.display='flex'; textWrap.style.flexDirection='column';
@@ -418,42 +424,41 @@ function refreshTasksUI(){
     const meta = document.createElement('span'); meta.className='meta'; meta.textContent = it.done ? 'Completed' : 'Quest';
     textWrap.appendChild(desc); textWrap.appendChild(meta);
     left.appendChild(box); left.appendChild(textWrap);
-
     const del = document.createElement('button'); del.className='del'; del.textContent='✕';
-    del.addEventListener('click', ()=>{ deleteTask(it.id); refreshTasksUI(); });
-
+    del.addEventListener('click', ()=>{
+      let arr = loadTasks(); arr = arr.filter(x => x.id !== it.id); saveTasks(arr); refreshTasksUI();
+    });
     li.appendChild(left); li.appendChild(del); todoList.appendChild(li);
   });
 }
-function saveItemChange(id, newItem){
-  const items = loadTasks();
-  const i = items.findIndex(it=>it.id===id);
-  if(i>=0){ items[i] = newItem; saveTasksToStorage(items); }
-}
-function deleteTask(id){
-  let items = loadTasks(); items = items.filter(it=>it.id!==id);
-  saveTasksToStorage(items);
-}
 function addTask(text){
   const items = loadTasks();
-  const item = { id: Date.now().toString(36), text:text, done:false, createdAt: Date.now() };
-  items.push(item); saveTasksToStorage(items); refreshTasksUI();
+  const item = { id: Date.now().toString(36), text: text, done:false, createdAt: Date.now() };
+  items.push(item); saveTasks(items); refreshTasksUI();
 }
-addTaskBtn.addEventListener('click', ()=>{ const v=todoInput.value.trim(); if(!v) return; addTask(v); todoInput.value=''; });
-todoInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') addTaskBtn.click(); });
+addTaskBtn.addEventListener('click', ()=>{
+  const v = todoInput.value.trim();
+  if(!v) return;
+  addTask(v);
+  todoInput.value='';
+  // unlock audio (user gesture)
+  unlockAudioOnUserGesture();
+});
+todoInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') addTaskBtn.click(); });
 
 refreshTasksUI();
 
-/* ========== helper: load persisted quotes/stats already handled above ========== */
-
-/* ========== utilities to ensure number spinners removed (Firefox) ========== */
+/* ---------- Helpers: ensure spinners removed for Firefox ---------- */
 (function removeSpinnerCSS(){
   const s = document.createElement('style');
   s.textContent = 'input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0} input[type=number]{-moz-appearance:textfield}';
   document.head.appendChild(s);
 })();
 
-/* ========== install Vercel analytics script safely (static method) ========== */
+/* ---------- Auto daily reset check (in case user left tab open across midnight) ---------- */
+/* already handled by updateDateTime() calling checkDailyReset() every second */
+
+/* ---------- Install Vercel analytics (static) ---------- */
 (function installVercel(){
   try{
     const s = document.createElement('script'); s.defer=true; s.src='/_vercel/insights/script.js'; document.head.appendChild(s);
@@ -461,8 +466,5 @@ refreshTasksUI();
 })();
 
 </script>
-
-  <!-- <p class="donation">Donate Here -</p> !-->
-  
 </body>
 </html>
