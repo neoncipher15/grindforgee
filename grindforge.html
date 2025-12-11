@@ -30,24 +30,56 @@ body{
   -webkit-tap-highlight-color: transparent;
 }
 
+/* background video */
 #bg-video{position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2}
 .overlay{position:fixed; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.36)); z-index:-1}
 
+/* layout desktop */
 .container-desktop{ display:flex; gap:24px; padding:28px; align-items:flex-start; justify-content:flex-end; }
 
+/* left column */
 .left-col{ position:fixed; top:28px; left:28px; width:320px; display:flex; flex-direction:column; gap:var(--gap); }
 .box{ background:var(--card); backdrop-filter: blur(8px); padding:14px; border-radius:var(--radius); box-shadow: 0 12px 30px var(--shadow);}
 
+/* date/time */
 #datetime-box{ font-size:15px; letter-spacing:0.2px; white-space:nowrap; }
 
+/* stats */
 .stats-row{ display:flex; gap:10px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted); }
 .stat-pill{ background: rgba(255,255,255,0.03); padding:6px 9px; border-radius:10px; display:inline-flex; gap:8px; align-items:center; }
 
+/* quotes */
 .quotes h3{ margin:0 0 8px 0; font-size:16px}
 .quote-text{ font-size:14px; color: #dffcff; opacity:0.95; min-height:44px; }
 .quote-actions{ display:flex; gap:8px; margin-top:8px;}
 .small-btn{ border:0; padding:8px 10px; border-radius:10px; cursor:pointer; background:var(--accent); color:#042726; font-weight:600;}
 
+/* End Day button */
+#endDayBtn{
+  margin-top:10px;
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:0;
+  cursor:pointer;
+  background:linear-gradient(135deg, #4ecdc4, #6ef0c9);
+  color:#042726;
+  font-weight:700;
+  font-size:14px;
+  box-shadow:0 10px 24px rgba(78,205,196,0.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+#endDayBtn:hover{
+  transform:translateY(-1px);
+}
+#endDayBtn span.icon{
+  font-size:16px;
+}
+
+/* timer area */
 .timer-area{ margin-left:auto; margin-right:28px; display:flex; flex-direction:column; gap:var(--gap); align-items:flex-end; }
 .timer-box{ width:340px; padding:22px 20px; text-align:center; background:var(--card); border-radius:18px; box-shadow:0 14px 40px var(--shadow); }
 .timer-box h1{ margin:0 0 6px 0; font-size:20px}
@@ -60,8 +92,10 @@ body{
 .settings label{ display:flex; flex-direction:column; align-items:center; gap:4px; }
 .settings input{ width:70px; padding:8px; border-radius:8px; border:0; background:rgba(255,255,255,0.05); color:var(--text); text-align:center }
 
+/* progress & session labels */
 .progress-row{ display:flex; justify-content:space-between; gap:12px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted) }
 
+/* todo */
 .todo-container{ width:340px; padding:18px; background:var(--glass); border-radius:14px; box-shadow:0 14px 36px var(--shadow) }
 .todo-container h2{ margin:0 0 10px 0; font-size:18px }
 .todo-input{ display:flex; gap:8px; margin-bottom:12px }
@@ -78,6 +112,93 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 .quest.done .desc{ text-decoration:line-through; opacity:0.55; color:#bfeee5 }
 .quest.done .meta{ opacity:0.6 }
 
+/* End Day overlay */
+#endDayOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(3,6,18,0.9);
+  backdrop-filter:blur(12px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.35s ease;
+}
+#endDayOverlay.active{
+  opacity:1;
+  pointer-events:auto;
+}
+.end-day-content{
+  text-align:center;
+  max-width:420px;
+  padding:30px 24px;
+  border-radius:18px;
+  background:rgba(8,10,20,0.9);
+  box-shadow:0 20px 60px rgba(0,0,0,0.7);
+  border:1px solid rgba(78,205,196,0.4);
+}
+.end-day-circle{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  margin:0 auto 20px;
+  background:radial-gradient(circle at 30% 20%, #ffffff, #4ecdc4);
+  position:relative;
+  overflow:hidden;
+  animation:endCircle 1.6s ease-out forwards;
+}
+.end-day-circle::after{
+  content:'';
+  position:absolute;
+  inset:14px;
+  border-radius:50%;
+  border:2px solid rgba(3,6,18,0.25);
+  backdrop-filter:blur(6px);
+}
+.end-day-check{
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(0.2);
+  opacity:0;
+  font-size:38px;
+  color:#042726;
+  font-weight:700;
+  animation:endCheck 1.4s 0.4s ease-out forwards;
+}
+@keyframes endCircle{
+  0%{ transform:scale(0.4); opacity:0; }
+  60%{ transform:scale(1.05); opacity:1; }
+  100%{ transform:scale(1); opacity:1; }
+}
+@keyframes endCheck{
+  0%{ opacity:0; transform:translate(-50%,-50%) scale(0.2); }
+  40%{ opacity:1; transform:translate(-50%,-50%) scale(1.1); }
+  100%{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+}
+.end-day-title{
+  font-size:22px;
+  margin-bottom:6px;
+}
+.end-day-sub{
+  font-size:14px;
+  color:var(--muted);
+  margin-bottom:18px;
+}
+#endDaySummary{
+  font-family:"Poppins", monospace;
+  font-size:16px;
+  min-height:56px;
+  white-space:pre-line;
+}
+.end-day-hint{
+  margin-top:16px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* responsive: stacked center */
 @media (max-width: 880px){
   .left-col{ position:static; width:100%; margin:12px auto 0; display:flex; justify-content:center; }
   .container-desktop{ flex-direction:column; align-items:center; padding:18px }
@@ -119,6 +240,12 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
         <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
       </div>
       <div style="margin-top:8px; font-size:12px; color:var(--muted)">Saved quotes persist locally.</div>
+
+      <!-- End Day button -->
+      <button id="endDayBtn">
+        <span class="icon">🌙</span>
+        <span>End Day</span>
+      </button>
     </div>
   </div>
 
@@ -161,9 +288,21 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 
 <audio id="alarm" preload="auto"></audio>
 
+<!-- End Day Overlay -->
+<div id="endDayOverlay">
+  <div class="end-day-content">
+    <div class="end-day-circle">
+      <div class="end-day-check">✓</div>
+    </div>
+    <div class="end-day-title">Day Complete</div>
+    <div class="end-day-sub">Here is what you achieved today:</div>
+    <div id="endDaySummary"></div>
+    <div class="end-day-hint">Press Esc or click anywhere to close.</div>
+  </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Elements - get them after DOM is ready
   const alarm = document.getElementById('alarm');
   const startBtn = document.getElementById('startBtn');
   const pauseBtn = document.getElementById('pauseBtn');
@@ -182,8 +321,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const hoursCompletedPill = document.getElementById('hoursCompleted');
   const sessionsCompletedPill = document.getElementById('sessionsCompleted');
   const datetimeBox = document.getElementById('datetime-box');
+  const endDayBtn = document.getElementById('endDayBtn');
+  const endDayOverlay = document.getElementById('endDayOverlay');
+  const endDaySummary = document.getElementById('endDaySummary');
 
-  // Storage keys
   const S_TASKS = 'gf_tasks_v2';
   const S_STATS = 'gf_stats_v2';
   const S_QUOTES = 'gf_quotes_v1';
@@ -191,25 +332,21 @@ document.addEventListener('DOMContentLoaded', function() {
   alarm.src = 'https://cdn.pixabay.com/audio/2022/03/15/audio_0b1aefdd20.mp3';
   alarm.volume = 0.7;
 
-  // State
   let audioUnlocked = false;
   let timerInterval = null;
   let isRunning = false;
   let isWork = true;
   let timeLeft = 25 * 60;
 
-  // Utilities
   function getTodayStr() {
     const d = new Date();
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
-
   function safeParseInt(v, fallback) {
     const n = parseInt(v, 10);
     return Number.isFinite(n) ? n : fallback;
   }
 
-  // Audio unlock
   function unlockAudio() {
     if (audioUnlocked) return;
     alarm.play().then(() => {
@@ -219,7 +356,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }).catch(() => {});
   }
 
-  // Date/Time
   function updateDateTime() {
     const now = new Date();
     const dateOpt = { weekday:'long', month:'long', day:'numeric' };
@@ -230,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function() {
   setInterval(updateDateTime, 1000);
   updateDateTime();
 
-  // Quotes
   const defaultQuotes = [
     "Focus is a skill - practice it daily.",
     "You don't have to be perfect, just persistent.",
@@ -244,7 +379,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const q = quotes[Math.floor(Math.random() * quotes.length)];
     quoteTextEl.textContent = `"${q}"`;
   }
-  
   newQuoteBtn.addEventListener('click', showRandomQuote);
   saveQuoteBtn.addEventListener('click', function() {
     const q = prompt('Add a new quote:');
@@ -256,9 +390,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   showRandomQuote();
 
-  // Stats
   let stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: getTodayStr() };
-  
   function updateStatsUI() {
     const totalSec = stats.completedSeconds || 0;
     const decimal = (totalSec / 3600).toFixed(2);
@@ -266,7 +398,6 @@ document.addEventListener('DOMContentLoaded', function() {
     sessionsCompletedPill.textContent = `Sessions: ${stats.sessionsCompleted || 0}`;
     sessionLabel.textContent = `Completed: ${stats.sessionsCompleted || 0}`;
   }
-  
   function loadStats() {
     try {
       const raw = localStorage.getItem(S_STATS);
@@ -281,17 +412,14 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   loadStats();
 
-  // Timer functions
   function renderTime() {
     const m = Math.floor(timeLeft / 60);
     const s = timeLeft % 60;
     timerEl.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
   }
-
   function setModeLabel() {
     modeLabel.textContent = `Mode: ${isWork ? 'Work' : 'Break'}`;
   }
-
   function playAlarm() {
     unlockAudio();
     alarm.currentTime = 0;
@@ -303,16 +431,15 @@ document.addEventListener('DOMContentLoaded', function() {
       timeLeft--;
       renderTime();
     }
-    
     if (timeLeft <= 0) {
       if (isWork) {
         const workMin = safeParseInt(workInput.value, 25);
         stats.completedSeconds += workMin * 60;
         stats.sessionsCompleted++;
+        stats.lastDate = getTodayStr();
         localStorage.setItem(S_STATS, JSON.stringify(stats));
         updateStatsUI();
       }
-      
       playAlarm();
       isWork = !isWork;
       setModeLabel();
@@ -329,14 +456,11 @@ document.addEventListener('DOMContentLoaded', function() {
   function startTimer() {
     unlockAudio();
     if (isRunning) return;
-    
     isRunning = true;
     updateControls();
-    
     renderTime();
     timerInterval = setInterval(tick, 1000);
   }
-
   function pauseTimer() {
     if (timerInterval) {
       clearInterval(timerInterval);
@@ -345,7 +469,6 @@ document.addEventListener('DOMContentLoaded', function() {
     isRunning = false;
     updateControls();
   }
-
   function resetTimer() {
     pauseTimer();
     isWork = true;
@@ -354,7 +477,6 @@ document.addEventListener('DOMContentLoaded', function() {
     renderTime();
   }
 
-  // Event listeners
   startBtn.addEventListener('click', startTimer);
   pauseBtn.addEventListener('click', pauseTimer);
   resetBtn.addEventListener('click', resetTimer);
@@ -365,7 +487,6 @@ document.addEventListener('DOMContentLoaded', function() {
       renderTime();
     }
   });
-
   breakInput.addEventListener('change', function() {
     if (!isRunning && !isWork) {
       timeLeft = safeParseInt(breakInput.value, 5) * 60;
@@ -373,12 +494,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Initial setup
   renderTime();
   setModeLabel();
   updateControls();
 
-  // Todo list
   function loadTasks() {
     try {
       const raw = localStorage.getItem(S_TASKS);
@@ -387,27 +506,21 @@ document.addEventListener('DOMContentLoaded', function() {
       return [];
     }
   }
-
   function saveTasks(items) {
     try {
       localStorage.setItem(S_TASKS, JSON.stringify(items));
     } catch(e) {}
   }
-
   function refreshTasksUI() {
     const items = loadTasks();
     todoList.innerHTML = '';
-    
     const undone = items.filter(it => !it.done);
     const done = items.filter(it => it.done);
-    
     [...undone, ...done].forEach(item => {
       const li = document.createElement('li');
       li.className = `quest ${item.done ? 'done' : ''}`;
-      
       const left = document.createElement('div');
       left.className = 'left';
-      
       const checkbox = document.createElement('div');
       checkbox.className = `checkbox ${item.done ? 'done' : ''}`;
       checkbox.innerHTML = item.done ? '✓' : '';
@@ -416,19 +529,15 @@ document.addEventListener('DOMContentLoaded', function() {
         saveTasks(loadTasks().map(x => x.id === item.id ? item : x));
         refreshTasksUI();
       });
-      
       const desc = document.createElement('span');
       desc.className = 'desc';
       desc.textContent = item.text;
-      
       const meta = document.createElement('span');
       meta.className = 'meta';
       meta.textContent = item.done ? 'Completed' : 'Quest';
-      
       left.appendChild(checkbox);
       left.appendChild(desc);
       left.appendChild(meta);
-      
       const delBtn = document.createElement('button');
       delBtn.className = 'del';
       delBtn.textContent = '✕';
@@ -436,17 +545,14 @@ document.addEventListener('DOMContentLoaded', function() {
         saveTasks(loadTasks().filter(x => x.id !== item.id));
         refreshTasksUI();
       });
-      
       li.appendChild(left);
       li.appendChild(delBtn);
       todoList.appendChild(li);
     });
   }
-
   function addTask() {
     const text = todoInput.value.trim();
     if (!text) return;
-    
     const tasks = loadTasks();
     const newTask = {
       id: Date.now().toString(36),
@@ -459,15 +565,12 @@ document.addEventListener('DOMContentLoaded', function() {
     todoInput.value = '';
     refreshTasksUI();
   }
-
   addTaskBtn.addEventListener('click', addTask);
   todoInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') addTask();
   });
-
   refreshTasksUI();
 
-  // Remove number spinners
   const style = document.createElement('style');
   style.textContent = `
     input[type=number]::-webkit-outer-spin-button,
@@ -480,6 +583,44 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   `;
   document.head.appendChild(style);
+
+  // ---- End Day logic ----
+  function typeWriterText(text, element, speed){
+    element.textContent = '';
+    let i = 0;
+    const interval = setInterval(() => {
+      element.textContent += text.charAt(i);
+      i++;
+      if(i >= text.length){
+        clearInterval(interval);
+      }
+    }, speed);
+  }
+
+  function openEndDayOverlay(){
+    // pull latest stats from storage to be safe
+    loadStats();
+    const hours = (stats.completedSeconds / 3600).toFixed(2);
+    const sessions = stats.sessionsCompleted || 0;
+
+    const summaryText = `Today you completed ${sessions} session${sessions === 1 ? '' : 's'}\n` +
+                        `and studied ${hours} hour${hours === '1.00' ? '' : 's'}.`;
+
+    endDayOverlay.classList.add('active');
+    typeWriterText(summaryText, endDaySummary, 40);
+  }
+
+  function closeEndDayOverlay(){
+    endDayOverlay.classList.remove('active');
+  }
+
+  endDayBtn.addEventListener('click', openEndDayOverlay);
+  endDayOverlay.addEventListener('click', closeEndDayOverlay);
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      closeEndDayOverlay();
+    }
+  });
 
   console.log('GrindForge fully loaded and working');
 });
