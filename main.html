@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GrindForge — Launch Pad</title>
+<link rel="icon" type="image/png" href="/GrindForge.png" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#4ecdc4;
+  --bg:#030612;
+  --card: rgba(4,6,10,0.8);
+  --glass: rgba(0,0,0,0.45);
+  --muted:#9adbd4;
+  --text:#dffcff;
+  --shadow: rgba(2,6,10,0.6);
+  --radius:20px;
+  --gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: "Poppins", sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+}
+
+.hero-bg{
+  position:fixed; inset:0; 
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(78,205,196,0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(110,240,201,0.2) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(3,6,18,0.9) 0%, #030612 100%);
+  z-index:-1;
+}
+
+.launch-container{
+  text-align:center;
+  background:var(--card);
+  backdrop-filter: blur(20px);
+  padding:60px 40px;
+  border-radius:var(--radius);
+  box-shadow: 0 30px 80px var(--shadow);
+  max-width:500px;
+  width:90%;
+  border:1px solid rgba(78,205,196,0.2);
+}
+
+.launch-logo{
+  width:120px;
+  height:120px;
+  background:var(--gradient);
+  border-radius:50%;
+  margin:0 auto 30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  font-weight:700;
+  box-shadow: 0 20px 50px rgba(78,205,196,0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{ transform:scale(1); }
+  50%{ transform:scale(1.05); }
+}
+
+h1{
+  font-size:clamp(28px,5vw,42px);
+  font-weight:700;
+  margin:0 0 20px;
+  background:linear-gradient(135deg, var(--accent), #6ef0c9);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.tagline{
+  font-size:18px;
+  color:var(--muted);
+  margin:0 0 40px;
+  line-height:1.6;
+  font-weight:300;
+}
+
+.launch-btn{
+  background:var(--gradient);
+  color:#042726;
+  border:none;
+  padding:18px 50px;
+  font-size:20px;
+  font-weight:700;
+  border-radius:50px;
+  cursor:pointer;
+  box-shadow:0 15px 40px rgba(78,205,196,0.4);
+  transition:all 0.3s ease;
+  letter-spacing:1px;
+  position:relative;
+  overflow:hidden;
+}
+
+.launch-btn:hover{
+  transform:translateY(-5px);
+  box-shadow:0 25px 60px rgba(78,205,196,0.5);
+}
+
+.launch-btn:active{
+  transform:translateY(-2px);
+}
+
+.launch-btn::before{
+  content:'';
+  position:absolute;
+  top:0; left:-100%;
+  width:100%; height:100%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition:left 0.5s;
+}
+
+.launch-btn:hover::before{
+  left:100%;
+}
+
+.features{
+  display:flex;
+  gap:20px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:40px;
+  font-size:14px;
+}
+
+.feature{
+  background:rgba(255,255,255,0.05);
+  padding:12px 20px;
+  border-radius:25px;
+  color:var(--muted);
+}
+
+.shortcut-hint{
+  margin-top:30px;
+  padding:15px 25px;
+  background:rgba(78,205,196,0.1);
+  border-radius:12px;
+  border:1px solid rgba(78,205,196,0.3);
+  font-size:14px;
+  color:var(--muted);
+}
+
+@media (max-width:600px){
+  .launch-container{ padding:40px 25px; }
+  .launch-btn{ padding:16px 40px; font-size:18px; }
+  .features{ flex-direction:column; align-items:center; }
+}
+</style>
+</head>
+<body>
+<div class="hero-bg"></div>
+
+<div class="launch-container">
+  <div class="launch-logo">⚡</div>
+  
+  <h1>GrindForge</h1>
+  <p class="tagline">Master your focus with the ultimate Pomodoro experience. Timer • Tasks • Quotes • Stats.</p>
+  
+  <a href="grindforge.html" class="launch-btn">Launch Pomodoro</a>
+  
+  <div class="features">
+    <div class="feature">⏱️ Smart Timer</div>
+    <div class="feature">✅ Todo List</div>
+    <div class="feature">📊 Daily Stats</div>
+    <div class="feature">💬 Motivational Quotes</div>
+  </div>
+  
+  <div class="shortcut-hint">
+    💡 <strong>Pro Tip:</strong> Bookmark this page or add to desktop for instant access!
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Add launch animation
+  const btn = document.querySelector('.launch-btn');
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    btn.textContent = 'Launching...';
+    btn.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      window.location.href = 'grindforge.html';
+    }, 300);
+  });
+  
+  // Keyboard shortcut
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const btn = document.querySelector('.launch-btn');
+      btn.click();
+    }
+  });
+  
+  console.log('GrindForge Launch Pad ready!');
+});
+</script>
+</body>
+</html>
