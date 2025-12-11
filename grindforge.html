@@ -9,8 +9,8 @@
 :root{
   --accent:#4ecdc4;
   --bg:#030612;
-  --card: rgba(4,6,10,0.6);
-  --glass: rgba(0,0,0,0.45);
+  --card: rgba(4,6,10,0.7);
+  --glass: rgba(0,0,0,0.55);
   --muted:#9adbd4;
   --text:#dffcff;
   --danger:#ff5a5a;
@@ -25,18 +25,74 @@ body{
   margin:0;
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color:var(--text);
-  /* Dark gradient background */
-  background: radial-gradient(circle at top left, #111827 0%, #030712 40%, #020617 100%);
+  background: #000;
   overflow-x:hidden;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
 }
 
-/* subtle overlay for depth */
+/* Animated Starfield Background */
+.stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -2;
+}
+
+.stars::before,
+.stars::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 130px 80px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 160px 30px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 200px 120px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 240px 10px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 280px 90px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 320px 50px, #eee, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 360px 110px, #fff, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 400px 200px;
+  animation: stars-twinkle 50s linear infinite;
+}
+
+.stars::after {
+  background-image: 
+    radial-gradient(2px 2px at 25px 45px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 55px 85px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 95px 35px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 135px 75px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 170px 25px, #eee, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 210px 115px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 250px 5px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 290px 85px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 330px 45px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 370px 105px, #eee, rgba(0,0,0,0));
+  animation: stars-twinkle 70s linear infinite reverse;
+  background-size: 500px 250px;
+}
+
+@keyframes stars-twinkle {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-200px); }
+}
+
+/* Subtle gradient overlay for depth */
 .overlay{
   position:fixed;
   inset:0;
-  background:linear-gradient(180deg, rgba(15,23,42,0.6), rgba(3,7,18,0.95));
-  z-index:-1;
+  background: radial-gradient(ellipse at top, rgba(10,20,40,0.8) 0%, rgba(0,5,15,0.95) 70%);
+  z-index: -1;
 }
 
 /* layout desktop */
@@ -46,17 +102,17 @@ body{
 .left-col{ position:fixed; top:28px; left:28px; width:320px; display:flex; flex-direction:column; gap:var(--gap); }
 .box{
   background:var(--card);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
   padding:14px;
   border-radius:var(--radius);
   box-shadow: 0 12px 30px var(--shadow);
-  /* hover animation */
-  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, background 0.18s ease-out, border-color 0.18s ease-out;
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, background 0.18s ease-out;
+  border: 1px solid rgba(78,205,196,0.1);
 }
 .box:hover{
   transform: translateY(-4px);
-  box-shadow: 0 18px 40px rgba(0,0,0,0.7);
-  background: rgba(10,16,30,0.9);
+  box-shadow: 0 20px 45px rgba(78,205,196,0.2), 0 0 0 1px rgba(78,205,196,0.1);
+  background: rgba(10,16,30,0.95);
 }
 
 /* date/time */
@@ -64,24 +120,21 @@ body{
 
 /* stats */
 .stats-row{ display:flex; gap:10px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted); }
-.stat-pill{ background: rgba(255,255,255,0.03); padding:6px 9px; border-radius:10px; display:inline-flex; gap:8px; align-items:center; }
+.stat-pill{ background: rgba(255,255,255,0.05); padding:6px 9px; border-radius:10px; display:inline-flex; gap:8px; align-items:center; border:1px solid rgba(78,205,196,0.1); }
 
 /* quotes */
 .quotes h3{ margin:0 0 8px 0; font-size:16px}
 .quote-text{ font-size:14px; color:#dffcff; opacity:0.95; min-height:44px; }
 .quote-actions{ display:flex; gap:8px; margin-top:8px;}
-.small-btn{ border:0; padding:8px 10px; border-radius:10px; cursor:pointer; background:var(--accent); color:#042726; font-weight:600; transition:transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;}
-.small-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 6px 16px rgba(78,205,196,0.45);
-}
+.small-btn{ border:0; padding:8px 10px; border-radius:10px; cursor:pointer; background:var(--accent); color:#042726; font-weight:600; transition:transform 0.12s ease, box-shadow 0.12s ease;}
+.small-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(78,205,196,0.45); }
 
-/* journal box (left column) */
 .journal-box{
   margin-top:10px;
   padding:10px;
   border-radius:10px;
-  background:rgba(0,0,0,0.35);
+  background:rgba(0,0,0,0.4);
+  border:1px solid rgba(78,205,196,0.15);
 }
 #endDayJournal{
   width:100%;
@@ -90,17 +143,13 @@ body{
   padding:8px;
   font-family:"Poppins", system-ui;
   font-size:13px;
-  background:rgba(255,255,255,0.04);
+  background:rgba(255,255,255,0.05);
   color:var(--text);
-  border:1px solid rgba(78,205,196,0.45);
+  border:1px solid rgba(78,205,196,0.3);
   box-sizing:border-box;
 }
-#endDayJournal:focus{
-  outline:none;
-  box-shadow:0 0 6px var(--accent);
-}
+#endDayJournal:focus{ outline:none; box-shadow:0 0 8px rgba(78,205,196,0.4); }
 
-/* End Day button */
 #endDayBtn{
   margin-top:14px;
   width:100%;
@@ -123,11 +172,8 @@ body{
   transform:translateY(-2px) scale(1.01);
   box-shadow:0 14px 32px rgba(78,205,196,0.6);
 }
-#endDayBtn span.icon{
-  font-size:16px;
-}
+#endDayBtn span.icon{ font-size:16px; }
 
-/* timer area */
 .timer-area{ margin-left:auto; margin-right:28px; display:flex; flex-direction:column; gap:var(--gap); align-items:flex-end; }
 .timer-box{
   width:340px;
@@ -137,26 +183,25 @@ body{
   border-radius:18px;
   box-shadow:0 14px 40px var(--shadow);
   transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, background 0.18s ease-out;
+  border: 1px solid rgba(78,205,196,0.1);
 }
 .timer-box:hover{
   transform:translateY(-4px);
-  box-shadow:0 20px 48px rgba(0,0,0,0.8);
-  background:rgba(10,16,30,0.9);
+  box-shadow:0 24px 55px rgba(78,205,196,0.25), 0 0 0 1px rgba(78,205,196,0.15);
+  background:rgba(10,16,30,0.95);
 }
 .timer-box h1{ margin:0 0 6px 0; font-size:20px}
 #timer{ font-size:44px; font-weight:700; color:var(--accent); margin:12px 0; }
 .timer-controls{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; }
-.timer-controls button{ padding:8px 12px; border-radius:10px; border:0; cursor:pointer; background:var(--accent); color:#042726; font-weight:700; transition:transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;}
+.timer-controls button{ padding:8px 12px; border-radius:10px; border:0; cursor:pointer; background:var(--accent); color:#042726; font-weight:700; transition:transform 0.12s ease, box-shadow 0.12s ease;}
 .timer-controls button[disabled]{ opacity:0.6; transform:none; cursor:not-allowed; box-shadow:none }
 .timer-controls button:not([disabled]):hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(78,205,196,0.55); }
 .settings{ display:flex; gap:10px; justify-content:center; align-items:center; margin-top:8px; font-size:14px }
 .settings label{ display:flex; flex-direction:column; align-items:center; gap:4px; }
-.settings input{ width:70px; padding:8px; border-radius:8px; border:0; background:rgba(255,255,255,0.05); color:var(--text); text-align:center }
+.settings input{ width:70px; padding:8px; border-radius:8px; border:0; background:rgba(255,255,255,0.06); color:var(--text); text-align:center }
 
-/* progress & session labels */
 .progress-row{ display:flex; justify-content:space-between; gap:12px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted) }
 
-/* todo */
 .todo-container{
   width:340px;
   padding:18px;
@@ -164,45 +209,37 @@ body{
   border-radius:14px;
   box-shadow:0 14px 36px var(--shadow);
   transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, background 0.18s ease-out;
+  border: 1px solid rgba(78,205,196,0.1);
 }
 .todo-container:hover{
   transform:translateY(-4px);
-  box-shadow:0 20px 48px rgba(0,0,0,0.8);
-  background:rgba(5,7,14,0.95);
+  box-shadow:0 24px 55px rgba(78,205,196,0.25), 0 0 0 1px rgba(78,205,196,0.15);
+  background:rgba(5,7,14,0.98);
 }
 .todo-container h2{ margin:0 0 10px 0; font-size:18px }
 .todo-input{ display:flex; gap:8px; margin-bottom:12px }
-.todo-input input{ flex:1; padding:10px 12px; border-radius:10px; border:0; background:rgba(255,255,255,0.04); color:var(--text) }
+.todo-input input{ flex:1; padding:10px 12px; border-radius:10px; border:0; background:rgba(255,255,255,0.05); color:var(--text) }
 .todo-input button{ padding:9px 12px; border-radius:10px; border:0; background:var(--accent); color:#042726; font-weight:700; transition:transform 0.12s ease, box-shadow 0.12s ease;}
-.todo-input button:hover{
-  transform:translateY(-1px);
-  box-shadow:0 6px 16px rgba(78,205,196,0.45);
-}
+.todo-input button:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(78,205,196,0.45); }
 ul#todo-list{ list-style:none; padding:0; margin:0; display:block; max-height:300px; overflow-y:auto; }
-li.quest{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px; margin-bottom:10px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
+li.quest{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px; margin-bottom:10px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.05); }
 .quest .left{ display:flex; gap:10px; align-items:center; flex:1; }
-.checkbox{ width:28px; height:28px; border-radius:8px; border:2px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; cursor:pointer; background:rgba(255,255,255,0.01); transition:background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;}
-.checkbox:hover{
-  transform:scale(1.04);
-}
+.checkbox{ width:28px; height:28px; border-radius:8px; border:2px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; cursor:pointer; background:rgba(255,255,255,0.02); transition: all 0.12s ease;}
+.checkbox:hover{ transform:scale(1.05); box-shadow:0 0 8px rgba(78,205,196,0.3); }
 .checkbox.done{ background:var(--success); border-color: rgba(110,240,201,0.9) }
 .quest .desc{ font-weight:700; flex:1; }
 .quest .meta{ font-size:12px; color:var(--muted) }
-.quest button.del{ padding:6px 8px; border-radius:8px; border:0; background:var(--danger); color:#fff; cursor:pointer; flex-shrink:0; transition:transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;}
-.quest button.del:hover{
-  transform:translateY(-1px);
-  box-shadow:0 6px 14px rgba(255,90,90,0.6);
-  background:#ff7272;
-}
+.quest button.del{ padding:6px 8px; border-radius:8px; border:0; background:var(--danger); color:#fff; cursor:pointer; flex-shrink:0; transition:all 0.12s ease;}
+.quest button.del:hover{ transform:translateY(-1px); box-shadow:0 6px 14px rgba(255,90,90,0.6); background:#ff7272; }
 .quest.done .desc{ text-decoration:line-through; opacity:0.55; color:#bfeee5 }
 .quest.done .meta{ opacity:0.6 }
 
-/* End Day overlay (animation kept) */
+/* End Day overlay */
 #endDayOverlay{
   position:fixed;
   inset:0;
-  background:rgba(3,6,18,0.9);
-  backdrop-filter:blur(12px);
+  background:rgba(3,6,18,0.95);
+  backdrop-filter:blur(16px);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -211,94 +248,50 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
   pointer-events:none;
   transition:opacity 0.35s ease;
 }
-#endDayOverlay.active{
-  opacity:1;
-  pointer-events:auto;
-}
+#endDayOverlay.active{ opacity:1; pointer-events:auto; }
 .end-day-content{
   text-align:center;
   max-width:420px;
   padding:30px 24px;
   border-radius:18px;
-  background:rgba(8,10,20,0.9);
-  box-shadow:0 20px 60px rgba(0,0,0,0.7);
-  border:1px solid rgba(78,205,196,0.4);
-  transition:transform 0.2s ease, box-shadow 0.2s ease;
+  background:rgba(8,10,20,0.95);
+  box-shadow:0 25px 70px rgba(0,0,0,0.8);
+  border:1px solid rgba(78,205,196,0.3);
+  transition: all 0.2s ease;
 }
-#endDayOverlay.active .end-day-content{
-  transform:translateY(0);
-}
-.end-day-content:hover{
-  transform:translateY(-4px);
-  box-shadow:0 26px 70px rgba(0,0,0,0.9);
-}
+.end-day-content:hover{ transform:translateY(-4px); box-shadow:0 32px 80px rgba(78,205,196,0.25); }
 .end-day-circle{
-  width:90px;
-  height:90px;
-  border-radius:50%;
+  width:90px; height:90px; border-radius:50%;
   margin:0 auto 20px;
   background:radial-gradient(circle at 30% 20%, #ffffff, #4ecdc4);
-  position:relative;
-  overflow:hidden;
+  position:relative; overflow:hidden;
   animation:endCircle 1.6s ease-out forwards;
 }
 .end-day-circle::after{
-  content:'';
-  position:absolute;
-  inset:14px;
-  border-radius:50%;
-  border:2px solid rgba(3,6,18,0.25);
-  backdrop-filter:blur(6px);
+  content:''; position:absolute; inset:14px;
+  border-radius:50%; border:2px solid rgba(3,6,18,0.3);
+  backdrop-filter:blur(8px);
 }
 .end-day-check{
-  position:absolute;
-  top:50%; left:50%;
-  transform:translate(-50%,-50%) scale(0.2);
-  opacity:0;
-  font-size:38px;
-  color:#042726;
-  font-weight:700;
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(0.2); opacity:0;
+  font-size:38px; color:#042726; font-weight:700;
   animation:endCheck 1.4s 0.4s ease-out forwards;
 }
-@keyframes endCircle{
-  0%{ transform:scale(0.4); opacity:0; }
-  60%{ transform:scale(1.05); opacity:1; }
-  100%{ transform:scale(1); opacity:1; }
-}
-@keyframes endCheck{
-  0%{ opacity:0; transform:translate(-50%,-50%) scale(0.2); }
-  40%{ opacity:1; transform:translate(-50%,-50%) scale(1.1); }
-  100%{ opacity:1; transform:translate(-50%,-50%) scale(1); }
-}
-.end-day-title{
-  font-size:22px;
-  margin-bottom:6px;
-}
-.end-day-sub{
-  font-size:14px;
-  color:var(--muted);
-  margin-bottom:18px;
-}
-#endDaySummary{
-  font-family:"Poppins", monospace;
-  font-size:16px;
-  min-height:56px;
-  white-space:pre-line;
-}
-.end-day-hint{
-  margin-top:16px;
-  font-size:12px;
-  color:var(--muted);
-}
+@keyframes endCircle{ 0%{ transform:scale(0.4); opacity:0; } 60%{ transform:scale(1.05); opacity:1; } 100%{ transform:scale(1); opacity:1; } }
+@keyframes endCheck{ 0%{ opacity:0; transform:translate(-50%,-50%) scale(0.2); } 40%{ opacity:1; transform:translate(-50%,-50%) scale(1.1); } 100%{ opacity:1; transform:translate(-50%,-50%) scale(1); } }
+.end-day-title{ font-size:22px; margin-bottom:6px; }
+.end-day-sub{ font-size:14px; color:var(--muted); margin-bottom:18px; }
+#endDaySummary{ font-family:"Poppins", monospace; font-size:16px; min-height:56px; white-space:pre-line; }
+.end-day-hint{ margin-top:16px; font-size:12px; color:var(--muted); }
 
-/* responsive: stacked center */
+/* responsive */
 @media (max-width: 880px){
   .left-col{ position:static; width:100%; margin:12px auto 0; display:flex; justify-content:center; }
   .container-desktop{ flex-direction:column; align-items:center; padding:18px }
   .timer-area{ align-items:center; margin:0 auto }
   .timer-box, .todo-container, .box{ width:min(94%,540px) }
   #datetime-box{ width:min(94%,540px); text-align:center }
-  .overlay{ background:linear-gradient(180deg, rgba(15,23,42,0.7), rgba(3,7,18,0.96)) }
 }
 @media (max-width:420px){
   #timer{ font-size:34px }
@@ -310,6 +303,10 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 </head>
 <body>
 
+<!-- Animated Starfield -->
+<div class="stars"></div>
+
+<!-- Gradient overlay -->
 <div class="overlay"></div>
 
 <div class="container-desktop">
@@ -331,14 +328,12 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
       </div>
       <div style="margin-top:8px; font-size:12px; color:var(--muted)">Saved quotes persist locally.</div>
 
-      <!-- Journal box above End Day -->
       <div class="journal-box">
         <h4 style="margin:8px 0 6px 0;font-size:14px;">Daily Journal</h4>
         <textarea id="endDayJournal" placeholder="Write your thoughts about today..." rows="5"></textarea>
         <button id="saveJournalBtn" class="small-btn" style="margin-top:8px;width:100%;">Save Journal</button>
       </div>
 
-      <!-- End Day button -->
       <button id="endDayBtn">
         <span class="icon">🌙</span>
         <span>End Day</span>
@@ -350,13 +345,11 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
     <section class="timer-box" aria-label="Pomodoro Timer">
       <h1>Pomodoro Timer</h1>
       <div id="timer" aria-live="polite">25:00</div>
-
       <div class="timer-controls">
         <button id="startBtn">Start</button>
         <button id="pauseBtn" disabled>Pause</button>
         <button id="resetBtn">Reset</button>
       </div>
-
       <div class="settings">
         <label>Work
           <input id="workTime" type="number" min="1" value="25" />
@@ -365,7 +358,6 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
           <input id="breakTime" type="number" min="1" value="5" />
         </label>
       </div>
-
       <div class="progress-row">
         <div id="modeLabel">Mode: Work</div>
         <div id="sessionLabel">Completed: 0</div>
@@ -385,7 +377,6 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 
 <audio id="alarm" preload="auto"></audio>
 
-<!-- End Day Overlay (animation only, no journal) -->
 <div id="endDayOverlay">
   <div class="end-day-content">
     <div class="end-day-circle">
@@ -684,7 +675,7 @@ document.addEventListener('DOMContentLoaded', function() {
   `;
   document.head.appendChild(style);
 
-  // ---- Journal logic ----
+  // Journal logic
   function loadJournal() {
     try {
       const saved = localStorage.getItem(S_JOURNAL);
@@ -708,7 +699,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   loadJournal();
 
-  // ---- End Day overlay logic (animation) ----
+  // End Day overlay logic
   function typeWriterText(text, element, speed){
     element.textContent = '';
     let i = 0;
@@ -729,7 +720,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const summaryText = `Today you completed ${sessions} session${sessions === 1 ? '' : 's'}\n` +
                         `and studied ${hours} hour${hours === '1.00' ? '' : 's'}.`;
 
-    saveJournal(); // auto-save journal when ending day
+    saveJournal();
 
     endDayOverlay.classList.add('active');
     typeWriterText(summaryText, endDaySummary, 40);
@@ -747,7 +738,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  console.log('GrindForge fully loaded and working');
+  console.log('GrindForge fully loaded with starry background!');
 });
 </script>
 </body>
