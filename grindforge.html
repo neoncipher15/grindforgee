@@ -35,61 +35,6 @@ body{
   position: relative;
 }
 
-/* Animated Starfield Background */
-.stars {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: -2;
-}
-
-.stars::before,
-.stars::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(8px 8px at 20px 30px, #ffffff, rgba(255,255,255,0.8) 50%, rgba(0,0,0,0)),
-    radial-gradient(10px 10px at 40px 70px, #ffffff, rgba(255,255,255,0.9) 60%, rgba(0,0,0,0)),
-    radial-gradient(6px 6px at 90px 40px, #ffffff, rgba(255,255,255,0.7) 40%, rgba(0,0,0,0)),
-    radial-gradient(12px 12px at 130px 80px, #ffffff, rgba(255,255,255,0.85) 55%, rgba(0,0,0,0)),
-    radial-gradient(7px 7px at 160px 30px, #ffffff, rgba(255,255,255,0.75) 45%, rgba(0,0,0,0)),
-    radial-gradient(9px 9px at 200px 120px, #ffffff, rgba(255,255,255,0.8) 50%, rgba(0,0,0,0)),
-    radial-gradient(11px 11px at 240px 10px, #ffffff, rgba(255,255,255,0.9) 60%, rgba(0,0,0,0)),
-    radial-gradient(6px 6px at 280px 90px, #ffffff, rgba(255,255,255,0.7) 40%, rgba(0,0,0,0)),
-    radial-gradient(8px 8px at 320px 50px, #ffffff, rgba(255,255,255,0.8) 50%, rgba(0,0,0,0)),
-    radial-gradient(10px 10px at 360px 110px, #ffffff, rgba(255,255,255,0.85) 55%, rgba(0,0,0,0));
-  background-repeat: repeat;
-  background-size: 400px 200px;
-  animation: stars-twinkle 50s linear infinite;
-}
-
-.stars::after {
-  background-image: 
-    radial-gradient(9px 9px at 25px 45px, #ffffff, rgba(255,255,255,0.85) 55%, rgba(0,0,0,0)),
-    radial-gradient(7px 7px at 55px 85px, #ffffff, rgba(255,255,255,0.75) 45%, rgba(0,0,0,0)),
-    radial-gradient(11px 11px at 95px 35px, #ffffff, rgba(255,255,255,0.9) 60%, rgba(0,0,0,0)),
-    radial-gradient(8px 8px at 135px 75px, #ffffff, rgba(255,255,255,0.8) 50%, rgba(0,0,0,0)),
-    radial-gradient(10px 10px at 170px 25px, #ffffff, rgba(255,255,255,0.85) 55%, rgba(0,0,0,0)),
-    radial-gradient(6px 6px at 210px 115px, #ffffff, rgba(255,255,255,0.7) 40%, rgba(0,0,0,0)),
-    radial-gradient(12px 12px at 250px 5px, #ffffff, rgba(255,255,255,0.95) 65%, rgba(0,0,0,0)),
-    radial-gradient(7px 7px at 290px 85px, #ffffff, rgba(255,255,255,0.75) 45%, rgba(0,0,0,0)),
-    radial-gradient(9px 9px at 330px 45px, #ffffff, rgba(255,255,255,0.8) 50%, rgba(0,0,0,0)),
-    radial-gradient(11px 11px at 370px 105px, #ffffff, rgba(255,255,255,0.9) 60%, rgba(0,0,0,0));
-  animation: stars-twinkle 70s linear infinite reverse;
-  background-size: 500px 250px;
-}
-
-@keyframes stars-twinkle {
-  from { transform: translateY(0px); }
-  to { transform: translateY(-200px); }
-}
 
 /* Dark overlay for readability over image */
 .overlay{
