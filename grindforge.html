@@ -25,14 +25,18 @@ body{
   margin:0;
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color:var(--text);
-  background:var(--bg);
+  background: linear-gradient(135deg, #0a0f1a, #030612);
   overflow-x:hidden;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* background video */
-#bg-video{position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2}
-.overlay{position:fixed; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.36)); z-index:-1}
+/* .overlay is just subtle dark gradient overlay to add depth */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg, rgba(3,6,18,0.7), rgba(3,6,18,0.9));
+  z-index:-1;
+}
 
 /* layout desktop */
 .container-desktop{ display:flex; gap:24px; padding:28px; align-items:flex-start; justify-content:flex-end; }
@@ -229,7 +233,7 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
   .timer-area{ align-items:center; margin:0 auto }
   .timer-box, .todo-container, .box{ width:min(94%,540px) }
   #datetime-box{ width:min(94%,540px); text-align:center }
-  .overlay{ background:linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.34)) }
+  .overlay{ background:linear-gradient(180deg, rgba(3,6,18,0.7), rgba(3,6,18,0.9)) }
 }
 @media (max-width:420px){
   #timer{ font-size:34px }
@@ -241,9 +245,7 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 </head>
 <body>
 
-<video id="bg-video" autoplay muted loop playsinline>
-  <source src="night.mp4" type="video/mp4">
-</video>
+<!-- Removed video, replaced with .overlay for background gradient -->
 <div class="overlay"></div>
 
 <div class="container-desktop">
