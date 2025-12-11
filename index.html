@@ -116,7 +116,7 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
   <!-- left column -->
   <div class="left-col">
     <div class="box" id="dateBox">
-      <div id="datetime-box" aria-live="polite">Loading date…</div>
+      <div id="datetime-box" aria-live="polite">Loading date...</div>
       <div class="stats-row" style="margin-top:10px">
         <div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
         <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
@@ -125,7 +125,7 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 
     <div class="box quotes" style="margin-top:12px">
       <h3>Quote</h3>
-      <div class="quote-text" id="quoteText">“Stay focused — distractions are the enemy of progress.”</div>
+      <div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
       <div class="quote-actions">
         <button class="small-btn" id="newQuoteBtn">New quote</button>
         <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
@@ -219,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let timerInterval = null;
   let isRunning = false;
   let isWork = true;
-  // initialize timeLeft from work input
   let timeLeft = (parseInt(workInput.value,10) || 25) * 60;
 
   /* ---------- Utilities ---------- */
@@ -236,7 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Audio unlock ---------- */
   function unlockAudioOnUserGesture(){
     if(audioUnlocked) return;
-    // Try to play/pause to unlock; only mark unlocked if play() resolves
     try{
       const p = alarm.play();
       if(p && typeof p.then === 'function'){
@@ -244,22 +242,15 @@ document.addEventListener('DOMContentLoaded', () => {
           alarm.pause();
           alarm.currentTime = 0;
           audioUnlocked = true;
-          // console.log('Audio unlocked');
-        }).catch((err) => {
-          // allowed to fail silently; will try again on next gesture
-        });
+        }).catch((err) => {});
       } else {
-        // older browsers: assume unlocked
         alarm.pause();
         alarm.currentTime = 0;
         audioUnlocked = true;
       }
-    }catch(err){
-      // ignore
-    }
+    }catch(err){}
   }
 
-  // try to unlock audio on first meaningful gestures
   const oneTimeHandler = (e) => {
     unlockAudioOnUserGesture();
     document.removeEventListener('click', oneTimeHandler);
@@ -270,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('touchstart', oneTimeHandler, { once: true });
   document.addEventListener('keydown', oneTimeHandler, { once: true });
 
-  /* ---------- Date & Time (words, no year) ---------- */
+  /* ---------- Date & Time ---------- */
   function updateDateTime(){
     const now = new Date();
     const dateOpt = { weekday:'long', month:'long', day:'numeric' };
@@ -285,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Quotes ---------- */
   const defaultQuotes = [
-    "Focus is a skill — practice it daily.",
+    "Focus is a skill - practice it daily.",
     "You don't have to be perfect, just persistent.",
     "Small progress each day adds up to big results.",
     "Work in silence, let success make the noise.",
@@ -301,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function showRandomQuote(){
     if(!quoteTextEl) return;
     const q = quotes[Math.floor(Math.random()*quotes.length)];
-    quoteTextEl.textContent = `“${q}”`;
+    quoteTextEl.textContent = `"${q}"`;
   }
   if(newQuoteBtn) newQuoteBtn.addEventListener('click', showRandomQuote);
   if(saveQuoteBtn) saveQuoteBtn.addEventListener('click', ()=> {
@@ -315,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   showRandomQuote();
 
-  /* ---------- Stats (daily reset) ---------- */
+  /* ---------- Stats ---------- */
   let stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
   function loadStats(){
     try{
@@ -377,26 +368,22 @@ document.addEventListener('DOMContentLoaded', () => {
     try{
       alarm.currentTime = 0;
       const p = alarm.play();
-      if(p && typeof p.then === 'function') p.catch(()=>{ /* blocked */ });
-    }catch(e){ /* ignore */ }
+      if(p && typeof p.then === 'function') p.catch(()=>{});
+    }catch(e){}
   }
 
-  // tick reduces timeLeft once per second; when it reaches zero, handle session end immediately
   function tick(){
     if(timeLeft > 0){
       timeLeft--;
       renderTime(timeLeft);
       if(timeLeft === 0){
-        // session just finished
         if(isWork){
           const workMin = safeParseInt(workInput.value, 25);
           endOfWorkSessionActions(workMin);
         }
         tryPlayAlarm();
-        // flip mode
         isWork = !isWork;
         setModeLabel();
-        // set next timeLeft based on new mode but do not auto-start the next session (we keep running)
         timeLeft = (isWork ? safeParseInt(workInput.value,25) : safeParseInt(breakInput.value,5)) * 60;
         renderTime(timeLeft);
       }
@@ -405,26 +392,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateControlsState(){
-    // start enabled only when not running
     if(startBtn) startBtn.disabled = isRunning;
     if(pauseBtn) pauseBtn.disabled = !isRunning;
-    // reset allowed anytime
     if(resetBtn) resetBtn.disabled = false;
   }
 
   function startTimer(){
-    // treat this user action as unlocking audio
     unlockAudioOnUserGesture();
-
     if(isRunning) return;
     isRunning = true;
     updateControlsState();
-
-    // if timer wasn't initialized, set it from the current mode
     if(!Number.isFinite(timeLeft) || timeLeft <= 0){
       timeLeft = (isWork ? safeParseInt(workInput.value,25) : safeParseInt(breakInput.value,5)) * 60;
     }
-    // ensure we render immediately
     renderTime(timeLeft);
     timerInterval = setInterval(tick, 1000);
   }
@@ -440,19 +420,15 @@ document.addEventListener('DOMContentLoaded', () => {
     timeLeft = safeParseInt(workInput.value,25) * 60;
     renderTime(timeLeft);
     setModeLabel();
-    // keep stats unchanged on reset (user expectures)
     updateControlsState();
   }
 
-  // attach event listeners if elements exist
   if(startBtn) startBtn.addEventListener('click', startTimer);
   if(pauseBtn) pauseBtn.addEventListener('click', pauseTimer);
   if(resetBtn) resetBtn.addEventListener('click', resetTimer);
 
-  // sync inputs on change even while paused or running; if running we update next session length only
   if(workInput) workInput.addEventListener('change', ()=>{
     const val = safeParseInt(workInput.value,25);
-    // if currently in work mode and not running, update timeLeft immediately
     if(!isRunning && isWork){
       timeLeft = val * 60;
       renderTime(timeLeft);
@@ -466,15 +442,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // initial render and control state
   renderTime(timeLeft);
   setModeLabel();
-  // buttons - ensure correct initial disabled states
-  if(startBtn) startBtn.disabled = false;
-  if(pauseBtn) pauseBtn.disabled = true;
-  if(resetBtn) resetBtn.disabled = false;
+  updateControlsState();
 
-  /* ---------- To-Do List (tick mark, persistence) ---------- */
+  /* ---------- To-Do List ---------- */
   function loadTasks(){
     try{
       const raw = localStorage.getItem(S_TASKS);
@@ -524,31 +496,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!v) return;
     addTask(v);
     todoInput.value='';
-    unlockAudioOnUserGesture(); // user gesture
+    unlockAudioOnUserGesture();
   });
   if(todoInput) todoInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') addTaskBtn.click(); });
 
   refreshTasksUI();
 
-  /* ---------- Helpers: remove number spinners  ---------- */
+  /* ---------- Helpers ---------- */
   (function removeSpinnerCSS(){
     const s = document.createElement('style');
     s.textContent = 'input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0} input[type=number]{-moz-appearance:textfield}';
     document.head.appendChild(s);
   })();
 
-  /* ---------- Vercel analytics (static) ---------- */
-  (function installVercel(){
-    try{
-      const s = document.createElement('script'); s.defer=true; s.src='/_vercel/insights/script.js'; document.head.appendChild(s);
-    }catch(e){}
-  })();
-
-  // ensure UI control state matches running flag at start
-  updateControlsState();
-
   console.log('GrindForge initialized');
-}); // DOMContentLoaded end
+});
 </script>
 </body>
 </html>
