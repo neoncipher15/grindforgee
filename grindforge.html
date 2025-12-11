@@ -25,7 +25,11 @@ body{
   margin:0;
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color:var(--text);
-  background: #000;
+  background-image: url('img.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   overflow-x:hidden;
   -webkit-tap-highlight-color: transparent;
   position: relative;
@@ -51,7 +55,6 @@ body{
   right: 0;
   bottom: 0;
   background-image: 
-    /* BIG BRIGHT STARS - LAYER 1 */
     radial-gradient(8px 8px at 20px 30px, #ffffff, rgba(255,255,255,0.8) 50%, rgba(0,0,0,0)),
     radial-gradient(10px 10px at 40px 70px, #ffffff, rgba(255,255,255,0.9) 60%, rgba(0,0,0,0)),
     radial-gradient(6px 6px at 90px 40px, #ffffff, rgba(255,255,255,0.7) 40%, rgba(0,0,0,0)),
@@ -67,10 +70,8 @@ body{
   animation: stars-twinkle 50s linear infinite;
 }
 
-
 .stars::after {
   background-image: 
-    /* BIG BRIGHT STARS - LAYER 2 (offset pattern) */
     radial-gradient(9px 9px at 25px 45px, #ffffff, rgba(255,255,255,0.85) 55%, rgba(0,0,0,0)),
     radial-gradient(7px 7px at 55px 85px, #ffffff, rgba(255,255,255,0.75) 45%, rgba(0,0,0,0)),
     radial-gradient(11px 11px at 95px 35px, #ffffff, rgba(255,255,255,0.9) 60%, rgba(0,0,0,0)),
@@ -85,21 +86,18 @@ body{
   background-size: 500px 250px;
 }
 
-
 @keyframes stars-twinkle {
   from { transform: translateY(0px); }
   to { transform: translateY(-200px); }
 }
 
-/* Subtle gradient overlay for depth */
+/* Dark overlay for readability over image */
 .overlay{
   position:fixed;
   inset:0;
-  /* DARK PURPLE GRADIENT */
-  background: radial-gradient(ellipse at top, rgba(90,59,126,0.9) 0%, rgba(122,86,163,0.7) 40%, #000000 80%);
+  background: rgba(0,0,0,0.7);
   z-index: -1;
 }
-
 
 /* layout desktop */
 .container-desktop{ display:flex; gap:24px; padding:28px; align-items:flex-start; justify-content:flex-end; }
@@ -309,10 +307,7 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 </head>
 <body>
 
-<!-- Animated Starfield -->
 <div class="stars"></div>
-
-<!-- Gradient overlay -->
 <div class="overlay"></div>
 
 <div class="container-desktop">
@@ -744,7 +739,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  console.log('GrindForge fully loaded with starry background!');
+  console.log('GrindForge fully loaded with starry background and image!');
 });
 </script>
 </body>
