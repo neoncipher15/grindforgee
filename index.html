@@ -3,485 +3,212 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>GrindForge — Pomodoro</title>
+<title>GrindForge — Launch Pad</title>
 <link rel="icon" type="image/png" href="/GrindForge.png" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --accent:#4ecdc4;
   --bg:#030612;
-  --card: rgba(4,6,10,0.6);
+  --card: rgba(4,6,10,0.8);
   --glass: rgba(0,0,0,0.45);
   --muted:#9adbd4;
   --text:#dffcff;
-  --danger:#ff5a5a;
-  --success:#6ef0c9;
   --shadow: rgba(2,6,10,0.6);
-  --radius:14px;
-  --gap:12px;
+  --radius:20px;
+  --gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
 }
+
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-family: "Poppins", sans-serif;
   color:var(--text);
   background:var(--bg);
-  overflow-x:hidden;
-  -webkit-tap-highlight-color: transparent;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
 }
 
-#bg-video{position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2}
-.overlay{position:fixed; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.36)); z-index:-1}
-
-.container-desktop{ display:flex; gap:24px; padding:28px; align-items:flex-start; justify-content:flex-end; }
-
-.left-col{ position:fixed; top:28px; left:28px; width:320px; display:flex; flex-direction:column; gap:var(--gap); }
-.box{ background:var(--card); backdrop-filter: blur(8px); padding:14px; border-radius:var(--radius); box-shadow: 0 12px 30px var(--shadow);}
-
-#datetime-box{ font-size:15px; letter-spacing:0.2px; white-space:nowrap; }
-
-.stats-row{ display:flex; gap:10px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted); }
-.stat-pill{ background: rgba(255,255,255,0.03); padding:6px 9px; border-radius:10px; display:inline-flex; gap:8px; align-items:center; }
-
-.quotes h3{ margin:0 0 8px 0; font-size:16px}
-.quote-text{ font-size:14px; color: #dffcff; opacity:0.95; min-height:44px; }
-.quote-actions{ display:flex; gap:8px; margin-top:8px;}
-.small-btn{ border:0; padding:8px 10px; border-radius:10px; cursor:pointer; background:var(--accent); color:#042726; font-weight:600;}
-
-.timer-area{ margin-left:auto; margin-right:28px; display:flex; flex-direction:column; gap:var(--gap); align-items:flex-end; }
-.timer-box{ width:340px; padding:22px 20px; text-align:center; background:var(--card); border-radius:18px; box-shadow:0 14px 40px var(--shadow); }
-.timer-box h1{ margin:0 0 6px 0; font-size:20px}
-#timer{ font-size:44px; font-weight:700; color:var(--accent); margin:12px 0; }
-.timer-controls{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; }
-.timer-controls button{ padding:8px 12px; border-radius:10px; border:0; cursor:pointer; background:var(--accent); color:#042726; font-weight:700 }
-.timer-controls button[disabled]{ opacity:0.6; transform:none; cursor:not-allowed }
-.timer-controls button:not([disabled]):hover{ transform:translateY(-2px) }
-.settings{ display:flex; gap:10px; justify-content:center; align-items:center; margin-top:8px; font-size:14px }
-.settings label{ display:flex; flex-direction:column; align-items:center; gap:4px; }
-.settings input{ width:70px; padding:8px; border-radius:8px; border:0; background:rgba(255,255,255,0.05); color:var(--text); text-align:center }
-
-.progress-row{ display:flex; justify-content:space-between; gap:12px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted) }
-
-.todo-container{ width:340px; padding:18px; background:var(--glass); border-radius:14px; box-shadow:0 14px 36px var(--shadow) }
-.todo-container h2{ margin:0 0 10px 0; font-size:18px }
-.todo-input{ display:flex; gap:8px; margin-bottom:12px }
-.todo-input input{ flex:1; padding:10px 12px; border-radius:10px; border:0; background:rgba(255,255,255,0.04); color:var(--text) }
-.todo-input button{ padding:9px 12px; border-radius:10px; border:0; background:var(--accent); color:#042726; font-weight:700 }
-ul#todo-list{ list-style:none; padding:0; margin:0; display:block; max-height:300px; overflow-y:auto; }
-li.quest{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px; margin-bottom:10px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
-.quest .left{ display:flex; gap:10px; align-items:center; flex:1; }
-.checkbox{ width:28px; height:28px; border-radius:8px; border:2px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; cursor:pointer; background:rgba(255,255,255,0.01); }
-.checkbox.done{ background:var(--success); border-color: rgba(110,240,201,0.9) }
-.quest .desc{ font-weight:700; flex:1; }
-.quest .meta{ font-size:12px; color:var(--muted) }
-.quest button.del{ padding:6px 8px; border-radius:8px; border:0; background:var(--danger); color:#fff; cursor:pointer; flex-shrink:0; }
-.quest.done .desc{ text-decoration:line-through; opacity:0.55; color:#bfeee5 }
-.quest.done .meta{ opacity:0.6 }
-
-@media (max-width: 880px){
-  .left-col{ position:static; width:100%; margin:12px auto 0; display:flex; justify-content:center; }
-  .container-desktop{ flex-direction:column; align-items:center; padding:18px }
-  .timer-area{ align-items:center; margin:0 auto }
-  .timer-box, .todo-container, .box{ width:min(94%,540px) }
-  #datetime-box{ width:min(94%,540px); text-align:center }
-  .overlay{ background:linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.34)) }
+.hero-bg{
+  position:fixed; inset:0; 
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(78,205,196,0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(110,240,201,0.2) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(3,6,18,0.9) 0%, #030612 100%);
+  z-index:-1;
 }
-@media (max-width:420px){
-  #timer{ font-size:34px }
-  .timer-box{ padding:16px }
-  .todo-input input{ padding:9px }
-  button{ font-size:14px }
+
+.launch-container{
+  text-align:center;
+  background:var(--card);
+  backdrop-filter: blur(20px);
+  padding:60px 40px;
+  border-radius:var(--radius);
+  box-shadow: 0 30px 80px var(--shadow);
+  max-width:500px;
+  width:90%;
+  border:1px solid rgba(78,205,196,0.2);
+}
+
+.launch-logo{
+  width:120px;
+  height:120px;
+  background:var(--gradient);
+  border-radius:50%;
+  margin:0 auto 30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  font-weight:700;
+  box-shadow: 0 20px 50px rgba(78,205,196,0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{ transform:scale(1); }
+  50%{ transform:scale(1.05); }
+}
+
+h1{
+  font-size:clamp(28px,5vw,42px);
+  font-weight:700;
+  margin:0 0 20px;
+  background:linear-gradient(135deg, var(--accent), #6ef0c9);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.tagline{
+  font-size:18px;
+  color:var(--muted);
+  margin:0 0 40px;
+  line-height:1.6;
+  font-weight:300;
+}
+
+.launch-btn{
+  background:var(--gradient);
+  color:#042726;
+  border:none;
+  padding:18px 50px;
+  font-size:20px;
+  font-weight:700;
+  border-radius:50px;
+  cursor:pointer;
+  box-shadow:0 15px 40px rgba(78,205,196,0.4);
+  transition:all 0.3s ease;
+  letter-spacing:1px;
+  position:relative;
+  overflow:hidden;
+}
+
+.launch-btn:hover{
+  transform:translateY(-5px);
+  box-shadow:0 25px 60px rgba(78,205,196,0.5);
+}
+
+.launch-btn:active{
+  transform:translateY(-2px);
+}
+
+.launch-btn::before{
+  content:'';
+  position:absolute;
+  top:0; left:-100%;
+  width:100%; height:100%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition:left 0.5s;
+}
+
+.launch-btn:hover::before{
+  left:100%;
+}
+
+.features{
+  display:flex;
+  gap:20px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:40px;
+  font-size:14px;
+}
+
+.feature{
+  background:rgba(255,255,255,0.05);
+  padding:12px 20px;
+  border-radius:25px;
+  color:var(--muted);
+}
+
+.shortcut-hint{
+  margin-top:30px;
+  padding:15px 25px;
+  background:rgba(78,205,196,0.1);
+  border-radius:12px;
+  border:1px solid rgba(78,205,196,0.3);
+  font-size:14px;
+  color:var(--muted);
+}
+
+@media (max-width:600px){
+  .launch-container{ padding:40px 25px; }
+  .launch-btn{ padding:16px 40px; font-size:18px; }
+  .features{ flex-direction:column; align-items:center; }
 }
 </style>
 </head>
 <body>
+<div class="hero-bg"></div>
 
-<video id="bg-video" autoplay muted loop playsinline>
-  <source src="night.mp4" type="video/mp4">
-</video>
-<div class="overlay"></div>
-
-<div class="container-desktop">
-  <div class="left-col">
-    <div class="box" id="dateBox">
-      <div id="datetime-box" aria-live="polite">Loading date...</div>
-      <div class="stats-row">
-        <div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
-        <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
-      </div>
-    </div>
-
-    <div class="box quotes">
-      <h3>Quote</h3>
-      <div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
-      <div class="quote-actions">
-        <button class="small-btn" id="newQuoteBtn">New quote</button>
-        <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
-      </div>
-      <div style="margin-top:8px; font-size:12px; color:var(--muted)">Saved quotes persist locally.</div>
-    </div>
+<div class="launch-container">
+  <div class="launch-logo">⚡</div>
+  
+  <h1>GrindForge</h1>
+  <p class="tagline">Master your focus with the ultimate Pomodoro experience. Timer • Tasks • Quotes • Stats.</p>
+  
+  <a href="grindforge.html" class="launch-btn">Launch Pomodoro</a>
+  
+  <div class="features">
+    <div class="feature">⏱️ Smart Timer</div>
+    <div class="feature">✅ Todo List</div>
+    <div class="feature">📊 Daily Stats</div>
+    <div class="feature">💬 Motivational Quotes</div>
   </div>
-
-  <div class="timer-area">
-    <section class="timer-box" aria-label="Pomodoro Timer">
-      <h1>Pomodoro Timer</h1>
-      <div id="timer" aria-live="polite">25:00</div>
-
-      <div class="timer-controls">
-        <button id="startBtn">Start</button>
-        <button id="pauseBtn" disabled>Pause</button>
-        <button id="resetBtn">Reset</button>
-      </div>
-
-      <div class="settings">
-        <label>Work
-          <input id="workTime" type="number" min="1" value="25" />
-        </label>
-        <label>Break
-          <input id="breakTime" type="number" min="1" value="5" />
-        </label>
-      </div>
-
-      <div class="progress-row">
-        <div id="modeLabel">Mode: Work</div>
-        <div id="sessionLabel">Completed: 0</div>
-      </div>
-    </section>
-
-    <aside class="todo-container" aria-label="To-Do">
-      <h2>To-Do List ✨</h2>
-      <div class="todo-input">
-        <input id="todoInput" type="text" placeholder="Write a task..." />
-        <button id="addTaskBtn">Add</button>
-      </div>
-      <ul id="todo-list" aria-live="polite"></ul>
-    </aside>
+  
+  <div class="shortcut-hint">
+    💡 <strong>Pro Tip:</strong> Bookmark this page or add to desktop for instant access!
   </div>
 </div>
 
-<audio id="alarm" preload="auto"></audio>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Elements - get them after DOM is ready
-  const alarm = document.getElementById('alarm');
-  const startBtn = document.getElementById('startBtn');
-  const pauseBtn = document.getElementById('pauseBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const timerEl = document.getElementById('timer');
-  const workInput = document.getElementById('workTime');
-  const breakInput = document.getElementById('breakTime');
-  const modeLabel = document.getElementById('modeLabel');
-  const sessionLabel = document.getElementById('sessionLabel');
-  const newQuoteBtn = document.getElementById('newQuoteBtn');
-  const saveQuoteBtn = document.getElementById('saveQuoteBtn');
-  const quoteTextEl = document.getElementById('quoteText');
-  const todoInput = document.getElementById('todoInput');
-  const addTaskBtn = document.getElementById('addTaskBtn');
-  const todoList = document.getElementById('todo-list');
-  const hoursCompletedPill = document.getElementById('hoursCompleted');
-  const sessionsCompletedPill = document.getElementById('sessionsCompleted');
-  const datetimeBox = document.getElementById('datetime-box');
-
-  // Storage keys
-  const S_TASKS = 'gf_tasks_v2';
-  const S_STATS = 'gf_stats_v2';
-  const S_QUOTES = 'gf_quotes_v1';
+  // Add launch animation
+  const btn = document.querySelector('.launch-btn');
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    btn.textContent = 'Launching...';
+    btn.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      window.location.href = 'grindforge.html';
+    }, 300);
+  });
   
-  alarm.src = 'https://cdn.pixabay.com/audio/2022/03/15/audio_0b1aefdd20.mp3';
-  alarm.volume = 0.7;
-
-  // State
-  let audioUnlocked = false;
-  let timerInterval = null;
-  let isRunning = false;
-  let isWork = true;
-  let timeLeft = 25 * 60;
-
-  // Utilities
-  function getTodayStr() {
-    const d = new Date();
-    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-  }
-
-  function safeParseInt(v, fallback) {
-    const n = parseInt(v, 10);
-    return Number.isFinite(n) ? n : fallback;
-  }
-
-  // Audio unlock
-  function unlockAudio() {
-    if (audioUnlocked) return;
-    alarm.play().then(() => {
-      alarm.pause();
-      alarm.currentTime = 0;
-      audioUnlocked = true;
-    }).catch(() => {});
-  }
-
-  // Date/Time
-  function updateDateTime() {
-    const now = new Date();
-    const dateOpt = { weekday:'long', month:'long', day:'numeric' };
-    const dateText = now.toLocaleDateString(undefined, dateOpt);
-    const timeText = now.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' });
-    datetimeBox.textContent = `${dateText} • ${timeText}`;
-  }
-  setInterval(updateDateTime, 1000);
-  updateDateTime();
-
-  // Quotes
-  const defaultQuotes = [
-    "Focus is a skill - practice it daily.",
-    "You don't have to be perfect, just persistent.",
-    "Small progress each day adds up to big results.",
-    "Work in silence, let success make the noise.",
-    "One task at a time. Win the moment."
-  ];
-  
-  let quotes = defaultQuotes.slice();
-  function showRandomQuote() {
-    const q = quotes[Math.floor(Math.random() * quotes.length)];
-    quoteTextEl.textContent = `"${q}"`;
-  }
-  
-  newQuoteBtn.addEventListener('click', showRandomQuote);
-  saveQuoteBtn.addEventListener('click', function() {
-    const q = prompt('Add a new quote:');
-    if (q && q.trim()) {
-      quotes.unshift(q.trim());
-      localStorage.setItem(S_QUOTES, JSON.stringify(quotes));
-      showRandomQuote();
+  // Keyboard shortcut
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const btn = document.querySelector('.launch-btn');
+      btn.click();
     }
   });
-  showRandomQuote();
-
-  // Stats
-  let stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: getTodayStr() };
   
-  function updateStatsUI() {
-    const totalSec = stats.completedSeconds || 0;
-    const decimal = (totalSec / 3600).toFixed(2);
-    hoursCompletedPill.textContent = `Hours: ${decimal}`;
-    sessionsCompletedPill.textContent = `Sessions: ${stats.sessionsCompleted || 0}`;
-    sessionLabel.textContent = `Completed: ${stats.sessionsCompleted || 0}`;
-  }
-  
-  function loadStats() {
-    try {
-      const raw = localStorage.getItem(S_STATS);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed.lastDate === getTodayStr()) {
-          stats = parsed;
-        }
-      }
-    } catch(e) {}
-    updateStatsUI();
-  }
-  loadStats();
-
-  // Timer functions
-  function renderTime() {
-    const m = Math.floor(timeLeft / 60);
-    const s = timeLeft % 60;
-    timerEl.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-  }
-
-  function setModeLabel() {
-    modeLabel.textContent = `Mode: ${isWork ? 'Work' : 'Break'}`;
-  }
-
-  function playAlarm() {
-    unlockAudio();
-    alarm.currentTime = 0;
-    alarm.play().catch(() => {});
-  }
-
-  function tick() {
-    if (timeLeft > 0) {
-      timeLeft--;
-      renderTime();
-    }
-    
-    if (timeLeft <= 0) {
-      if (isWork) {
-        const workMin = safeParseInt(workInput.value, 25);
-        stats.completedSeconds += workMin * 60;
-        stats.sessionsCompleted++;
-        localStorage.setItem(S_STATS, JSON.stringify(stats));
-        updateStatsUI();
-      }
-      
-      playAlarm();
-      isWork = !isWork;
-      setModeLabel();
-      timeLeft = isWork ? safeParseInt(workInput.value, 25) * 60 : safeParseInt(breakInput.value, 5) * 60;
-      renderTime();
-    }
-  }
-
-  function updateControls() {
-    startBtn.disabled = isRunning;
-    pauseBtn.disabled = !isRunning;
-  }
-
-  function startTimer() {
-    unlockAudio();
-    if (isRunning) return;
-    
-    isRunning = true;
-    updateControls();
-    
-    renderTime();
-    timerInterval = setInterval(tick, 1000);
-  }
-
-  function pauseTimer() {
-    if (timerInterval) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-    }
-    isRunning = false;
-    updateControls();
-  }
-
-  function resetTimer() {
-    pauseTimer();
-    isWork = true;
-    timeLeft = safeParseInt(workInput.value, 25) * 60;
-    setModeLabel();
-    renderTime();
-  }
-
-  // Event listeners
-  startBtn.addEventListener('click', startTimer);
-  pauseBtn.addEventListener('click', pauseTimer);
-  resetBtn.addEventListener('click', resetTimer);
-
-  workInput.addEventListener('change', function() {
-    if (!isRunning && isWork) {
-      timeLeft = safeParseInt(workInput.value, 25) * 60;
-      renderTime();
-    }
-  });
-
-  breakInput.addEventListener('change', function() {
-    if (!isRunning && !isWork) {
-      timeLeft = safeParseInt(breakInput.value, 5) * 60;
-      renderTime();
-    }
-  });
-
-  // Initial setup
-  renderTime();
-  setModeLabel();
-  updateControls();
-
-  // Todo list
-  function loadTasks() {
-    try {
-      const raw = localStorage.getItem(S_TASKS);
-      return raw ? JSON.parse(raw) : [];
-    } catch(e) {
-      return [];
-    }
-  }
-
-  function saveTasks(items) {
-    try {
-      localStorage.setItem(S_TASKS, JSON.stringify(items));
-    } catch(e) {}
-  }
-
-  function refreshTasksUI() {
-    const items = loadTasks();
-    todoList.innerHTML = '';
-    
-    const undone = items.filter(it => !it.done);
-    const done = items.filter(it => it.done);
-    
-    [...undone, ...done].forEach(item => {
-      const li = document.createElement('li');
-      li.className = `quest ${item.done ? 'done' : ''}`;
-      
-      const left = document.createElement('div');
-      left.className = 'left';
-      
-      const checkbox = document.createElement('div');
-      checkbox.className = `checkbox ${item.done ? 'done' : ''}`;
-      checkbox.innerHTML = item.done ? '✓' : '';
-      checkbox.addEventListener('click', () => {
-        item.done = !item.done;
-        saveTasks(loadTasks().map(x => x.id === item.id ? item : x));
-        refreshTasksUI();
-      });
-      
-      const desc = document.createElement('span');
-      desc.className = 'desc';
-      desc.textContent = item.text;
-      
-      const meta = document.createElement('span');
-      meta.className = 'meta';
-      meta.textContent = item.done ? 'Completed' : 'Quest';
-      
-      left.appendChild(checkbox);
-      left.appendChild(desc);
-      left.appendChild(meta);
-      
-      const delBtn = document.createElement('button');
-      delBtn.className = 'del';
-      delBtn.textContent = '✕';
-      delBtn.addEventListener('click', () => {
-        saveTasks(loadTasks().filter(x => x.id !== item.id));
-        refreshTasksUI();
-      });
-      
-      li.appendChild(left);
-      li.appendChild(delBtn);
-      todoList.appendChild(li);
-    });
-  }
-
-  function addTask() {
-    const text = todoInput.value.trim();
-    if (!text) return;
-    
-    const tasks = loadTasks();
-    const newTask = {
-      id: Date.now().toString(36),
-      text: text,
-      done: false,
-      createdAt: Date.now()
-    };
-    tasks.push(newTask);
-    saveTasks(tasks);
-    todoInput.value = '';
-    refreshTasksUI();
-  }
-
-  addTaskBtn.addEventListener('click', addTask);
-  todoInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') addTask();
-  });
-
-  refreshTasksUI();
-
-  // Remove number spinners
-  const style = document.createElement('style');
-  style.textContent = `
-    input[type=number]::-webkit-outer-spin-button,
-    input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    input[type=number] {
-      -moz-appearance: textfield;
-    }
-  `;
-  document.head.appendChild(style);
-
-  console.log('GrindForge fully loaded and working');
+  console.log('GrindForge Launch Pad ready!');
 });
 </script>
 </body>
