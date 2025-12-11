@@ -10,7 +10,7 @@
 :root{
   --accent:#4ecdc4;
   --bg:#030612;
-  --card: rgba(4,6,10,0.8);
+  --card: rgba(0,0,0,0.82);
   --glass: rgba(0,0,0,0.45);
   --muted:#9adbd4;
   --text:#dffcff;
@@ -64,15 +64,15 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:48px;
-  font-weight:700;
-  box-shadow: 0 20px 50px rgba(78,205,196,0.3);
-  animation: pulse 2s infinite;
+  box-shadow:none;              /* no outer light */
+  overflow:hidden;
 }
 
-@keyframes pulse{
-  0%,100%{ transform:scale(1); }
-  50%{ transform:scale(1.05); }
+.launch-logo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
 }
 
 h1{
@@ -93,7 +93,9 @@ h1{
   font-weight:300;
 }
 
+/* button styled as real button, no link underline or glow */
 .launch-btn{
+  display:inline-block;
   background:var(--gradient);
   color:#042726;
   border:none;
@@ -102,33 +104,25 @@ h1{
   font-weight:700;
   border-radius:50px;
   cursor:pointer;
-  box-shadow:0 15px 40px rgba(78,205,196,0.4);
-  transition:all 0.3s ease;
+  box-shadow:none;              /* remove bright glow */
+  transition:transform 0.2s ease;
   letter-spacing:1px;
+  text-decoration:none;         /* no underline */
   position:relative;
   overflow:hidden;
 }
 
 .launch-btn:hover{
-  transform:translateY(-5px);
-  box-shadow:0 25px 60px rgba(78,205,196,0.5);
+  transform:translateY(-3px);
 }
 
 .launch-btn:active{
-  transform:translateY(-2px);
+  transform:translateY(-1px);
 }
 
+/* remove shiny sweep */
 .launch-btn::before{
-  content:'';
-  position:absolute;
-  top:0; left:-100%;
-  width:100%; height:100%;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition:left 0.5s;
-}
-
-.launch-btn:hover::before{
-  left:100%;
+  content:none;
 }
 
 .features{
@@ -168,12 +162,16 @@ h1{
 <div class="hero-bg"></div>
 
 <div class="launch-container">
-  <div class="launch-logo"><img src="/.GrindForge.png"></div>
+  <div class="launch-logo">
+    <!-- use your uploaded image; adjust path/filename to match your project -->
+    <img src="image.jpg" alt="GrindForge logo">
+  </div>
   
   <h1>GrindForge</h1>
   <p class="tagline">Master your focus with the ultimate Pomodoro experience. Timer • Tasks • Quotes • Stats.</p>
   
-  <a href="/.grindforge.html" class="launch-btn">Launch Pomodoro</a>
+  <!-- use button element instead of <a> to avoid underline styles -->
+  <button type="button" class="launch-btn">Launch Pomodoro</button>
   
   <div class="features">
     <div class="feature">⏱️ Smart Timer</div>
@@ -189,10 +187,8 @@ h1{
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Add launch animation
   const btn = document.querySelector('.launch-btn');
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
+  btn.addEventListener('click', function() {
     btn.textContent = 'Launching...';
     btn.style.transform = 'scale(0.95)';
     setTimeout(() => {
