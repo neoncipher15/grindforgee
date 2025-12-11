@@ -150,7 +150,7 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
   animation:endCircle 1.6s ease-out forwards;
 }
 .end-day-circle::after{
-  content:'';
+  content:''; 
   position:absolute;
   inset:14px;
   border-radius:50%;
@@ -196,6 +196,37 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
   margin-top:16px;
   font-size:12px;
   color:var(--muted);
+}
+
+/* journal area */
+#endDayJournal{
+  width:100%;
+  resize:vertical;
+  margin-top:12px;
+  border-radius:10px;
+  padding:10px;
+  font-family:"Poppins", monospace;
+  font-size:14px;
+  background:rgba(255,255,255,0.05);
+  color:var(--text);
+  border:1px solid rgba(78,205,196,0.4);
+}
+#endDayJournal:focus{
+  outline:none;
+  box-shadow:0 0 8px var(--accent);
+}
+#saveJournalBtn{
+  margin-top:10px;
+  padding:10px 15px;
+  border:none;
+  border-radius:10px;
+  background:var(--accent);
+  color:#042726;
+  font-weight:700;
+  cursor:pointer;
+}
+#saveJournalBtn:hover{
+  filter:brightness(1.1);
 }
 
 /* responsive: stacked center */
@@ -297,6 +328,11 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
     <div class="end-day-title">Day Complete</div>
     <div class="end-day-sub">Here is what you achieved today:</div>
     <div id="endDaySummary"></div>
+
+    <!-- Journal area -->
+    <textarea id="endDayJournal" placeholder="Write your journal entry here..." rows="6"></textarea>
+    <button id="saveJournalBtn">Save Journal</button>
+
     <div class="end-day-hint">Press Esc or click anywhere to close.</div>
   </div>
 </div>
@@ -324,10 +360,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const endDayBtn = document.getElementById('endDayBtn');
   const endDayOverlay = document.getElementById('endDayOverlay');
   const endDaySummary = document.getElementById('endDaySummary');
+  const endDayJournal = document.getElementById('endDayJournal');
+  const saveJournalBtn = document.getElementById('saveJournalBtn');
 
   const S_TASKS = 'gf_tasks_v2';
   const S_STATS = 'gf_stats_v2';
   const S_QUOTES = 'gf_quotes_v1';
+  const S_JOURNAL = 'gf_journal_v1';
   
   alarm.src = 'https://cdn.pixabay.com/audio/2022/03/15/audio_0b1aefdd20.mp3';
   alarm.volume = 0.7;
@@ -584,6 +623,26 @@ document.addEventListener('DOMContentLoaded', function() {
   `;
   document.head.appendChild(style);
 
+  // ---- Journal logic ----
+  function loadJournal() {
+    try {
+      const saved = localStorage.getItem(S_JOURNAL);
+      endDayJournal.value = saved || '';
+    } catch(e) {
+      endDayJournal.value = '';
+    }
+  }
+  function saveJournal() {
+    try {
+      localStorage.setItem(S_JOURNAL, endDayJournal.value.trim());
+      // You could swap this for a subtle inline "Saved!" if you want
+      alert('Journal saved.');
+    } catch(e) {
+      alert('Failed to save journal.');
+    }
+  }
+  saveJournalBtn.addEventListener('click', saveJournal);
+
   // ---- End Day logic ----
   function typeWriterText(text, element, speed){
     element.textContent = '';
@@ -608,6 +667,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     endDayOverlay.classList.add('active');
     typeWriterText(summaryText, endDaySummary, 40);
+
+    // load journal content when overlay opens
+    loadJournal();
   }
 
   function closeEndDayOverlay(){
