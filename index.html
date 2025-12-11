@@ -19,8 +19,6 @@
   --radius:14px;
   --gap:12px;
 }
-
-/* reset/base */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -28,8 +26,6 @@ body{
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color:var(--text);
   background:var(--bg);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
   overflow-x:hidden;
   -webkit-tap-highlight-color: transparent;
 }
@@ -65,6 +61,7 @@ body{
 #timer{ font-size:44px; font-weight:700; color:var(--accent); margin:12px 0; }
 .timer-controls{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; }
 .timer-controls button{ padding:8px 12px; border-radius:10px; border:0; cursor:pointer; background:var(--accent); color:#042726; font-weight:700 }
+.timer-controls button[disabled]{ opacity:0.6; transform:none; cursor:not-allowed }
 .timer-controls button:hover{ transform:translateY(-2px) }
 .settings{ display:flex; gap:10px; justify-content:center; align-items:center; margin-top:8px; font-size:14px }
 .settings input{ width:70px; padding:8px; border-radius:8px; border:0; background:rgba(255,255,255,0.05); color:var(--text); text-align:center }
@@ -181,284 +178,342 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
 <audio id="alarm" preload="auto"></audio>
 
 <script>
-/* ---------------- UTILS ---------------- */
-const $ = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
+document.addEventListener('DOMContentLoaded', () => {
+  /* ---------- helper selectors ---------- */
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
 
-/* ---------- Config & Storage Keys ---------- */
-const S_TASKS = 'gf_tasks_v2';
-const S_STATS = 'gf_stats_v2';
-const S_QUOTES = 'gf_quotes_v1';
-const ONLINE_ALARM_URL = 'https://cdn.pixabay.com/audio/2022/03/15/audio_0b1aefdd20.mp3'; // chosen alarm
+  /* ---------- Config & Storage Keys ---------- */
+  const S_TASKS = 'gf_tasks_v2';
+  const S_STATS = 'gf_stats_v2';
+  const S_QUOTES = 'gf_quotes_v1';
+  const ONLINE_ALARM_URL = 'https://cdn.pixabay.com/audio/2022/03/15/audio_0b1aefdd20.mp3';
 
-/* ---------- Init alarm element with online source ---------- */
-const alarm = $('#alarm');
-alarm.src = ONLINE_ALARM_URL;
-alarm.volume = 0.9;
+  /* ---------- Elements ---------- */
+  const alarm = $('#alarm');
+  alarm.src = ONLINE_ALARM_URL;
+  alarm.volume = 0.9;
 
-/* audio unlocked flag */
-let audioUnlocked = false;
-function unlockAudioOnUserGesture(){
-  if(audioUnlocked) return;
-  // browsers allow play() when triggered by a user gesture — call play then pause to "unlock"
-  const p = alarm.play();
-  if (p && typeof p.then === 'function') {
-    p.then(() => {
-      alarm.pause();
-      alarm.currentTime = 0;
-      audioUnlocked = true;
-      // console.log('Audio unlocked (promise resolved)');
-    }).catch(() => {
-      // if play was blocked, still mark unlocked only after a user gesture (we'll set true anyway so future attempts may work)
-      // console.log('Audio play blocked initially; next user gesture should unlock');
-      audioUnlocked = true; // still set true because a user action triggered this attempt
-    });
-  } else {
-    // older browsers
-    try { alarm.pause(); alarm.currentTime = 0; audioUnlocked = true; } catch(e){ audioUnlocked = true; }
+  const startBtn = $('#startBtn');
+  const pauseBtn = $('#pauseBtn');
+  const resetBtn = $('#resetBtn');
+  const timerEl = $('#timer');
+  const workInput = $('#workTime');
+  const breakInput = $('#breakTime');
+  const modeLabel = $('#modeLabel');
+  const sessionLabel = $('#sessionLabel');
+
+  const newQuoteBtn = $('#newQuoteBtn');
+  const saveQuoteBtn = $('#saveQuoteBtn');
+  const quoteTextEl = $('#quoteText');
+
+  const todoInput = $('#todoInput');
+  const addTaskBtn = $('#addTaskBtn');
+  const todoList = $('#todo-list');
+
+  const hoursCompletedPill = $('#hoursCompleted');
+  const sessionsCompletedPill = $('#sessionsCompleted');
+
+  /* ---------- State ---------- */
+  let audioUnlocked = false;
+  let timerInterval = null;
+  let isRunning = false;
+  let isWork = true;
+  let timeLeft = (parseInt(workInput.value,10) || 25) * 60;
+
+  /* ---------- Utilities ---------- */
+  function getTodayStr(){
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
-}
 
-/* Ensure audio unlock on first user interaction (click/tap/keypress) */
-function oneTimeAudioGestureListener() {
-  const handler = () => {
+  function safeParseInt(v, fallback){
+    const n = parseInt(v,10);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  /* ---------- Audio unlock ---------- */
+  function unlockAudioOnUserGesture(){
+    if(audioUnlocked) return;
+    // Try to play/pause to unlock; only mark unlocked if play() resolves
+    try{
+      const p = alarm.play();
+      if(p && typeof p.then === 'function'){
+        p.then(() => {
+          alarm.pause();
+          alarm.currentTime = 0;
+          audioUnlocked = true;
+          console.log('Audio unlocked');
+        }).catch((err) => {
+          // play blocked — keep audioUnlocked false; will try again on next gesture
+          console.warn('Audio play blocked; will try again on next gesture', err);
+        });
+      } else {
+        // older browsers: assume unlocked
+        alarm.pause();
+        alarm.currentTime = 0;
+        audioUnlocked = true;
+      }
+    }catch(err){
+      console.warn('Audio unlock error', err);
+    }
+  }
+
+  // one-time listeners to attempt unlocking on first user interaction
+  const oneTimeHandler = () => {
     unlockAudioOnUserGesture();
-    document.removeEventListener('click', handler);
-    document.removeEventListener('touchstart', handler);
-    document.removeEventListener('keydown', handler);
+    document.removeEventListener('click', oneTimeHandler);
+    document.removeEventListener('touchstart', oneTimeHandler);
+    document.removeEventListener('keydown', oneTimeHandler);
   };
-  document.addEventListener('click', handler, { once: true });
-  document.addEventListener('touchstart', handler, { once: true });
-  document.addEventListener('keydown', handler, { once: true });
-}
-oneTimeAudioGestureListener();
+  document.addEventListener('click', oneTimeHandler, { once: true });
+  document.addEventListener('touchstart', oneTimeHandler, { once: true });
+  document.addEventListener('keydown', oneTimeHandler, { once: true });
 
-/* ---------- Date & Time (words, no year) ---------- */
-function updateDateTime(){
-  const now = new Date();
-  const dateOpt = { weekday:'long', month:'long', day:'numeric' }; // no year
-  const dateText = now.toLocaleDateString(undefined, dateOpt);
-  const timeText = now.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-  $('#datetime-box').textContent = `${dateText} • ${timeText}`;
+  /* ---------- Date & Time (words, no year) ---------- */
+  function updateDateTime(){
+    const now = new Date();
+    const dateOpt = { weekday:'long', month:'long', day:'numeric' };
+    const dateText = now.toLocaleDateString(undefined, dateOpt);
+    const timeText = now.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    const dt = $('#datetime-box');
+    if(dt) dt.textContent = `${dateText} • ${timeText}`;
+    checkDailyReset();
+  }
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
 
-  // check for day rollover to reset daily stats
-  checkDailyReset();
-}
-setInterval(updateDateTime, 1000);
-updateDateTime();
+  /* ---------- Quotes ---------- */
+  const defaultQuotes = [
+    "Focus is a skill — practice it daily.",
+    "You don't have to be perfect, just persistent.",
+    "Small progress each day adds up to big results.",
+    "Work in silence, let success make the noise.",
+    "One task at a time. Win the moment."
+  ];
+  function loadQuotes(){
+    try{
+      const raw = localStorage.getItem(S_QUOTES);
+      return raw ? JSON.parse(raw) : defaultQuotes.slice();
+    }catch(e){ return defaultQuotes.slice(); }
+  }
+  let quotes = loadQuotes();
+  function showRandomQuote(){
+    if(!quoteTextEl) return;
+    const q = quotes[Math.floor(Math.random()*quotes.length)];
+    quoteTextEl.textContent = `“${q}”`;
+  }
+  if(newQuoteBtn) newQuoteBtn.addEventListener('click', showRandomQuote);
+  if(saveQuoteBtn) saveQuoteBtn.addEventListener('click', ()=>{
+    const q = prompt('Add a new quote:');
+    if(q && q.trim()){ quotes.unshift(q.trim()); localStorage.setItem(S_QUOTES, JSON.stringify(quotes)); alert('Saved!'); showRandomQuote(); }
+  });
+  showRandomQuote();
 
-/* ---------- Quotes ---------- */
-const defaultQuotes = [
-  "Focus is a skill — practice it daily.",
-  "You don't have to be perfect, just persistent.",
-  "Small progress each day adds up to big results.",
-  "Work in silence, let success make the noise.",
-  "One task at a time. Win the moment."
-];
-function loadQuotes(){
-  try{
-    const raw = localStorage.getItem(S_QUOTES);
-    return raw ? JSON.parse(raw) : defaultQuotes.slice();
-  }catch(e){ return defaultQuotes.slice(); }
-}
-let quotes = loadQuotes();
-function showRandomQuote(){ const q = quotes[Math.floor(Math.random()*quotes.length)]; $('#quoteText').textContent = `“${q}”`; }
-$('#newQuoteBtn').addEventListener('click', showRandomQuote);
-$('#saveQuoteBtn').addEventListener('click', ()=>{
-  const q = prompt('Add a new quote:');
-  if(q && q.trim()){ quotes.unshift(q.trim()); localStorage.setItem(S_QUOTES, JSON.stringify(quotes)); alert('Saved!'); showRandomQuote(); }
-});
-showRandomQuote();
-
-/* --------- Stats (daily reset) --------- */
-let stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
-function getTodayStr(){
-  const d = new Date();
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-}
-function loadStats(){
-  try{
-    const raw = localStorage.getItem(S_STATS);
-    if(!raw) { stats.lastDate = getTodayStr(); saveStats(); return; }
-    const parsed = JSON.parse(raw);
-    if(parsed.lastDate !== getTodayStr()){
+  /* ---------- Stats (daily reset) ---------- */
+  let stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
+  function loadStats(){
+    try{
+      const raw = localStorage.getItem(S_STATS);
+      if(!raw) { stats.lastDate = getTodayStr(); saveStats(); return; }
+      const parsed = JSON.parse(raw);
+      if(parsed.lastDate !== getTodayStr()){
+        stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
+        saveStats();
+      } else {
+        stats = parsed;
+      }
+    }catch(e){
       stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
       saveStats();
-    } else {
-      stats = parsed;
     }
-  }catch(e){
+    updateStatsUI();
+  }
+  function saveStats(){
+    stats.lastDate = getTodayStr();
+    localStorage.setItem(S_STATS, JSON.stringify(stats));
+    updateStatsUI();
+  }
+  function resetStatsForNewDay(){
     stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
     saveStats();
   }
-  updateStatsUI();
-}
-function saveStats(){
-  stats.lastDate = getTodayStr();
-  localStorage.setItem(S_STATS, JSON.stringify(stats));
-  updateStatsUI();
-}
-function resetStatsForNewDay(){
-  stats = { completedSeconds:0, sessionsCompleted:0, lastDate: getTodayStr() };
-  saveStats();
-}
-function updateStatsUI(){
-  const totalSec = stats.completedSeconds || 0;
-  const decimal = (totalSec/3600).toFixed(2);
-  $('#hoursCompleted').textContent = `Hours: ${decimal}`;
-  $('#sessionsCompleted').textContent = `Sessions: ${stats.sessionsCompleted || 0}`;
-  $('#sessionLabel').textContent = `Completed: ${stats.sessionsCompleted || 0}`;
-}
-function checkDailyReset(){
-  const today = getTodayStr();
-  if(stats.lastDate !== today){
-    resetStatsForNewDay();
+  function updateStatsUI(){
+    const totalSec = stats.completedSeconds || 0;
+    const decimal = (totalSec/3600).toFixed(2);
+    if(hoursCompletedPill) hoursCompletedPill.textContent = `Hours: ${decimal}`;
+    if(sessionsCompletedPill) sessionsCompletedPill.textContent = `Sessions: ${stats.sessionsCompleted || 0}`;
+    if(sessionLabel) sessionLabel.textContent = `Completed: ${stats.sessionsCompleted || 0}`;
   }
-}
-loadStats();
-
-/* ---------- Timer Logic ---------- */
-const startBtn = $('#startBtn'), pauseBtn = $('#pauseBtn'), resetBtn = $('#resetBtn');
-const timerEl = $('#timer');
-const workInput = $('#workTime'), breakInput = $('#breakTime');
-
-let timerInterval = null;
-let isRunning = false;
-let isWork = true;
-let timeLeft = (parseInt(workInput.value,10) || 25) * 60;
-
-function renderTime(t){
-  const m = Math.floor(t/60), s = t%60;
-  timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-}
-function setModeLabel(){ $('#modeLabel').textContent = `Mode: ${isWork ? 'Work' : 'Break'}`; }
-
-function endOfWorkSessionActions(workMinutes){
-  stats.completedSeconds = (stats.completedSeconds || 0) + (workMinutes * 60);
-  stats.sessionsCompleted = (stats.sessionsCompleted || 0) + 1;
-  saveStats();
-}
-
-function tick(){
-  if(timeLeft>0){
-    timeLeft--; renderTime(timeLeft); return;
+  function checkDailyReset(){
+    const today = getTodayStr();
+    if(stats.lastDate !== today){
+      resetStatsForNewDay();
+    }
   }
-  // session ended
-  if(isWork){
-    const workMin = parseInt(workInput.value,10) || 25;
-    endOfWorkSessionActions(workMin);
+  loadStats();
+
+  /* ---------- Timer Logic ---------- */
+  function renderTime(t){
+    const m = Math.floor(t/60), s = t%60;
+    if(timerEl) timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  }
+  function setModeLabel(){
+    if(modeLabel) modeLabel.textContent = `Mode: ${isWork ? 'Work' : 'Break'}`;
   }
 
-  // try to play alarm (may be blocked if no gesture yet)
-  try{
-    alarm.currentTime = 0;
-    const p = alarm.play();
-    if(p && typeof p.then === 'function'){ p.catch(()=>{}); }
-  }catch(e){ /* ignore */ }
+  function endOfWorkSessionActions(workMinutes){
+    stats.completedSeconds = (stats.completedSeconds || 0) + (workMinutes * 60);
+    stats.sessionsCompleted = (stats.sessionsCompleted || 0) + 1;
+    saveStats();
+  }
 
-  // switch
-  isWork = !isWork;
-  setModeLabel();
-  timeLeft = (isWork ? (parseInt(workInput.value,10)||25) : (parseInt(breakInput.value,10)||5)) * 60;
-  renderTime(timeLeft);
-}
+  function tryPlayAlarm(){
+    try{
+      alarm.currentTime = 0;
+      const p = alarm.play();
+      if(p && typeof p.then === 'function') p.catch(()=>{ /* blocked */ });
+    }catch(e){ /* ignore */ }
+  }
 
-function startTimer(){
-  // treat this user action as unlocking audio
-  unlockAudioOnUserGesture();
+  function tick(){
+    if(timeLeft > 0){
+      timeLeft--;
+      renderTime(timeLeft);
+      return;
+    }
+    // session ended
+    if(isWork){
+      const workMin = safeParseInt(workInput.value, 25);
+      endOfWorkSessionActions(workMin);
+    }
+    // Play alarm (may be blocked if user never interacted)
+    tryPlayAlarm();
 
-  if(isRunning) return;
-  isRunning = true;
-  if(!timeLeft) timeLeft = (parseInt(workInput.value,10)||25) * 60;
-  timerInterval = setInterval(tick, 1000);
-}
-function pauseTimer(){ clearInterval(timerInterval); timerInterval = null; isRunning = false; }
-function resetTimer(){ pauseTimer(); isWork = true; timeLeft = (parseInt(workInput.value,10)||25)*60; renderTime(timeLeft); setModeLabel(); }
+    // flip mode
+    isWork = !isWork;
+    setModeLabel();
+    timeLeft = (isWork ? safeParseInt(workInput.value,25) : safeParseInt(breakInput.value,5)) * 60;
+    renderTime(timeLeft);
+  }
 
-startBtn.addEventListener('click', startTimer);
-pauseBtn.addEventListener('click', pauseTimer);
-resetBtn.addEventListener('click', resetTimer);
+  function startTimer(){
+    // treat this user action as unlocking audio
+    unlockAudioOnUserGesture();
 
-/* sync input changes */
-workInput.addEventListener('change', ()=>{
-  if(!isRunning && isWork){ timeLeft = (parseInt(workInput.value,10)||25)*60; renderTime(timeLeft); }
-});
-breakInput.addEventListener('change', ()=>{
-  if(!isRunning && !isWork){ timeLeft = (parseInt(breakInput.value,10)||5)*60; renderTime(timeLeft); }
-});
+    if(isRunning) return;
+    isRunning = true;
+    // disable start button while running
+    if(startBtn) startBtn.disabled = true;
+    if(pauseBtn) pauseBtn.disabled = false;
+    if(resetBtn) resetBtn.disabled = false;
 
-renderTime(timeLeft); setModeLabel();
+    if(!timeLeft) timeLeft = safeParseInt(workInput.value,25) * 60;
+    timerInterval = setInterval(tick, 1000);
+  }
+  function pauseTimer(){
+    clearInterval(timerInterval);
+    timerInterval = null;
+    isRunning = false;
+    if(startBtn) startBtn.disabled = false;
+  }
+  function resetTimer(){
+    pauseTimer();
+    isWork = true;
+    timeLeft = safeParseInt(workInput.value,25) * 60;
+    renderTime(timeLeft);
+    setModeLabel();
+  }
 
-/* ---------- To-Do List (tick mark, persistence) ---------- */
-const todoInput = $('#todoInput'), addTaskBtn = $('#addTaskBtn'), todoList = $('#todo-list');
+  // attach event listeners if elements exist
+  if(startBtn) startBtn.addEventListener('click', startTimer);
+  if(pauseBtn) pauseBtn.addEventListener('click', pauseTimer);
+  if(resetBtn) resetBtn.addEventListener('click', resetTimer);
 
-function loadTasks(){
-  try{
-    const raw = localStorage.getItem(S_TASKS);
-    return raw ? JSON.parse(raw) : [];
-  }catch(e){ return []; }
-}
-function saveTasks(items){
-  localStorage.setItem(S_TASKS, JSON.stringify(items));
-}
-function refreshTasksUI(){
-  const items = loadTasks();
-  todoList.innerHTML = '';
-  const undone = items.filter(it => !it.done);
-  const done = items.filter(it => it.done);
-  undone.concat(done).forEach(it => {
-    const li = document.createElement('li'); li.className = 'quest' + (it.done ? ' done' : '');
-    const left = document.createElement('div'); left.className='left';
-    const box = document.createElement('div'); box.className='checkbox'; if(it.done) box.classList.add('done'); box.innerHTML = it.done ? '✓' : '';
-    box.addEventListener('click', ()=>{
-      it.done = !it.done;
-      const arr = loadTasks().map(x => x.id === it.id ? it : x);
-      saveTasks(arr);
-      refreshTasksUI();
-    });
-    const textWrap = document.createElement('div'); textWrap.style.display='flex'; textWrap.style.flexDirection='column';
-    const desc = document.createElement('span'); desc.className='desc'; desc.textContent = it.text;
-    const meta = document.createElement('span'); meta.className='meta'; meta.textContent = it.done ? 'Completed' : 'Quest';
-    textWrap.appendChild(desc); textWrap.appendChild(meta);
-    left.appendChild(box); left.appendChild(textWrap);
-    const del = document.createElement('button'); del.className='del'; del.textContent='✕';
-    del.addEventListener('click', ()=>{
-      let arr = loadTasks(); arr = arr.filter(x => x.id !== it.id); saveTasks(arr); refreshTasksUI();
-    });
-    li.appendChild(left); li.appendChild(del); todoList.appendChild(li);
+  // sync inputs on change if not running
+  if(workInput) workInput.addEventListener('change', ()=>{
+    if(!isRunning && isWork){ timeLeft = safeParseInt(workInput.value,25)*60; renderTime(timeLeft); }
   });
-}
-function addTask(text){
-  const items = loadTasks();
-  const item = { id: Date.now().toString(36), text: text, done:false, createdAt: Date.now() };
-  items.push(item); saveTasks(items); refreshTasksUI();
-}
-addTaskBtn.addEventListener('click', ()=>{
-  const v = todoInput.value.trim();
-  if(!v) return;
-  addTask(v);
-  todoInput.value='';
-  // unlocking audio on user gesture
-  unlockAudioOnUserGesture();
-});
-todoInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') addTaskBtn.click(); });
+  if(breakInput) breakInput.addEventListener('change', ()=>{
+    if(!isRunning && !isWork){ timeLeft = safeParseInt(breakInput.value,5)*60; renderTime(timeLeft); }
+  });
 
-refreshTasksUI();
+  // initial render
+  renderTime(timeLeft);
+  setModeLabel();
 
-/* ---------- Helpers: remove number spinners  ---------- */
-(function removeSpinnerCSS(){
-  const s = document.createElement('style');
-  s.textContent = 'input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0} input[type=number]{-moz-appearance:textfield}';
-  document.head.appendChild(s);
-})();
+  /* ---------- To-Do List (tick mark, persistence) ---------- */
+  function loadTasks(){
+    try{
+      const raw = localStorage.getItem(S_TASKS);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveTasks(items){
+    localStorage.setItem(S_TASKS, JSON.stringify(items));
+  }
+  function refreshTasksUI(){
+    const items = loadTasks();
+    todoList.innerHTML = '';
+    const undone = items.filter(it => !it.done);
+    const done = items.filter(it => it.done);
+    undone.concat(done).forEach(it => {
+      const li = document.createElement('li');
+      li.className = 'quest' + (it.done ? ' done' : '');
+      const left = document.createElement('div'); left.className='left';
+      const box = document.createElement('div'); box.className='checkbox';
+      if(it.done) box.classList.add('done');
+      box.innerHTML = it.done ? '✓' : '';
+      box.addEventListener('click', ()=>{
+        it.done = !it.done;
+        const arr = loadTasks().map(x => x.id === it.id ? it : x);
+        saveTasks(arr);
+        refreshTasksUI();
+      });
+      const textWrap = document.createElement('div'); textWrap.style.display='flex'; textWrap.style.flexDirection='column';
+      const desc = document.createElement('span'); desc.className='desc'; desc.textContent = it.text;
+      const meta = document.createElement('span'); meta.className='meta'; meta.textContent = it.done ? 'Completed' : 'Quest';
+      textWrap.appendChild(desc); textWrap.appendChild(meta);
+      left.appendChild(box); left.appendChild(textWrap);
+      const del = document.createElement('button'); del.className='del'; del.textContent='✕';
+      del.addEventListener('click', ()=>{
+        let arr = loadTasks(); arr = arr.filter(x => x.id !== it.id); saveTasks(arr); refreshTasksUI();
+      });
+      li.appendChild(left); li.appendChild(del); todoList.appendChild(li);
+    });
+  }
+  function addTask(text){
+    const items = loadTasks();
+    const item = { id: Date.now().toString(36), text: text, done:false, createdAt: Date.now() };
+    items.push(item); saveTasks(items); refreshTasksUI();
+  }
+  if(addTaskBtn) addTaskBtn.addEventListener('click', ()=>{
+    const v = todoInput.value.trim();
+    if(!v) return;
+    addTask(v);
+    todoInput.value='';
+    unlockAudioOnUserGesture(); // user gesture
+  });
+  if(todoInput) todoInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') addTaskBtn.click(); });
 
-/* ---------- Vercel analytics (static) ---------- */
-(function installVercel(){
-  try{
-    const s = document.createElement('script'); s.defer=true; s.src='/_vercel/insights/script.js'; document.head.appendChild(s);
-  }catch(e){}
-})();
+  refreshTasksUI();
 
+  /* ---------- Helpers: remove number spinners  ---------- */
+  (function removeSpinnerCSS(){
+    const s = document.createElement('style');
+    s.textContent = 'input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0} input[type=number]{-moz-appearance:textfield}';
+    document.head.appendChild(s);
+  })();
+
+  /* ---------- Vercel analytics (static) ---------- */
+  (function installVercel(){
+    try{
+      const s = document.createElement('script'); s.defer=true; s.src='/_vercel/insights/script.js'; document.head.appendChild(s);
+    }catch(e){}
+  })();
+
+  console.log('GrindForge initialized');
+}); // DOMContentLoaded end
 </script>
 </body>
 </html>
