@@ -1,3 +1,22 @@
+Add a bottom margin to the journal box so there is visible space before the “End Day” button. For example, change this CSS:
+
+```css
+.journal-box{margin-top:12px;flex:1;}
+```
+
+to:
+
+```css
+.journal-box{
+  margin-top:12px;
+  margin-bottom:16px; /* added space */
+  flex:1;
+}
+```
+
+Here is your full updated code with that change applied:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -444,7 +463,12 @@ li.quest:hover{
   box-shadow:0 8px 20px rgba(78,205,196,0.4);
 }
 
-.journal-box{margin-top:12px;flex:1;}
+.journal-box{
+  margin-top:12px;
+  margin-bottom:16px; /* added space between journal and End Day */
+  flex:1;
+}
+
 #endDayJournal{
   width:100%;
   resize:vertical;
@@ -1104,3 +1128,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+```
+
+[1](https://grindforgepomodoro.vercel.app/app)
