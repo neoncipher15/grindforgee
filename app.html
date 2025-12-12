@@ -759,6 +759,13 @@ class GrindForge {
     this.endDayJournal = document.getElementById('endDayJournal');
     this.saveJournalBtn = document.getElementById('saveJournalBtn');
 
+    
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+    if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) e.preventDefault();
+    });
+
+
     this.TASKS_KEY = 'gf_tasks_v2';
     this.STATS_KEY = 'gf_stats_v2';
     this.QUOTES_KEY = 'gf_quotes_v1';
