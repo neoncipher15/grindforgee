@@ -9,7 +9,7 @@
 :root{
   --accent:#4ecdc4;
   --bg:#030612;
-  --card: rgba(4,6,10,0.7);
+  --card: rgba(4,6,10,0.85);
   --glass: rgba(0,0,0,0.55);
   --muted:#9adbd4;
   --text:#dffcff;
@@ -17,12 +17,11 @@
   --success:#6ef0c9;
   --shadow: rgba(2,6,10,0.6);
   --radius:14px;
-  --gap:12px;
+  --gap:16px;
 }
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{height:100%; margin:0}
 body{
-  margin:0;
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color:var(--text);
   background-image: url('img.jpg');
@@ -35,7 +34,7 @@ body{
   position: relative;
 }
 
-/* Dark overlay for readability over image */
+/* Dark overlay */
 .overlay{
   position:fixed;
   inset:0;
@@ -43,630 +42,336 @@ body{
   z-index: -1;
 }
 
-/* Main layout - always flex column on mobile, row on desktop */
-.page-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  gap: 20px;
+/* EXCEL DASHBOARD LAYOUT - CSS GRID */
+.dashboard-grid {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr 1fr;
+  grid-template-areas: 
+    "header header"
+    "sidebar timer"
+    "sidebar todo";
+  gap: var(--gap);
+  padding: var(--gap);
   box-sizing: border-box;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.main-content {
+/* HEADER - Website Name + Logo */
+.header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--card);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius);
+  padding: 20px 28px;
+  box-shadow: 0 16px 40px var(--shadow);
+  border: 1px solid rgba(78,205,196,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(78,205,196,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.header:hover::before { opacity: 1; }
+.header:hover { transform: translateY(-2px); }
+
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(78,205,196,0.4);
+}
+.brand-title {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), #6ef0c9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+.brand-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* SIDEBAR - Left column (Date, Quotes, Journal) */
+.sidebar {
+  grid-area: sidebar;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  flex: 1;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-/* Desktop layout: side-by-side */
-@media (min-width: 881px) {
-  .page-container {
-    padding: 28px;
-  }
-  
-  .main-content {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 24px;
-  }
-  
-  .left-col {
-    width: 320px;
-    flex-shrink: 0;
-  }
-  
-  .right-col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 600px;
-  }
-}
-
-/* Mobile-first: stacked layout */
-@media (max-width: 880px) {
-  .left-col {
-    order: 3;
-    width: 100%;
-  }
-  
-  .right-col {
-    order: 1;
-    width: 100%;
-  }
-  
-  .creator-credit {
-    order: 2;
-    margin-top: auto;
-  }
+  gap: var(--gap);
+  height: 100%;
 }
 
 .box{
   background:var(--card);
-  backdrop-filter: blur(12px);
-  padding:14px;
+  backdrop-filter: blur(16px);
+  padding:18px;
   border-radius:var(--radius);
-  box-shadow: 0 12px 30px var(--shadow);
-  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, background 0.18s ease-out;
+  box-shadow: 0 16px 40px var(--shadow);
+  transition: all 0.2s ease-out;
   border: 1px solid rgba(78,205,196,0.1);
-  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .box:hover{
   transform: translateY(-4px);
-  box-shadow: 0 20px 45px rgba(78,205,196,0.2), 0 0 0 1px rgba(78,205,196,0.1);
+  box-shadow: 0 24px 50px rgba(78,205,196,0.25);
   background: rgba(10,16,30,0.95);
 }
 
-/* date/time */
-#datetime-box{ 
-  font-size:15px; 
-  letter-spacing:0.2px; 
-  white-space:nowrap;
-  text-align: center;
-}
-
-/* stats */
-.stats-row{ 
-  display:flex; 
-  gap:10px; 
-  margin-top:10px; 
-  align-items:center; 
-  font-size:13px; 
-  color:var(--muted); 
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.stat-pill{ 
-  background: rgba(255,255,255,0.05); 
-  padding:6px 9px; 
-  border-radius:10px; 
-  display:inline-flex; 
-  gap:8px; 
-  align-items:center; 
-  border:1px solid rgba(78,205,196,0.1); 
-}
-
-/* quotes */
-.quotes h3{ margin:0 0 8px 0; font-size:16px}
-.quote-text{ font-size:14px; color:#dffcff; opacity:0.95; min-height:44px; }
-.quote-actions{ display:flex; gap:8px; margin-top:8px; flex-wrap: wrap;}
-.small-btn{ 
-  border:0; 
-  padding:8px 10px; 
-  border-radius:10px; 
-  cursor:pointer; 
-  background:var(--accent); 
-  color:#042726; 
-  font-weight:600; 
-  transition:transform 0.12s ease, box-shadow 0.12s ease;
-  flex: 1;
-  min-width: 80px;
-}
-.small-btn:hover{ 
-  transform:translateY(-1px); 
-  box-shadow:0 6px 16px rgba(78,205,196,0.45); 
-}
-
-.journal-box{
-  margin-top:10px;
-  padding:10px;
-  border-radius:10px;
-  background:rgba(0,0,0,0.4);
-  border:1px solid rgba(78,205,196,0.15);
-}
-#endDayJournal{
-  width:100%;
-  resize:vertical;
-  border-radius:8px;
-  padding:8px;
-  font-family:"Poppins", system-ui;
-  font-size:13px;
-  background:rgba(255,255,255,0.05);
-  color:var(--text);
-  border:1px solid rgba(78,205,196,0.3);
-  box-sizing:border-box;
-}
-#endDayJournal:focus{ 
-  outline:none; 
-  box-shadow:0 0 8px rgba(78,205,196,0.4); 
-}
-
-#endDayBtn{
-  margin-top:14px;
-  width:100%;
-  padding:10px 12px;
-  border-radius:10px;
-  border:0;
-  cursor:pointer;
-  background:linear-gradient(135deg, #4ecdc4, #6ef0c9);
-  color:#042726;
-  font-weight:700;
-  font-size:14px;
-  box-shadow:0 10px 24px rgba(78,205,196,0.45);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  transition:transform 0.15s ease, box-shadow 0.15s ease;
-}
-#endDayBtn:hover{
-  transform:translateY(-2px) scale(1.01);
-  box-shadow:0 14px 32px rgba(78,205,196,0.6);
-}
-#endDayBtn span.icon{ font-size:16px; }
-
+/* TIMER - Top Right */
 .timer-box{
-  padding:22px 20px;
+  grid-area: timer;
   text-align:center;
   background:var(--card);
-  border-radius:18px;
-  box-shadow:0 14px 40px var(--shadow);
-  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, background 0.18s ease-out;
-  border: 1px solid rgba(78,205,196,0.1);
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+  backdrop-filter: blur(20px);
+  border-radius:var(--radius);
+  box-shadow:0 20px 50px var(--shadow);
+  border: 1px solid rgba(78,205,196,0.15);
+  padding:28px 24px;
+  transition: all 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .timer-box:hover{
   transform:translateY(-4px);
-  box-shadow:0 24px 55px rgba(78,205,196,0.25), 0 0 0 1px rgba(78,205,196,0.15);
-  background:rgba(10,16,30,0.95);
+  box-shadow:0 32px 70px rgba(78,205,196,0.3);
 }
-.timer-box h1{ margin:0 0 6px 0; font-size:20px}
-#timer{ font-size:44px; font-weight:700; color:var(--accent); margin:12px 0; }
-.timer-controls{ 
-  display:flex; 
-  gap:8px; 
-  justify-content:center; 
-  margin-bottom:8px; 
-  flex-wrap: wrap;
-}
+.timer-box h1{ margin:0 0 12px 0; font-size:24px; font-weight:700 }
+#timer{ font-size:52px; font-weight:800; color:var(--accent); margin:16px 0; letter-spacing:-1px; }
+.timer-controls{ display:flex; gap:12px; justify-content:center; margin-bottom:16px; flex-wrap:wrap; }
 .timer-controls button{ 
-  padding:8px 12px; 
-  border-radius:10px; 
+  padding:12px 20px; 
+  border-radius:12px; 
   border:0; 
   cursor:pointer; 
   background:var(--accent); 
   color:#042726; 
   font-weight:700; 
-  transition:transform 0.12s ease, box-shadow 0.12s ease;
-  flex: 1;
-  min-width: 70px;
-  max-width: 100px;
+  font-size:15px;
+  transition:all 0.15s ease;
+  min-width: 90px;
 }
-.timer-controls button[disabled]{ 
-  opacity:0.6; 
-  transform:none; 
-  cursor:not-allowed; 
-  box-shadow:none 
-}
+.timer-controls button[disabled]{ opacity:0.6; cursor:not-allowed; transform:none }
 .timer-controls button:not([disabled]):hover{ 
-  transform:translateY(-2px); 
-  box-shadow:0 8px 20px rgba(78,205,196,0.55); 
+  transform:translateY(-2px) scale(1.02); 
+  box-shadow:0 12px 28px rgba(78,205,196,0.5); 
 }
-.settings{ 
-  display:flex; 
-  gap:10px; 
-  justify-content:center; 
-  align-items:center; 
-  margin-top:8px; 
-  font-size:14px;
-  flex-wrap: wrap;
-}
-.settings label{ 
-  display:flex; 
-  flex-direction:column; 
-  align-items:center; 
-  gap:4px; 
-}
-.settings input{ 
-  width:70px; 
-  padding:8px; 
-  border-radius:8px; 
-  border:0; 
-  background:rgba(255,255,255,0.06); 
-  color:var(--text); 
-  text-align:center 
-}
+.settings{ display:flex; gap:16px; justify-content:center; align-items:center; margin-top:12px; flex-wrap:wrap; }
+.settings label{ display:flex; flex-direction:column; align-items:center; gap:6px; font-size:14px; }
+.settings input{ width:80px; padding:12px; border-radius:10px; border:0; background:rgba(255,255,255,0.08); color:var(--text); text-align:center; font-size:16px; font-weight:600; }
+.progress-row{ display:flex; justify-content:space-between; gap:16px; margin-top:16px; align-items:center; font-size:14px; color:var(--muted); width:100%; flex-wrap:wrap; }
 
-.progress-row{ 
-  display:flex; 
-  justify-content:space-between; 
-  gap:12px; 
-  margin-top:10px; 
-  align-items:center; 
-  font-size:13px; 
-  color:var(--muted);
-  flex-wrap: wrap;
-}
-
+/* TODO - Bottom Right */
 .todo-container{
-  padding:18px;
+  grid-area: todo;
   background:var(--glass);
-  border-radius:14px;
-  box-shadow:0 14px 36px var(--shadow);
-  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, background 0.18s ease-out;
-  border: 1px solid rgba(78,205,196,0.1);
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+  backdrop-filter: blur(16px);
+  border-radius:var(--radius);
+  box-shadow:0 20px 50px var(--shadow);
+  border: 1px solid rgba(78,205,196,0.15);
+  padding:24px;
+  transition: all 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .todo-container:hover{
   transform:translateY(-4px);
-  box-shadow:0 24px 55px rgba(78,205,196,0.25), 0 0 0 1px rgba(78,205,196,0.15);
-  background:rgba(5,7,14,0.98);
+  box-shadow:0 32px 70px rgba(78,205,196,0.3);
 }
-.todo-container h2{ margin:0 0 10px 0; font-size:18px }
-.todo-input{ 
-  display:flex; 
-  gap:8px; 
-  margin-bottom:12px;
-  flex-direction: column;
-}
-.todo-input input{ 
-  padding:10px 12px; 
-  border-radius:10px; 
-  border:0; 
-  background:rgba(255,255,255,0.05); 
-  color:var(--text);
-  width: 100%;
-}
-.todo-input button{ 
-  padding:9px 12px; 
-  border-radius:10px; 
-  border:0; 
-  background:var(--accent); 
-  color:#042726; 
-  font-weight:700; 
-  transition:transform 0.12s ease, box-shadow 0.12s ease;
-  width: 100%;
-}
-.todo-input button:hover{ 
-  transform:translateY(-1px); 
-  box-shadow:0 6px 16px rgba(78,205,196,0.45); 
-}
-ul#todo-list{ 
-  list-style:none; 
-  padding:0; 
-  margin:0; 
-  display:block; 
-  max-height:300px; 
-  overflow-y:auto; 
-}
+.todo-container h2{ margin:0 0 16px 0; font-size:22px; text-align:center; }
+.todo-input{ display:flex; gap:12px; margin-bottom:20px; flex-direction:column; }
+.todo-input input{ padding:14px 16px; border-radius:12px; border:0; background:rgba(255,255,255,0.08); color:var(--text); font-size:15px; }
+.todo-input button{ padding:14px 20px; border-radius:12px; border:0; background:var(--accent); color:#042726; font-weight:700; font-size:15px; transition:all 0.15s ease; }
+.todo-input button:hover{ transform:translateY(-2px); box-shadow:0 12px 28px rgba(78,205,196,0.5); }
+ul#todo-list{ flex:1; list-style:none; padding:0; margin:0; overflow-y:auto; }
 li.quest{ 
-  display:flex; 
-  justify-content:space-between; 
-  align-items:center; 
-  gap:12px; 
-  padding:10px; 
-  margin-bottom:10px; 
-  border-radius:10px; 
-  background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); 
-  border:1px solid rgba(255,255,255,0.05); 
+  display:flex; justify-content:space-between; align-items:center; gap:16px; 
+  padding:14px 16px; margin-bottom:12px; border-radius:12px; 
+  background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); 
+  border:1px solid rgba(255,255,255,0.08); 
+  transition:all 0.15s ease;
 }
-.quest .left{ 
-  display:flex; 
-  gap:10px; 
-  align-items:center; 
-  flex:1; 
-}
-.checkbox{ 
-  width:28px; 
-  height:28px; 
-  border-radius:8px; 
-  border:2px solid rgba(255,255,255,0.1); 
-  display:flex; 
-  align-items:center; 
-  justify-content:center; 
-  cursor:pointer; 
-  background:rgba(255,255,255,0.02); 
-  transition: all 0.12s ease;
-  flex-shrink: 0;
-}
-.checkbox:hover{ 
-  transform:scale(1.05); 
-  box-shadow:0 0 8px rgba(78,205,196,0.3); 
-}
-.checkbox.done{ 
-  background:var(--success); 
-  border-color: rgba(110,240,201,0.9) 
-}
-.quest .desc{ 
-  font-weight:700; 
-  flex:1; 
-}
-.quest .meta{ 
-  font-size:12px; 
-  color:var(--muted);
-  flex-shrink: 0;
-}
-.quest button.del{ 
-  padding:6px 8px; 
-  border-radius:8px; 
-  border:0; 
-  background:var(--danger); 
-  color:#fff; 
-  cursor:pointer; 
-  flex-shrink:0; 
-  transition:all 0.12s ease;
-  white-space: nowrap;
-}
-.quest button.del:hover{ 
-  transform:translateY(-1px); 
-  box-shadow:0 6px 14px rgba(255,90,90,0.6); 
-  background:#ff7272; 
-}
-.quest.done .desc{ 
-  text-decoration:line-through; 
-  opacity:0.55; 
-  color:#bfeee5 
-}
-.quest.done .meta{ opacity:0.6 }
+li.quest:hover{ transform:translateX(4px); box-shadow:0 8px 24px rgba(78,205,196,0.2); }
+.quest .left{ display:flex; gap:12px; align-items:center; flex:1; }
+.checkbox{ width:32px; height:32px; border-radius:10px; border:2px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; cursor:pointer; background:rgba(255,255,255,0.03); transition:all 0.15s ease; flex-shrink:0; }
+.checkbox:hover{ transform:scale(1.05); box-shadow:0 0 12px rgba(78,205,196,0.4); }
+.checkbox.done{ background:var(--success); border-color:var(--success); color:#042726; }
+.quest .desc{ font-weight:700; font-size:15px; flex:1; }
+.quest .meta{ font-size:13px; color:var(--muted); flex-shrink:0; white-space:nowrap; }
+.quest button.del{ padding:8px 12px; border-radius:10px; border:0; background:var(--danger); color:#fff; cursor:pointer; font-weight:600; transition:all 0.15s ease; }
+.quest button.del:hover{ transform:translateY(-1px); box-shadow:0 8px 20px rgba(255,90,90,0.5); background:#ff7272; }
+.quest.done .desc{ text-decoration:line-through; opacity:0.6; color:#bfeee5 }
+.quest.done .meta{ opacity:0.7 }
 
-/* End Day overlay - fully responsive */
+/* Sidebar specific styles */
+#datetime-box{ font-size:16px; letter-spacing:0.3px; text-align:center; margin-bottom:12px; }
+.stats-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.stat-pill{ background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:12px; font-size:14px; border:1px solid rgba(78,205,196,0.2); }
+.quotes h3, .journal-box h4{ margin:0 0 12px 0; font-size:16px; }
+.quote-text{ font-size:15px; min-height:48px; margin-bottom:12px; }
+.quote-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+.small-btn{ border:0; padding:10px 16px; border-radius:12px; cursor:pointer; background:var(--accent); color:#042726; font-weight:700; font-size:14px; transition:all 0.15s ease; flex:1; min-width:100px; }
+.small-btn:hover{ transform:translateY(-1px); box-shadow:0 8px 20px rgba(78,205,196,0.4); }
+.journal-box{ margin-top:16px; flex:1; }
+#endDayJournal{ width:100%; resize:vertical; border-radius:12px; padding:12px; font-size:14px; background:rgba(255,255,255,0.06); color:var(--text); border:1px solid rgba(78,205,196,0.25); min-height:100px; }
+#endDayJournal:focus{ outline:none; box-shadow:0 0 12px rgba(78,205,196,0.5); }
+#endDayBtn{ margin-top:auto; padding:14px; border-radius:12px; border:0; cursor:pointer; background:linear-gradient(135deg, #4ecdc4, #6ef0c9); color:#042726; font-weight:800; font-size:16px; box-shadow:0 12px 32px rgba(78,205,196,0.5); display:flex; align-items:center; justify-content:center; gap:10px; transition:all 0.2s ease; }
+#endDayBtn:hover{ transform:translateY(-2px) scale(1.02); box-shadow:0 20px 40px rgba(78,205,196,0.6); }
+
+/* RESPONSIVE - Mobile/Tablet */
+@media (max-width: 880px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-areas: 
+      "header"
+      "timer"
+      "sidebar"
+      "todo";
+    padding: 12px;
+    gap: 12px;
+  }
+  .brand-title { font-size: 24px; }
+  #timer { font-size: 42px; }
+  .logo { width: 40px; height: 40px; }
+}
+
+@media (max-width: 480px) {
+  .dashboard-grid { padding: 8px; gap: 10px; }
+  .header { padding: 16px 20px; flex-direction: column; text-align: center; gap: 12px; }
+  .brand-title { font-size: 20px; }
+  #timer { font-size: 36px; }
+  .timer-controls button { padding: 10px 16px; font-size: 14px; }
+}
+
+/* End Day Overlay */
 #endDayOverlay{
-  position:fixed;
-  inset:0;
-  background:rgba(3,6,18,0.95);
-  backdrop-filter:blur(16px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:50;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 0.35s ease;
-  padding: 20px;
+  position:fixed; inset:0; background:rgba(3,6,18,0.95); backdrop-filter:blur(20px);
+  display:flex; align-items:center; justify-content:center; z-index:50;
+  opacity:0; pointer-events:none; transition:opacity 0.35s ease; padding:20px;
 }
-#endDayOverlay.active{ 
-  opacity:1; 
-  pointer-events:auto; 
-}
+#endDayOverlay.active{ opacity:1; pointer-events:auto; }
 .end-day-content{
-  text-align:center;
-  width: 100%;
-  max-width: 420px;
-  padding:30px 24px;
-  border-radius:18px;
-  background:rgba(8,10,20,0.95);
-  box-shadow:0 25px 70px rgba(0,0,0,0.8);
-  border:1px solid rgba(78,205,196,0.3);
-  transition: all 0.2s ease;
+  text-align:center; width:100%; max-width:420px; padding:32px 24px;
+  border-radius:20px; background:rgba(8,10,20,0.98); box-shadow:0 30px 80px rgba(0,0,0,0.9);
+  border:1px solid rgba(78,205,196,0.4);
 }
-.end-day-content:hover{ 
-  transform:translateY(-4px); 
-  box-shadow:0 32px 80px rgba(78,205,196,0.25); 
-}
-.end-day-circle{
-  width:90px; 
-  height:90px; 
-  border-radius:50%;
-  margin:0 auto 20px;
-  background:radial-gradient(circle at 30% 20%, #ffffff, #4ecdc4);
-  position:relative; 
-  overflow:hidden;
+.end-day-circle{ width:100px; height:100px; border-radius:50%; margin:0 auto 24px;
+  background:radial-gradient(circle at 30% 20%, #ffffff, #4ecdc4); position:relative; overflow:hidden;
   animation:endCircle 1.6s ease-out forwards;
 }
-.end-day-circle::after{
-  content:''; 
-  position:absolute; 
-  inset:14px;
-  border-radius:50%; 
-  border:2px solid rgba(3,6,18,0.3);
-  backdrop-filter:blur(8px);
+.end-day-check{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.2); opacity:0;
+  font-size:42px; color:#042726; font-weight:800; animation:endCheck 1.4s 0.4s ease-out forwards;
 }
-.end-day-check{
-  position:absolute; 
-  top:50%; 
-  left:50%;
-  transform:translate(-50%,-50%) scale(0.2); 
-  opacity:0;
-  font-size:38px; 
-  color:#042726; 
-  font-weight:700;
-  animation:endCheck 1.4s 0.4s ease-out forwards;
-}
-@keyframes endCircle{ 
-  0%{ transform:scale(0.4); opacity:0; } 
-  60%{ transform:scale(1.05); opacity:1; } 
-  100%{ transform:scale(1); opacity:1; } 
-}
-@keyframes endCheck{ 
-  0%{ opacity:0; transform:translate(-50%,-50%) scale(0.2); } 
-  40%{ opacity:1; transform:translate(-50%,-50%) scale(1.1); } 
-  100%{ opacity:1; transform:translate(-50%,-50%) scale(1); } 
-}
-.end-day-title{ font-size:22px; margin-bottom:6px; }
-.end-day-sub{ font-size:14px; color:var(--muted); margin-bottom:18px; }
-#endDaySummary{ 
-  font-family:"Poppins", monospace; 
-  font-size:16px; 
-  min-height:56px; 
-  white-space:pre-line; 
-}
-.end-day-hint{ 
-  margin-top:16px; 
-  font-size:12px; 
-  color:var(--muted); 
-}
+@keyframes endCircle{ 0%{transform:scale(0.4);opacity:0;} 60%{transform:scale(1.05);opacity:1;} 100%{transform:scale(1);opacity:1;} }
+@keyframes endCheck{ 0%{opacity:0;transform:translate(-50%,-50%) scale(0.2);} 40%{opacity:1;transform:translate(-50%,-50%) scale(1.1);} 100%{opacity:1;transform:translate(-50%,-50%) scale(1);} }
+.end-day-title{ font-size:26px; margin-bottom:8px; font-weight:800; }
+.end-day-sub{ font-size:15px; color:var(--muted); margin-bottom:20px; }
+#endDaySummary{ font-family:"Poppins", monospace; font-size:17px; min-height:64px; white-space:pre-line; margin-bottom:20px; }
+.end-day-hint{ font-size:13px; color:var(--muted); }
 
-/* Creator credit - responsive */
-.creator-credit {
-  text-align: center;
-  color: #39FF14;
-  font-weight: 300;
-  font-size: 14px;
-  padding: 10px;
-  width: 100%;
-}
-
-/* Small mobile adjustments */
-@media (max-width: 480px) {
-  .page-container {
-    padding: 12px;
-    gap: 16px;
-  }
-  
-  #timer { 
-    font-size: 36px; 
-  }
-  
-  .timer-box { 
-    padding: 18px 16px; 
-  }
-  
-  .todo-container { 
-    padding: 16px; 
-  }
-  
-  .box {
-    padding: 12px;
-  }
-  
-  .timer-controls button {
-    padding: 10px 8px;
-    font-size: 14px;
-  }
-  
-  .settings input {
-    width: 60px;
-  }
-  
-  .end-day-content {
-    padding: 24px 16px;
-    margin: 10px;
-  }
-  
-  .end-day-circle {
-    width: 70px;
-    height: 70px;
-  }
-  
-  .end-day-check {
-    font-size: 28px;
-  }
-}
-
-@media (max-width: 360px) {
-  #timer { 
-    font-size: 32px; 
-  }
-  
-  .stat-pill {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-}
-
-/* Hide spin buttons for number inputs */
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type=number] {
-  -moz-appearance: textfield;
-}
+/* Hide number input spinners */
+input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+input[type=number] { -moz-appearance:textfield; }
 </style>
 </head>
 <body>
-<p class="creator-credit">Creator - Shaurya Chauhan</p>
-
-<div class="stars"></div>
 <div class="overlay"></div>
 
-<div class="page-container">
-  <div class="main-content">
-    <div class="right-col">
-      <section class="timer-box" aria-label="Pomodoro Timer">
-        <h1>Pomodoro Timer</h1>
-        <div id="timer" aria-live="polite">25:00</div>
-        <div class="timer-controls">
-          <button id="startBtn">Start</button>
-          <button id="pauseBtn" disabled>Pause</button>
-          <button id="resetBtn">Reset</button>
-        </div>
-        <div class="settings">
-          <label>Work
-            <input id="workTime" type="number" min="1" value="25" />
-          </label>
-          <label>Break
-            <input id="breakTime" type="number" min="1" value="5" />
-          </label>
-        </div>
-        <div class="progress-row">
-          <div id="modeLabel">Mode: Work</div>
-          <div id="sessionLabel">Completed: 0</div>
-        </div>
-      </section>
+<div class="dashboard-grid">
+  <!-- HEADER: Logo + GrindForge Title -->
+  <header class="header">
+    <img src="/GrindForge.png" alt="GrindForge Logo" class="logo">
+    <div>
+      <h1 class="brand-title">GrindForge</h1>
+      <p class="brand-subtitle">Pomodoro Productivity Dashboard</p>
+    </div>
+  </header>
 
-      <aside class="todo-container" aria-label="To-Do">
-        <h2>To-Do List ✨</h2>
-        <div class="todo-input">
-          <input id="todoInput" type="text" placeholder="Write a task..." />
-          <button id="addTaskBtn">Add</button>
-        </div>
-        <ul id="todo-list" aria-live="polite"></ul>
-      </aside>
+  <!-- SIDEBAR: Date, Stats, Quotes, Journal -->
+  <aside class="sidebar">
+    <div class="box" id="dateBox">
+      <div id="datetime-box" aria-live="polite">Loading date...</div>
+      <div class="stats-row">
+        <div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
+        <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
+      </div>
     </div>
 
-    <aside class="left-col">
-      <div class="box" id="dateBox">
-        <div id="datetime-box" aria-live="polite">Loading date...</div>
-        <div class="stats-row">
-          <div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
-          <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
-        </div>
+    <div class="box quotes">
+      <h3>Quote</h3>
+      <div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
+      <div class="quote-actions">
+        <button class="small-btn" id="newQuoteBtn">New Quote</button>
+        <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
+      </div>
+      <div style="margin-top:8px; font-size:13px; color:var(--muted)">Saved quotes persist locally.</div>
+
+      <div class="journal-box">
+        <h4>Daily Journal</h4>
+        <textarea id="endDayJournal" placeholder="Write your thoughts about today..." rows="4"></textarea>
+        <button id="saveJournalBtn" class="small-btn" style="margin-top:12px;">Save Journal</button>
       </div>
 
-      <div class="box quotes">
-        <h3>Quote</h3>
-        <div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
-        <div class="quote-actions">
-          <button class="small-btn" id="newQuoteBtn">New quote</button>
-          <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
-        </div>
-        <div style="margin-top:8px; font-size:12px; color:var(--muted)">Saved quotes persist locally.</div>
+      <button id="endDayBtn">
+        <span style="font-size:20px;">🌙</span>
+        <span>End Day</span>
+      </button>
+    </div>
+  </aside>
 
-        <div class="journal-box">
-          <h4 style="margin:8px 0 6px 0;font-size:14px;">Daily Journal</h4>
-          <textarea id="endDayJournal" placeholder="Write your thoughts about today..." rows="5"></textarea>
-          <button id="saveJournalBtn" class="small-btn" style="margin-top:8px;width:100%;">Save Journal</button>
-        </div>
+  <!-- TIMER: Top Right -->
+  <section class="timer-box" aria-label="Pomodoro Timer">
+    <h1>Pomodoro Timer</h1>
+    <div id="timer" aria-live="polite">25:00</div>
+    <div class="timer-controls">
+      <button id="startBtn">Start</button>
+      <button id="pauseBtn" disabled>Pause</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+    <div class="settings">
+      <label>Work
+        <input id="workTime" type="number" min="1" value="25" />
+      </label>
+      <label>Break
+        <input id="breakTime" type="number" min="1" value="5" />
+      </label>
+    </div>
+    <div class="progress-row">
+      <div id="modeLabel">Mode: Work</div>
+      <div id="sessionLabel">Completed: 0</div>
+    </div>
+  </section>
 
-        <button id="endDayBtn">
-          <span class="icon">🌙</span>
-          <span>End Day</span>
-        </button>
-      </div>
-    </aside>
-  </div>
+  <!-- TODO: Bottom Right -->
+  <aside class="todo-container" aria-label="To-Do">
+    <h2>To-Do List ✨</h2>
+    <div class="todo-input">
+      <input id="todoInput" type="text" placeholder="Write a task..." />
+      <button id="addTaskBtn">Add Task</button>
+    </div>
+    <ul id="todo-list" aria-live="polite"></ul>
+  </aside>
 </div>
 
 <audio id="alarm" preload="auto"></audio>
@@ -685,6 +390,7 @@ input[type=number] {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // All existing JavaScript remains exactly the same...
   const alarm = document.getElementById('alarm');
   const startBtn = document.getElementById('startBtn');
   const pauseBtn = document.getElementById('pauseBtn');
@@ -722,6 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let isRunning = false;
   let isWork = true;
   let timeLeft = 25 * 60;
+  let stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: '' };
 
   function getTodayStr() {
     const d = new Date();
@@ -775,7 +482,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   showRandomQuote();
 
-  let stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: getTodayStr() };
   function updateStatsUI() {
     const totalSec = stats.completedSeconds || 0;
     const decimal = (totalSec / 3600).toFixed(2);
@@ -887,14 +593,10 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       const raw = localStorage.getItem(S_TASKS);
       return raw ? JSON.parse(raw) : [];
-    } catch(e) {
-      return [];
-    }
+    } catch(e) { return []; }
   }
   function saveTasks(items) {
-    try {
-      localStorage.setItem(S_TASKS, JSON.stringify(items));
-    } catch(e) {}
+    try { localStorage.setItem(S_TASKS, JSON.stringify(items)); } catch(e) {}
   }
   function refreshTasksUI() {
     const items = loadTasks();
@@ -939,12 +641,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const text = todoInput.value.trim();
     if (!text) return;
     const tasks = loadTasks();
-    const newTask = {
-      id: Date.now().toString(36),
-      text: text,
-      done: false,
-      createdAt: Date.now()
-    };
+    const newTask = { id: Date.now().toString(36), text, done: false, createdAt: Date.now() };
     tasks.push(newTask);
     saveTasks(tasks);
     todoInput.value = '';
@@ -956,70 +653,53 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   refreshTasksUI();
 
-  // Journal logic
   function loadJournal() {
     try {
       const saved = localStorage.getItem(S_JOURNAL);
       endDayJournal.value = saved || '';
-    } catch(e) {
-      endDayJournal.value = '';
-    }
+    } catch(e) { endDayJournal.value = ''; }
   }
   function saveJournal() {
     try {
       localStorage.setItem(S_JOURNAL, endDayJournal.value.trim());
       saveJournalBtn.textContent = 'Saved ✔';
       setTimeout(() => saveJournalBtn.textContent = 'Save Journal', 1200);
-    } catch(e) {
-      alert('Failed to save journal.');
-    }
+    } catch(e) { alert('Failed to save journal.'); }
   }
-  saveJournalBtn.addEventListener('click', function(e){
-    e.stopPropagation();
-    saveJournal();
-  });
+  saveJournalBtn.addEventListener('click', function(e){ e.stopPropagation(); saveJournal(); });
   loadJournal();
 
-  // End Day overlay logic
-  function typeWriterText(text, element, speed){
+  function typeWriterText(text, element, speed) {
     element.textContent = '';
     let i = 0;
     const interval = setInterval(() => {
       element.textContent += text.charAt(i);
       i++;
-      if(i >= text.length){
-        clearInterval(interval);
-      }
+      if(i >= text.length) clearInterval(interval);
     }, speed);
   }
 
-  function openEndDayOverlay(){
+  function openEndDayOverlay() {
     loadStats();
     const hours = (stats.completedSeconds / 3600).toFixed(2);
     const sessions = stats.sessionsCompleted || 0;
-
-    const summaryText = `Today you completed ${sessions} session${sessions === 1 ? '' : 's'}\n` +
-                        `and studied ${hours} hour${hours === '1.00' ? '' : 's'}.`;
-
+    const summaryText = `Today you completed ${sessions} session${sessions === 1 ? '' : 's'}\nand studied ${hours} hour${hours === '1.00' ? '' : 's'}.`;
     saveJournal();
-
     endDayOverlay.classList.add('active');
-    typeWriterText(summaryText, endDaySummary, 40);
+    typeWriterText(summaryText, endDaySummary, 50);
   }
 
-  function closeEndDayOverlay(){
+  function closeEndDayOverlay() {
     endDayOverlay.classList.remove('active');
   }
 
   endDayBtn.addEventListener('click', openEndDayOverlay);
   endDayOverlay.addEventListener('click', closeEndDayOverlay);
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape'){
-      closeEndDayOverlay();
-    }
+  document.addEventListener('keydown', function(e) {
+    if(e.key === 'Escape') closeEndDayOverlay();
   });
 
-  console.log('GrindForge fully loaded - Fully Responsive!');
+  console.log('🚀 GrindForge Dashboard - Excel-style Grid Layout Loaded!');
 });
 </script>
 </body>
