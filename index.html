@@ -27,184 +27,243 @@ body{
   color:var(--text);
   background:var(--bg);
   overflow:hidden;
+  min-height:100vh;
+  position:relative;
+}
+
+.hero-bg{
+  position:fixed; 
+  inset:0; 
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(78,205,196,0.4) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(110,240,201,0.3) 0%, transparent 50%),
+    radial-gradient(circle at 50% 10%, rgba(78,205,196,0.2) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(3,6,18,0.95) 0%, #030612 70%);
+  z-index:-1;
+  animation: bgShift 20s ease-in-out infinite alternate;
+}
+
+@keyframes bgShift {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.05) rotate(1deg); }
+}
+
+.main-content{
+  height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  min-height:100vh;
-}
-
-.hero-bg{
-  position:fixed; inset:0; 
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(78,205,196,0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(110,240,201,0.2) 0%, transparent 50%),
-    linear-gradient(180deg, rgba(3,6,18,0.9) 0%, #030612 100%);
-  z-index:-1;
-}
-
-.launch-container{
-  text-align:center;
-  background:var(--card);
-  backdrop-filter: blur(20px);
-  padding:60px 40px;
-  border-radius:var(--radius);
-  box-shadow: 0 30px 80px var(--shadow);
-  max-width:500px;
-  width:90%;
-  border:1px solid rgba(78,205,196,0.2);
+  padding:0 20px;
+  position:relative;
+  z-index:1;
 }
 
 .launch-logo{
-  width:120px;
-  height:120px;
+  width:140px;
+  height:140px;
   background:var(--gradient);
   border-radius:50%;
-  margin:0 auto 30px;
+  margin-bottom:40px;
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:none;              /* no outer light */
-  overflow:hidden;
+  box-shadow: 0 0 60px rgba(78,205,196,0.4);
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
 }
 
 .launch-logo img{
-  width:100%;
-  height:100%;
+  width:90%;
+  height:90%;
   object-fit:cover;
   border-radius:50%;
 }
 
 h1{
-  font-size:clamp(28px,5vw,42px);
+  font-size:clamp(36px,8vw,52px);
   font-weight:700;
-  margin:0 0 20px;
+  margin:0 0 24px;
   background:linear-gradient(135deg, var(--accent), #6ef0c9);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   background-clip:text;
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  0% { filter: drop-shadow(0 0 10px rgba(78,205,196,0.5)); }
+  100% { filter: drop-shadow(0 0 20px rgba(78,205,196,0.8)); }
 }
 
 .tagline{
-  font-size:18px;
+  font-size:clamp(16px,3vw,22px);
   color:var(--muted);
-  margin:0 0 40px;
-  line-height:1.6;
+  margin:0 0 50px;
+  line-height:1.7;
   font-weight:300;
+  max-width:600px;
+  text-align:center;
+  opacity:0.9;
 }
 
-/* button styled as real button, no link underline or glow */
 .launch-btn{
   display:inline-block;
   background:var(--gradient);
   color:#042726;
   border:none;
-  padding:18px 50px;
-  font-size:20px;
+  padding:22px 60px;
+  font-size:clamp(18px,4vw,24px);
   font-weight:700;
   border-radius:50px;
   cursor:pointer;
-  box-shadow:none;              /* remove bright glow */
-  transition:transform 0.2s ease;
-  letter-spacing:1px;
-  text-decoration:none;         /* no underline */
+  box-shadow: 0 20px 40px rgba(78,205,196,0.3);
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing:1.5px;
+  text-decoration:none;
   position:relative;
   overflow:hidden;
+  backdrop-filter: blur(10px);
 }
 
 .launch-btn:hover{
-  transform:translateY(-3px);
+  transform:translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(78,205,196,0.4);
 }
 
 .launch-btn:active{
-  transform:translateY(-1px);
+  transform:translateY(-4px) scale(0.98);
 }
 
-/* remove shiny sweep */
-.launch-btn::before{
-  content:none;
-}
-
-.features{
-  display:flex;
-  gap:20px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:40px;
-  font-size:14px;
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+  gap:24px;
+  margin-top:60px;
+  max-width:800px;
+  width:100%;
 }
 
 .feature{
-  background:rgba(255,255,255,0.05);
-  padding:12px 20px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter: blur(15px);
+  padding:20px 24px;
   border-radius:25px;
   color:var(--muted);
+  text-align:center;
+  border:1px solid rgba(78,205,196,0.15);
+  transition:all 0.3s ease;
+  font-size:15px;
+  font-weight:500;
+}
+
+.feature:hover{
+  background:rgba(78,205,196,0.15);
+  border-color:var(--accent);
+  transform:translateY(-5px);
+  color:var(--text);
 }
 
 .shortcut-hint{
-  margin-top:30px;
-  padding:15px 25px;
-  background:rgba(78,205,196,0.1);
-  border-radius:12px;
-  border:1px solid rgba(78,205,196,0.3);
+  position:absolute;
+  bottom:40px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:18px 30px;
+  background:rgba(78,205,196,0.12);
+  backdrop-filter: blur(20px);
+  border-radius:16px;
+  border:1px solid rgba(78,205,196,0.25);
   font-size:14px;
   color:var(--muted);
+  max-width:90%;
+  text-align:center;
 }
 
-@media (max-width:600px){
-  .launch-container{ padding:40px 25px; }
-  .launch-btn{ padding:16px 40px; font-size:18px; }
-  .features{ flex-direction:column; align-items:center; }
+.scroll-indicator{
+  position:absolute;
+  bottom:120px;
+  left:50%;
+  transform:translateX(-50%);
+  width:2px;
+  height:40px;
+  background:var(--accent);
+  border-radius:2px;
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity:0; transform:translateX(-50%) translateY(0px) scaleY(1); }
+  50% { opacity:1; transform:translateX(-50%) translateY(-10px) scaleY(1.2); }
+}
+
+@media (max-width:768px){
+  .main-content{ padding:0 15px; }
+  .features-grid{ grid-template-columns:repeat(2, 1fr); gap:16px; }
+  .launch-btn{ padding:18px 45px; }
+  .shortcut-hint{ bottom:25px; padding:14px 20px; font-size:13px; }
+}
+
+@media (max-width:480px){
+  .features-grid{ grid-template-columns:1fr; }
+  h1{ font-size:clamp(32px,9vw,42px); }
 }
 </style>
 </head>
 <body>
 <div class="hero-bg"></div>
 
-<div class="launch-container">
+<div class="main-content">
   <div class="launch-logo">
-    <!-- use your uploaded image; adjust path/filename to match your project -->
     <img src="GrindForge.png" alt="GrindForge logo">
   </div>
   
   <h1>GrindForge</h1>
-  <p class="tagline">Master your focus with the ultimate Pomodoro experience. Timer • Tasks • Quotes • Stats.</p>
+  <p class="tagline">Master your focus with the ultimate Pomodoro experience. Timer • Tasks • Quotes • Stats. Built for relentless grinders.</p>
   
-  <!-- use button element instead of <a> to avoid underline styles -->
-  <button type="button" class="launch-btn">Launch</button>
+  <button type="button" class="launch-btn">Launch App</button>
   
-  <div class="features">
+  <div class="features-grid">
     <div class="feature">⏱️ Smart Timer</div>
     <div class="feature">✅ Todo List</div>
     <div class="feature">📊 Daily Stats</div>
     <div class="feature">💬 Motivational Quotes</div>
   </div>
   
+  <div class="scroll-indicator"></div>
   <div class="shortcut-hint">
-    💡 <strong>Pro Tip:</strong> Bookmark this page or add to desktop for instant access!
+    💡 <strong>Pro Tip:</strong> Press Enter or bookmark for instant access!
   </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const btn = document.querySelector('.launch-btn');
+  
   btn.addEventListener('click', function() {
     btn.textContent = 'Launching...';
     btn.style.transform = 'scale(0.95)';
     setTimeout(() => {
       window.location.href = 'app.html';
-    }, 300);
+    }, 400);
   });
   
-  // Keyboard shortcut
+  // Enhanced keyboard shortcuts
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' || e.key === ' ') {
-      const btn = document.querySelector('.launch-btn');
+      e.preventDefault();
       btn.click();
     }
   });
   
-  console.log('GrindForge Launch Pad ready!');
+  // Focus trap for better UX
+  document.querySelector('.launch-btn').focus();
+  
+  console.log('🌟 GrindForge Launch Pad - Fullscreen Edition ready!');
 });
 </script>
 </body>
