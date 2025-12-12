@@ -1,7 +1,7 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/app", "destination": "/grindforge.html" }
+    { "source": "/app", "destination": "/app.html" }
   ]
 }
 
