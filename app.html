@@ -35,7 +35,6 @@ body{
   position: relative;
 }
 
-
 /* Dark overlay for readability over image */
 .overlay{
   position:fixed;
@@ -44,11 +43,70 @@ body{
   z-index: -1;
 }
 
-/* layout desktop */
-.container-desktop{ display:flex; gap:24px; padding:28px; align-items:flex-start; justify-content:flex-end; }
+/* Main layout - always flex column on mobile, row on desktop */
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 20px;
+  box-sizing: border-box;
+}
 
-/* left column */
-.left-col{ position:fixed; top:28px; left:28px; width:320px; display:flex; flex-direction:column; gap:var(--gap); }
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Desktop layout: side-by-side */
+@media (min-width: 881px) {
+  .page-container {
+    padding: 28px;
+  }
+  
+  .main-content {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  
+  .left-col {
+    width: 320px;
+    flex-shrink: 0;
+  }
+  
+  .right-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+  }
+}
+
+/* Mobile-first: stacked layout */
+@media (max-width: 880px) {
+  .left-col {
+    order: 3;
+    width: 100%;
+  }
+  
+  .right-col {
+    order: 1;
+    width: 100%;
+  }
+  
+  .creator-credit {
+    order: 2;
+    margin-top: auto;
+  }
+}
+
 .box{
   background:var(--card);
   backdrop-filter: blur(12px);
@@ -57,6 +115,7 @@ body{
   box-shadow: 0 12px 30px var(--shadow);
   transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, background 0.18s ease-out;
   border: 1px solid rgba(78,205,196,0.1);
+  width: 100%;
 }
 .box:hover{
   transform: translateY(-4px);
@@ -65,18 +124,54 @@ body{
 }
 
 /* date/time */
-#datetime-box{ font-size:15px; letter-spacing:0.2px; white-space:nowrap; }
+#datetime-box{ 
+  font-size:15px; 
+  letter-spacing:0.2px; 
+  white-space:nowrap;
+  text-align: center;
+}
 
 /* stats */
-.stats-row{ display:flex; gap:10px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted); }
-.stat-pill{ background: rgba(255,255,255,0.05); padding:6px 9px; border-radius:10px; display:inline-flex; gap:8px; align-items:center; border:1px solid rgba(78,205,196,0.1); }
+.stats-row{ 
+  display:flex; 
+  gap:10px; 
+  margin-top:10px; 
+  align-items:center; 
+  font-size:13px; 
+  color:var(--muted); 
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.stat-pill{ 
+  background: rgba(255,255,255,0.05); 
+  padding:6px 9px; 
+  border-radius:10px; 
+  display:inline-flex; 
+  gap:8px; 
+  align-items:center; 
+  border:1px solid rgba(78,205,196,0.1); 
+}
 
 /* quotes */
 .quotes h3{ margin:0 0 8px 0; font-size:16px}
 .quote-text{ font-size:14px; color:#dffcff; opacity:0.95; min-height:44px; }
-.quote-actions{ display:flex; gap:8px; margin-top:8px;}
-.small-btn{ border:0; padding:8px 10px; border-radius:10px; cursor:pointer; background:var(--accent); color:#042726; font-weight:600; transition:transform 0.12s ease, box-shadow 0.12s ease;}
-.small-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(78,205,196,0.45); }
+.quote-actions{ display:flex; gap:8px; margin-top:8px; flex-wrap: wrap;}
+.small-btn{ 
+  border:0; 
+  padding:8px 10px; 
+  border-radius:10px; 
+  cursor:pointer; 
+  background:var(--accent); 
+  color:#042726; 
+  font-weight:600; 
+  transition:transform 0.12s ease, box-shadow 0.12s ease;
+  flex: 1;
+  min-width: 80px;
+}
+.small-btn:hover{ 
+  transform:translateY(-1px); 
+  box-shadow:0 6px 16px rgba(78,205,196,0.45); 
+}
 
 .journal-box{
   margin-top:10px;
@@ -97,7 +192,10 @@ body{
   border:1px solid rgba(78,205,196,0.3);
   box-sizing:border-box;
 }
-#endDayJournal:focus{ outline:none; box-shadow:0 0 8px rgba(78,205,196,0.4); }
+#endDayJournal:focus{ 
+  outline:none; 
+  box-shadow:0 0 8px rgba(78,205,196,0.4); 
+}
 
 #endDayBtn{
   margin-top:14px;
@@ -123,9 +221,7 @@ body{
 }
 #endDayBtn span.icon{ font-size:16px; }
 
-.timer-area{ margin-left:auto; margin-right:28px; display:flex; flex-direction:column; gap:var(--gap); align-items:flex-end; }
 .timer-box{
-  width:340px;
   padding:22px 20px;
   text-align:center;
   background:var(--card);
@@ -133,6 +229,9 @@ body{
   box-shadow:0 14px 40px var(--shadow);
   transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, background 0.18s ease-out;
   border: 1px solid rgba(78,205,196,0.1);
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 }
 .timer-box:hover{
   transform:translateY(-4px);
@@ -141,24 +240,82 @@ body{
 }
 .timer-box h1{ margin:0 0 6px 0; font-size:20px}
 #timer{ font-size:44px; font-weight:700; color:var(--accent); margin:12px 0; }
-.timer-controls{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; }
-.timer-controls button{ padding:8px 12px; border-radius:10px; border:0; cursor:pointer; background:var(--accent); color:#042726; font-weight:700; transition:transform 0.12s ease, box-shadow 0.12s ease;}
-.timer-controls button[disabled]{ opacity:0.6; transform:none; cursor:not-allowed; box-shadow:none }
-.timer-controls button:not([disabled]):hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(78,205,196,0.55); }
-.settings{ display:flex; gap:10px; justify-content:center; align-items:center; margin-top:8px; font-size:14px }
-.settings label{ display:flex; flex-direction:column; align-items:center; gap:4px; }
-.settings input{ width:70px; padding:8px; border-radius:8px; border:0; background:rgba(255,255,255,0.06); color:var(--text); text-align:center }
+.timer-controls{ 
+  display:flex; 
+  gap:8px; 
+  justify-content:center; 
+  margin-bottom:8px; 
+  flex-wrap: wrap;
+}
+.timer-controls button{ 
+  padding:8px 12px; 
+  border-radius:10px; 
+  border:0; 
+  cursor:pointer; 
+  background:var(--accent); 
+  color:#042726; 
+  font-weight:700; 
+  transition:transform 0.12s ease, box-shadow 0.12s ease;
+  flex: 1;
+  min-width: 70px;
+  max-width: 100px;
+}
+.timer-controls button[disabled]{ 
+  opacity:0.6; 
+  transform:none; 
+  cursor:not-allowed; 
+  box-shadow:none 
+}
+.timer-controls button:not([disabled]):hover{ 
+  transform:translateY(-2px); 
+  box-shadow:0 8px 20px rgba(78,205,196,0.55); 
+}
+.settings{ 
+  display:flex; 
+  gap:10px; 
+  justify-content:center; 
+  align-items:center; 
+  margin-top:8px; 
+  font-size:14px;
+  flex-wrap: wrap;
+}
+.settings label{ 
+  display:flex; 
+  flex-direction:column; 
+  align-items:center; 
+  gap:4px; 
+}
+.settings input{ 
+  width:70px; 
+  padding:8px; 
+  border-radius:8px; 
+  border:0; 
+  background:rgba(255,255,255,0.06); 
+  color:var(--text); 
+  text-align:center 
+}
 
-.progress-row{ display:flex; justify-content:space-between; gap:12px; margin-top:10px; align-items:center; font-size:13px; color:var(--muted) }
+.progress-row{ 
+  display:flex; 
+  justify-content:space-between; 
+  gap:12px; 
+  margin-top:10px; 
+  align-items:center; 
+  font-size:13px; 
+  color:var(--muted);
+  flex-wrap: wrap;
+}
 
 .todo-container{
-  width:340px;
   padding:18px;
   background:var(--glass);
   border-radius:14px;
   box-shadow:0 14px 36px var(--shadow);
   transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, background 0.18s ease-out;
   border: 1px solid rgba(78,205,196,0.1);
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 }
 .todo-container:hover{
   transform:translateY(-4px);
@@ -166,24 +323,113 @@ body{
   background:rgba(5,7,14,0.98);
 }
 .todo-container h2{ margin:0 0 10px 0; font-size:18px }
-.todo-input{ display:flex; gap:8px; margin-bottom:12px }
-.todo-input input{ flex:1; padding:10px 12px; border-radius:10px; border:0; background:rgba(255,255,255,0.05); color:var(--text) }
-.todo-input button{ padding:9px 12px; border-radius:10px; border:0; background:var(--accent); color:#042726; font-weight:700; transition:transform 0.12s ease, box-shadow 0.12s ease;}
-.todo-input button:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(78,205,196,0.45); }
-ul#todo-list{ list-style:none; padding:0; margin:0; display:block; max-height:300px; overflow-y:auto; }
-li.quest{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px; margin-bottom:10px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.05); }
-.quest .left{ display:flex; gap:10px; align-items:center; flex:1; }
-.checkbox{ width:28px; height:28px; border-radius:8px; border:2px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; cursor:pointer; background:rgba(255,255,255,0.02); transition: all 0.12s ease;}
-.checkbox:hover{ transform:scale(1.05); box-shadow:0 0 8px rgba(78,205,196,0.3); }
-.checkbox.done{ background:var(--success); border-color: rgba(110,240,201,0.9) }
-.quest .desc{ font-weight:700; flex:1; }
-.quest .meta{ font-size:12px; color:var(--muted) }
-.quest button.del{ padding:6px 8px; border-radius:8px; border:0; background:var(--danger); color:#fff; cursor:pointer; flex-shrink:0; transition:all 0.12s ease;}
-.quest button.del:hover{ transform:translateY(-1px); box-shadow:0 6px 14px rgba(255,90,90,0.6); background:#ff7272; }
-.quest.done .desc{ text-decoration:line-through; opacity:0.55; color:#bfeee5 }
+.todo-input{ 
+  display:flex; 
+  gap:8px; 
+  margin-bottom:12px;
+  flex-direction: column;
+}
+.todo-input input{ 
+  padding:10px 12px; 
+  border-radius:10px; 
+  border:0; 
+  background:rgba(255,255,255,0.05); 
+  color:var(--text);
+  width: 100%;
+}
+.todo-input button{ 
+  padding:9px 12px; 
+  border-radius:10px; 
+  border:0; 
+  background:var(--accent); 
+  color:#042726; 
+  font-weight:700; 
+  transition:transform 0.12s ease, box-shadow 0.12s ease;
+  width: 100%;
+}
+.todo-input button:hover{ 
+  transform:translateY(-1px); 
+  box-shadow:0 6px 16px rgba(78,205,196,0.45); 
+}
+ul#todo-list{ 
+  list-style:none; 
+  padding:0; 
+  margin:0; 
+  display:block; 
+  max-height:300px; 
+  overflow-y:auto; 
+}
+li.quest{ 
+  display:flex; 
+  justify-content:space-between; 
+  align-items:center; 
+  gap:12px; 
+  padding:10px; 
+  margin-bottom:10px; 
+  border-radius:10px; 
+  background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); 
+  border:1px solid rgba(255,255,255,0.05); 
+}
+.quest .left{ 
+  display:flex; 
+  gap:10px; 
+  align-items:center; 
+  flex:1; 
+}
+.checkbox{ 
+  width:28px; 
+  height:28px; 
+  border-radius:8px; 
+  border:2px solid rgba(255,255,255,0.1); 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  cursor:pointer; 
+  background:rgba(255,255,255,0.02); 
+  transition: all 0.12s ease;
+  flex-shrink: 0;
+}
+.checkbox:hover{ 
+  transform:scale(1.05); 
+  box-shadow:0 0 8px rgba(78,205,196,0.3); 
+}
+.checkbox.done{ 
+  background:var(--success); 
+  border-color: rgba(110,240,201,0.9) 
+}
+.quest .desc{ 
+  font-weight:700; 
+  flex:1; 
+}
+.quest .meta{ 
+  font-size:12px; 
+  color:var(--muted);
+  flex-shrink: 0;
+}
+.quest button.del{ 
+  padding:6px 8px; 
+  border-radius:8px; 
+  border:0; 
+  background:var(--danger); 
+  color:#fff; 
+  cursor:pointer; 
+  flex-shrink:0; 
+  transition:all 0.12s ease;
+  white-space: nowrap;
+}
+.quest button.del:hover{ 
+  transform:translateY(-1px); 
+  box-shadow:0 6px 14px rgba(255,90,90,0.6); 
+  background:#ff7272; 
+}
+.quest.done .desc{ 
+  text-decoration:line-through; 
+  opacity:0.55; 
+  color:#bfeee5 
+}
 .quest.done .meta{ opacity:0.6 }
 
-/* End Day overlay */
+/* End Day overlay - fully responsive */
 #endDayOverlay{
   position:fixed;
   inset:0;
@@ -196,11 +442,16 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
   opacity:0;
   pointer-events:none;
   transition:opacity 0.35s ease;
+  padding: 20px;
 }
-#endDayOverlay.active{ opacity:1; pointer-events:auto; }
+#endDayOverlay.active{ 
+  opacity:1; 
+  pointer-events:auto; 
+}
 .end-day-content{
   text-align:center;
-  max-width:420px;
+  width: 100%;
+  max-width: 420px;
   padding:30px 24px;
   border-radius:18px;
   background:rgba(8,10,20,0.95);
@@ -208,127 +459,212 @@ li.quest{ display:flex; justify-content:space-between; align-items:center; gap:1
   border:1px solid rgba(78,205,196,0.3);
   transition: all 0.2s ease;
 }
-.end-day-content:hover{ transform:translateY(-4px); box-shadow:0 32px 80px rgba(78,205,196,0.25); }
+.end-day-content:hover{ 
+  transform:translateY(-4px); 
+  box-shadow:0 32px 80px rgba(78,205,196,0.25); 
+}
 .end-day-circle{
-  width:90px; height:90px; border-radius:50%;
+  width:90px; 
+  height:90px; 
+  border-radius:50%;
   margin:0 auto 20px;
   background:radial-gradient(circle at 30% 20%, #ffffff, #4ecdc4);
-  position:relative; overflow:hidden;
+  position:relative; 
+  overflow:hidden;
   animation:endCircle 1.6s ease-out forwards;
 }
 .end-day-circle::after{
-  content:''; position:absolute; inset:14px;
-  border-radius:50%; border:2px solid rgba(3,6,18,0.3);
+  content:''; 
+  position:absolute; 
+  inset:14px;
+  border-radius:50%; 
+  border:2px solid rgba(3,6,18,0.3);
   backdrop-filter:blur(8px);
 }
 .end-day-check{
-  position:absolute; top:50%; left:50%;
-  transform:translate(-50%,-50%) scale(0.2); opacity:0;
-  font-size:38px; color:#042726; font-weight:700;
+  position:absolute; 
+  top:50%; 
+  left:50%;
+  transform:translate(-50%,-50%) scale(0.2); 
+  opacity:0;
+  font-size:38px; 
+  color:#042726; 
+  font-weight:700;
   animation:endCheck 1.4s 0.4s ease-out forwards;
 }
-@keyframes endCircle{ 0%{ transform:scale(0.4); opacity:0; } 60%{ transform:scale(1.05); opacity:1; } 100%{ transform:scale(1); opacity:1; } }
-@keyframes endCheck{ 0%{ opacity:0; transform:translate(-50%,-50%) scale(0.2); } 40%{ opacity:1; transform:translate(-50%,-50%) scale(1.1); } 100%{ opacity:1; transform:translate(-50%,-50%) scale(1); } }
+@keyframes endCircle{ 
+  0%{ transform:scale(0.4); opacity:0; } 
+  60%{ transform:scale(1.05); opacity:1; } 
+  100%{ transform:scale(1); opacity:1; } 
+}
+@keyframes endCheck{ 
+  0%{ opacity:0; transform:translate(-50%,-50%) scale(0.2); } 
+  40%{ opacity:1; transform:translate(-50%,-50%) scale(1.1); } 
+  100%{ opacity:1; transform:translate(-50%,-50%) scale(1); } 
+}
 .end-day-title{ font-size:22px; margin-bottom:6px; }
 .end-day-sub{ font-size:14px; color:var(--muted); margin-bottom:18px; }
-#endDaySummary{ font-family:"Poppins", monospace; font-size:16px; min-height:56px; white-space:pre-line; }
-.end-day-hint{ margin-top:16px; font-size:12px; color:var(--muted); }
-
-/* responsive */
-@media (max-width: 880px){
-  .left-col{ position:static; width:100%; margin:12px auto 0; display:flex; justify-content:center; }
-  .container-desktop{ flex-direction:column; align-items:center; padding:18px }
-  .timer-area{ align-items:center; margin:0 auto }
-  .timer-box, .todo-container, .box{ width:min(94%,540px) }
-  #datetime-box{ width:min(94%,540px); text-align:center }
+#endDaySummary{ 
+  font-family:"Poppins", monospace; 
+  font-size:16px; 
+  min-height:56px; 
+  white-space:pre-line; 
 }
-@media (max-width:420px){
-  #timer{ font-size:34px }
-  .timer-box{ padding:16px }
-  .todo-input input{ padding:9px }
-  button{ font-size:14px }
+.end-day-hint{ 
+  margin-top:16px; 
+  font-size:12px; 
+  color:var(--muted); 
 }
 
-.p {
-  position: absolute;
-  bottom: 10px;   /* distance from bottom */
-  left: 50%;      /* push to the middle horizontally */
-  transform: translateX(-50%); /* perfect centering */
-  color: 39FF14;
+/* Creator credit - responsive */
+.creator-credit {
+  text-align: center;
+  color: #39FF14;
   font-weight: 300;
+  font-size: 14px;
+  padding: 10px;
+  width: 100%;
 }
 
+/* Small mobile adjustments */
+@media (max-width: 480px) {
+  .page-container {
+    padding: 12px;
+    gap: 16px;
+  }
+  
+  #timer { 
+    font-size: 36px; 
+  }
+  
+  .timer-box { 
+    padding: 18px 16px; 
+  }
+  
+  .todo-container { 
+    padding: 16px; 
+  }
+  
+  .box {
+    padding: 12px;
+  }
+  
+  .timer-controls button {
+    padding: 10px 8px;
+    font-size: 14px;
+  }
+  
+  .settings input {
+    width: 60px;
+  }
+  
+  .end-day-content {
+    padding: 24px 16px;
+    margin: 10px;
+  }
+  
+  .end-day-circle {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .end-day-check {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 360px) {
+  #timer { 
+    font-size: 32px; 
+  }
+  
+  .stat-pill {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}
+
+/* Hide spin buttons for number inputs */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
 </style>
 </head>
 <body>
-<p class="p">Creator - Shaurya Chauhan</p>
+<p class="creator-credit">Creator - Shaurya Chauhan</p>
 
-  
 <div class="stars"></div>
 <div class="overlay"></div>
 
-<div class="container-desktop">
-  <div class="left-col">
-    <div class="box" id="dateBox">
-      <div id="datetime-box" aria-live="polite">Loading date...</div>
-      <div class="stats-row">
-        <div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
-        <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
-      </div>
+<div class="page-container">
+  <div class="main-content">
+    <div class="right-col">
+      <section class="timer-box" aria-label="Pomodoro Timer">
+        <h1>Pomodoro Timer</h1>
+        <div id="timer" aria-live="polite">25:00</div>
+        <div class="timer-controls">
+          <button id="startBtn">Start</button>
+          <button id="pauseBtn" disabled>Pause</button>
+          <button id="resetBtn">Reset</button>
+        </div>
+        <div class="settings">
+          <label>Work
+            <input id="workTime" type="number" min="1" value="25" />
+          </label>
+          <label>Break
+            <input id="breakTime" type="number" min="1" value="5" />
+          </label>
+        </div>
+        <div class="progress-row">
+          <div id="modeLabel">Mode: Work</div>
+          <div id="sessionLabel">Completed: 0</div>
+        </div>
+      </section>
+
+      <aside class="todo-container" aria-label="To-Do">
+        <h2>To-Do List ✨</h2>
+        <div class="todo-input">
+          <input id="todoInput" type="text" placeholder="Write a task..." />
+          <button id="addTaskBtn">Add</button>
+        </div>
+        <ul id="todo-list" aria-live="polite"></ul>
+      </aside>
     </div>
 
-    <div class="box quotes">
-      <h3>Quote</h3>
-      <div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
-      <div class="quote-actions">
-        <button class="small-btn" id="newQuoteBtn">New quote</button>
-        <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
-      </div>
-      <div style="margin-top:8px; font-size:12px; color:var(--muted)">Saved quotes persist locally.</div>
-
-      <div class="journal-box">
-        <h4 style="margin:8px 0 6px 0;font-size:14px;">Daily Journal</h4>
-        <textarea id="endDayJournal" placeholder="Write your thoughts about today..." rows="5"></textarea>
-        <button id="saveJournalBtn" class="small-btn" style="margin-top:8px;width:100%;">Save Journal</button>
+    <aside class="left-col">
+      <div class="box" id="dateBox">
+        <div id="datetime-box" aria-live="polite">Loading date...</div>
+        <div class="stats-row">
+          <div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
+          <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
+        </div>
       </div>
 
-      <button id="endDayBtn">
-        <span class="icon">🌙</span>
-        <span>End Day</span>
-      </button>
-    </div>
-  </div>
+      <div class="box quotes">
+        <h3>Quote</h3>
+        <div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
+        <div class="quote-actions">
+          <button class="small-btn" id="newQuoteBtn">New quote</button>
+          <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
+        </div>
+        <div style="margin-top:8px; font-size:12px; color:var(--muted)">Saved quotes persist locally.</div>
 
-  <div class="timer-area">
-    <section class="timer-box" aria-label="Pomodoro Timer">
-      <h1>Pomodoro Timer</h1>
-      <div id="timer" aria-live="polite">25:00</div>
-      <div class="timer-controls">
-        <button id="startBtn">Start</button>
-        <button id="pauseBtn" disabled>Pause</button>
-        <button id="resetBtn">Reset</button>
-      </div>
-      <div class="settings">
-        <label>Work
-          <input id="workTime" type="number" min="1" value="25" />
-        </label>
-        <label>Break
-          <input id="breakTime" type="number" min="1" value="5" />
-        </label>
-      </div>
-      <div class="progress-row">
-        <div id="modeLabel">Mode: Work</div>
-        <div id="sessionLabel">Completed: 0</div>
-      </div>
-    </section>
+        <div class="journal-box">
+          <h4 style="margin:8px 0 6px 0;font-size:14px;">Daily Journal</h4>
+          <textarea id="endDayJournal" placeholder="Write your thoughts about today..." rows="5"></textarea>
+          <button id="saveJournalBtn" class="small-btn" style="margin-top:8px;width:100%;">Save Journal</button>
+        </div>
 
-    <aside class="todo-container" aria-label="To-Do">
-      <h2>To-Do List ✨</h2>
-      <div class="todo-input">
-        <input id="todoInput" type="text" placeholder="Write a task..." />
-        <button id="addTaskBtn">Add</button>
+        <button id="endDayBtn">
+          <span class="icon">🌙</span>
+          <span>End Day</span>
+        </button>
       </div>
-      <ul id="todo-list" aria-live="polite"></ul>
     </aside>
   </div>
 </div>
@@ -620,19 +956,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   refreshTasksUI();
 
-  const style = document.createElement('style');
-  style.textContent = `
-    input[type=number]::-webkit-outer-spin-button,
-    input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    input[type=number] {
-      -moz-appearance: textfield;
-    }
-  `;
-  document.head.appendChild(style);
-
   // Journal logic
   function loadJournal() {
     try {
@@ -696,7 +1019,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  console.log('GrindForge fully loaded with starry background and image!');
+  console.log('GrindForge fully loaded - Fully Responsive!');
 });
 </script>
 </body>
