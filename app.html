@@ -21,7 +21,7 @@
 }
 
 *{box-sizing:border-box}
-html,body{height:100%; margin:0}
+html,body{height:100%; margin:0; overflow:hidden;}
 body{
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color:var(--text);
@@ -30,7 +30,6 @@ body{
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  overflow-x:hidden;
   -webkit-tap-highlight-color: transparent;
   position: relative;
 }
@@ -40,14 +39,16 @@ body{
 .dashboard-grid{
   display:grid;
   height:100vh;
+  width:100vw;
   grid-template-columns:1fr 1fr;
   grid-template-rows:auto 1fr 1fr;
   grid-template-areas:"header header""sidebar timer""sidebar todo";
   gap:var(--gap);
   padding:var(--gap);
   box-sizing:border-box;
-  max-width:1400px;
-  margin:0 auto;
+  max-width:100%;
+  margin:0;
+  overflow:hidden;
 }
 
 .header{
@@ -102,7 +103,14 @@ body{
   box-shadow:0 4px 12px rgba(57,255,20,0.25);
 }
 
-.sidebar{grid-area:sidebar;display:flex;flex-direction:column;gap:var(--gap);height:100%;}
+.sidebar{
+  grid-area:sidebar;
+  display:flex;
+  flex-direction:column;
+  gap:var(--gap);
+  height:100%;
+  overflow:hidden;
+}
 
 .box,.timer-box,.todo-container{
   background:var(--card);
@@ -113,6 +121,7 @@ body{
   border:1px solid rgba(78,205,196,0.1);
   display:flex;
   flex-direction:column;
+  overflow:hidden;
 }
 
 .box:hover,.timer-box:hover,.todo-container:hover{
@@ -120,8 +129,16 @@ body{
   box-shadow:0 22px 48px rgba(78,205,196,0.22);
 }
 
-.box{padding:16px;flex:1;}
-.timer-box{grid-area:timer;text-align:center;padding:24px 20px;justify-content:center;align-items:center;border:1px solid rgba(78,205,196,0.15);}
+.box{padding:16px;flex:1;overflow:auto;}
+.timer-box{
+  grid-area:timer;
+  text-align:center;
+  padding:24px 20px;
+  justify-content:center;
+  align-items:center;
+  border:1px solid rgba(78,205,196,0.15);
+  overflow:auto;
+}
 
 .todo-container{
   grid-area:todo;
@@ -131,6 +148,7 @@ body{
   height:100%;
   background:var(--glass);
   border:1px solid rgba(78,205,196,0.15);
+  overflow:hidden;
 }
 
 .timer-box h1{margin:0 0 10px 0;font-size:clamp(19px,2.8vw,22px);font-weight:700}
@@ -216,13 +234,14 @@ body{
   flex-wrap:wrap;
 }
 
-.todo-container h2{margin:0 0 14px 0;font-size:clamp(19px,2.8vw,20px);text-align:center;}
+.todo-container h2{margin:0 0 14px 0;font-size:clamp(19px,2.8vw,20px);text-align:center;flex-shrink:0;}
 
 .todo-input{
   display:flex;
   gap:10px;
   margin-bottom:16px;
   flex-direction:column;
+  flex-shrink:0;
 }
 
 .todo-input input{
@@ -250,12 +269,12 @@ body{
   box-shadow:0 10px 24px rgba(78,205,196,0.45);
 }
 
-/* ✅ FIXED: Task list with proper scroll and height control */
 .todo-list-container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Critical for flex children to shrink */
+  min-height: 0;
+  overflow:hidden;
 }
 
 ul#todo-list{
@@ -263,7 +282,7 @@ ul#todo-list{
   list-style:none;
   padding:0;
   margin:0 0 8px 0;
-  overflow-y: auto; /* ✅ Scrollbar appears */
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(78,205,196,0.5) transparent;
 }
@@ -292,12 +311,12 @@ li.quest{
   align-items:center;
   gap:12px;
   padding:12px 14px;
-  margin-bottom:8px; /* Reduced from 10px */
+  margin-bottom:8px;
   border-radius:10px;
   background:linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));
   border:1px solid rgba(255,255,255,0.06);
   transition:all 0.15s ease;
-  max-height: 60px; /* Prevent individual items from growing too tall */
+  max-height: 60px;
 }
 
 li.quest:hover{
@@ -446,7 +465,6 @@ li.quest:hover{
   box-shadow:0 18px 36px rgba(78,205,196,0.55);
 }
 
-/* RESPONSIVE DESIGN */
 @media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
@@ -468,7 +486,6 @@ li.quest:hover{
     align-self: center;
   }
   
-  /* ✅ Ensure todo list scrolls properly on mobile */
   .todo-list-container {
     max-height: 60vh;
   }
@@ -528,7 +545,6 @@ li.quest:hover{
     padding: 16px 12px;
   }
   
-  /* ✅ Mobile todo height control */
   .todo-list-container {
     max-height: 50vh;
   }
@@ -543,7 +559,6 @@ input[type=number]{
   -moz-appearance:textfield;
 }
 
-/* END DAY OVERLAY */
 #endDayOverlay{
   position:fixed;
   inset:0;
@@ -689,7 +704,6 @@ input[type=number]{
     </div>
   </section>
 
-  <!-- ✅ FIXED: Proper structure for scrollable todo list -->
   <aside class="todo-container" aria-label="To-Do">
     <h2>To-Do List ✨</h2>
     <div class="todo-input">
@@ -697,7 +711,6 @@ input[type=number]{
       <button id="addTaskBtn">Add Task</button>
     </div>
     
-    <!-- ✅ New scroll container -->
     <div class="todo-list-container">
       <ul id="todo-list" aria-live="polite"></ul>
     </div>
@@ -779,7 +792,6 @@ class GrindForge {
     this.updateButtons();
     this.loadTodos();
     
-    // Event listeners
     this.startBtn.addEventListener('click', () => this.startTimer());
     this.pauseBtn.addEventListener('click', () => this.pauseTimer());
     this.resetBtn.addEventListener('click', () => this.resetTimer());
