@@ -122,7 +122,16 @@ body{
 
 .box{padding:16px;flex:1;}
 .timer-box{grid-area:timer;text-align:center;padding:24px 20px;justify-content:center;align-items:center;border:1px solid rgba(78,205,196,0.15);}
-.todo-container{grid-area:todo;padding:20px;height:100%;background:var(--glass);border:1px solid rgba(78,205,196,0.15);}
+
+.todo-container{
+  grid-area:todo;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  background:var(--glass);
+  border:1px solid rgba(78,205,196,0.15);
+}
 
 .timer-box h1{margin:0 0 10px 0;font-size:clamp(19px,2.8vw,22px);font-weight:700}
 
@@ -241,12 +250,40 @@ body{
   box-shadow:0 10px 24px rgba(78,205,196,0.45);
 }
 
+/* ✅ FIXED: Task list with proper scroll and height control */
+.todo-list-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Critical for flex children to shrink */
+}
+
 ul#todo-list{
-  flex:1;
+  flex: 1;
   list-style:none;
   padding:0;
-  margin:0;
-  overflow-y:auto;
+  margin:0 0 8px 0;
+  overflow-y: auto; /* ✅ Scrollbar appears */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(78,205,196,0.5) transparent;
+}
+
+ul#todo-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+ul#todo-list::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+}
+
+ul#todo-list::-webkit-scrollbar-thumb {
+  background: rgba(78,205,196,0.6);
+  border-radius: 3px;
+}
+
+ul#todo-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(78,205,196,0.9);
 }
 
 li.quest{
@@ -255,11 +292,12 @@ li.quest{
   align-items:center;
   gap:12px;
   padding:12px 14px;
-  margin-bottom:10px;
+  margin-bottom:8px; /* Reduced from 10px */
   border-radius:10px;
   background:linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));
   border:1px solid rgba(255,255,255,0.06);
   transition:all 0.15s ease;
+  max-height: 60px; /* Prevent individual items from growing too tall */
 }
 
 li.quest:hover{
@@ -299,7 +337,7 @@ li.quest:hover{
   color:#042726;
 }
 
-.quest .desc{font-weight:700;font-size:14px;flex:1;}
+.quest .desc{font-weight:700;font-size:14px;flex:1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .quest .meta{font-size:12px;color:var(--muted);flex-shrink:0;white-space:nowrap;}
 
 .quest button.del{
@@ -312,6 +350,7 @@ li.quest:hover{
   font-weight:600;
   font-size:12px;
   transition:all 0.15s ease;
+  flex-shrink:0;
 }
 
 .quest button.del:hover{
@@ -428,6 +467,11 @@ li.quest:hover{
     order: 3;
     align-self: center;
   }
+  
+  /* ✅ Ensure todo list scrolls properly on mobile */
+  .todo-list-container {
+    max-height: 60vh;
+  }
 }
 
 @media (max-width: 768px) {
@@ -464,6 +508,14 @@ li.quest:hover{
     gap: 8px;
     text-align: center;
   }
+  
+  .todo-input {
+    flex-direction: column;
+  }
+  
+  .quote-actions {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 480px) {
@@ -476,12 +528,9 @@ li.quest:hover{
     padding: 16px 12px;
   }
   
-  .todo-input {
-    flex-direction: column;
-  }
-  
-  .quote-actions {
-    flex-direction: column;
+  /* ✅ Mobile todo height control */
+  .todo-list-container {
+    max-height: 50vh;
   }
 }
 
@@ -640,13 +689,18 @@ input[type=number]{
     </div>
   </section>
 
+  <!-- ✅ FIXED: Proper structure for scrollable todo list -->
   <aside class="todo-container" aria-label="To-Do">
     <h2>To-Do List ✨</h2>
     <div class="todo-input">
       <input id="todoInput" type="text" placeholder="Write a task..."/>
       <button id="addTaskBtn">Add Task</button>
     </div>
-    <ul id="todo-list" aria-live="polite"></ul>
+    
+    <!-- ✅ New scroll container -->
+    <div class="todo-list-container">
+      <ul id="todo-list" aria-live="polite"></ul>
+    </div>
   </aside>
 </div>
 
@@ -862,7 +916,6 @@ class GrindForge {
     this.pauseTimer();
     
     if (this.isWorkMode) {
-      // Work session completed
       const workMinutes = parseInt(this.workTimeInput.value);
       this.stats.completedSeconds += workMinutes * 60;
       this.stats.sessionsCompleted++;
@@ -873,7 +926,6 @@ class GrindForge {
       this.isWorkMode = false;
       this.timeLeft = parseInt(this.breakTimeInput.value) * 60;
     } else {
-      // Break completed, start new work session
       this.playAlarm();
       this.isWorkMode = true;
       this.timeLeft = parseInt(this.workTimeInput.value) * 60;
@@ -888,7 +940,6 @@ class GrindForge {
     this.alarm.play().catch(() => {});
   }
 
-  // Quotes functionality
   loadQuotes() {
     try {
       const saved = localStorage.getItem(this.QUOTES_KEY);
@@ -917,7 +968,6 @@ class GrindForge {
     }
   }
 
-  // Todo functionality
   loadTodos() {
     try {
       const saved = localStorage.getItem(this.TASKS_KEY);
@@ -1014,7 +1064,6 @@ class GrindForge {
     this.renderTodos(tasks);
   }
 
-  // Journal functionality
   loadJournal() {
     try {
       const saved = localStorage.getItem(this.JOURNAL_KEY);
@@ -1034,7 +1083,6 @@ class GrindForge {
     }
   }
 
-  // End day functionality
   endDay() {
     this.loadStats();
     const hours = (this.stats.completedSeconds / 3600).toFixed(2);
@@ -1051,7 +1099,6 @@ class GrindForge {
   }
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   new GrindForge();
   console.log('🚀 GrindForge Dashboard Loaded Successfully!');
