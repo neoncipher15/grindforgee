@@ -1171,21 +1171,7 @@ class GrindForge {
     } catch (e) {}
   }
 
-  saveJournal() {
-    try {
-      localStorage.setItem(this.JOURNAL_KEY, this.endDayJournal.value.trim());
-      const btn = this.saveJournalBtn;
-      const original = btn.textContent;
-      btn.textContent = 'Saved ✔';
-      btn.style.background = '#6ef0c9';
-      setTimeout(() => {
-        btn.textContent = original;
-        btn.style.background = '';
-      }, 1500);
-    } catch (e) {
-      alert('Failed to save journal. Please try again.');
-    }
-  }
+  
 
   endDay() {
     this.loadStats();
@@ -1197,7 +1183,7 @@ class GrindForge {
     
     const summary = `Today you completed ${sessions} session${sessions !== 1 ? 's' : ''} (${hours} hour${hours !== '1.00' ? 's' : ''})\n` +
                    `✅ ${completedTodos}/${totalTodos} tasks done\n` +
-                   `✍️  Journal saved automatically`;
+                  ;
     
     this.saveJournal();
     this.endDaySummary.textContent = summary;
