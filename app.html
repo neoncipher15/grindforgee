@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>GrindForge — Pomodoro</title>
-<link rel="icon" type="image/png" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iMjQiIGZpbGw9IiM0ZWNkYzQiLz4KPHRleHQgeD0iMjQiIHk9IjMyIiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjgwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzA0MjcyNiI+RyU8L3RleHQ+Cjwvc3ZnPgo=" />
+<link rel="icon" type="image/png" href="/GrindForge.png" />
 <style>
 :root{
   --accent:#4ecdc4;
@@ -31,7 +31,10 @@ html,body{
 body{
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color:var(--text);
-  background: linear-gradient(135deg, #0c0e1a 0%, #1a1f2e 50%, #16213e 100%);
+  background-image: url('img.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
   -webkit-tap-highlight-color: transparent;
   position: relative;
@@ -83,19 +86,7 @@ body{
 .header:hover::before{opacity:1;}
 .header:hover{transform:translateY(-2px);}
 
-.logo{
-  width:44px;
-  height:44px;
-  border-radius:10px;
-  box-shadow:0 8px 24px rgba(78,205,196,0.5);
-  background:linear-gradient(135deg,var(--accent),#6ef0c9);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:800;
-  font-size:18px;
-  color:#042726;
-}
+.logo{width:44px;height:44px;border-radius:10px;box-shadow:0 8px 24px rgba(78,205,196,0.5);}
 
 .brand-section{display:flex;flex-direction:column;gap:2px;flex:1;}
 .brand-title{font-size:clamp(22px,3.5vw,26px);font-weight:800;background:linear-gradient(135deg,var(--accent),#6ef0c9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:0;}
@@ -149,7 +140,7 @@ body{
 .timer-box{grid-area:timer;text-align:center;padding:28px 24px;justify-content:center;align-items:center;border:2px solid rgba(78,205,196,0.25);}
 .todo-container{grid-area:todo;padding:24px;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
 
-.timer-box h1{margin:0 0 12px 0;font-size:clamp(20px,3vw,24px);font-weight:700}
+.timer-box h1{display:none;}
 
 #timer{
   font-size:clamp(48px,8vw,64px);
@@ -158,7 +149,7 @@ body{
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   background-clip:text;
-  margin:16px 0;
+  margin:24px 0 16px 0;
   letter-spacing:-1px;
   text-shadow:0 4px 20px rgba(78,205,196,0.3);
 }
@@ -360,7 +351,7 @@ li.quest:hover{
 @media (max-width:768px){
   .dashboard-grid{padding:12px;gap:12px;}
   .header{flex-direction:column;text-align:center;gap:20px;padding:24px 20px;}
-  .logo{width:48px;height:48px;font-size:20px;}
+  .logo{width:48px;height:48px;}
   .timer-controls{flex-direction:column;align-items:center;}
   .timer-controls button{width:100%;max-width:240px;}
   .settings{flex-direction:column;gap:12px;}
@@ -439,7 +430,7 @@ input[type=number]{-moz-appearance:textfield;}
 <div class="dashboard-grid">
   <header class="header">
     <div style="display:flex;align-items:center;gap:16px;flex:1;">
-      <div class="logo">G</div>
+      <img src="/GrindForge.png" alt="GrindForge Logo" class="logo">
       <div class="brand-section">
         <h1 class="brand-title">GrindForge</h1>
         <p class="brand-subtitle">Pomodoro Productivity Dashboard</p>
@@ -479,7 +470,6 @@ input[type=number]{-moz-appearance:textfield;}
   </aside>
 
   <section class="timer-box" aria-label="Pomodoro Timer">
-    <h1>Pomodoro Timer</h1>
     <div id="timer" aria-live="polite">25:00</div>
     <div class="timer-controls">
       <button id="startBtn">Start</button>
@@ -512,8 +502,8 @@ input[type=number]{-moz-appearance:textfield;}
   </aside>
 </div>
 
-<!-- Web Audio API for alarm instead of missing file -->
-<audio id="alarm" preload="auto"></audio>
+<!-- Original audio file restored -->
+<audio id="alarm" preload="metadata" src="alarm.mp3"></audio>
 
 <div id="endDayOverlay">
   <div class="end-day-content">
@@ -554,7 +544,6 @@ class GrindForge {
     this.endDayJournal = document.getElementById('endDayJournal');
     this.saveJournalBtn = document.getElementById('saveJournalBtn');
 
-    // Security
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
       if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) e.preventDefault();
@@ -570,7 +559,6 @@ class GrindForge {
     this.isWorkMode = true;
     this.timeLeft = 25 * 60;
     this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: '' };
-    this.audioContext = null;
 
     this.quotes = [
       "Focus is a skill - practice it daily.",
@@ -597,7 +585,6 @@ class GrindForge {
     this.updateButtons();
     this.loadTodos();
     
-    // Event listeners
     this.startBtn.addEventListener('click', () => this.startTimer());
     this.pauseBtn.addEventListener('click', () => this.pauseTimer());
     this.resetBtn.addEventListener('click', () => this.resetTimer());
@@ -618,32 +605,8 @@ class GrindForge {
   }
 
   setupAlarm() {
-    // Web Audio API for reliable alarm
-    this.createAlarmTone();
-  }
-
-  createAlarmTone() {
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  }
-
-  playAlarm() {
-    if (!this.audioContext) this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    
-    // Simple beep tone
-    const oscillator = this.audioContext.createOscillator();
-    const gainNode = this.audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(this.audioContext.destination);
-    
-    oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(400, this.audioContext.currentTime + 0.5);
-    
-    gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.5);
-    
-    oscillator.start(this.audioContext.currentTime);
-    oscillator.stop(this.audioContext.currentTime + 0.5);
+    this.alarm.volume = 0.7;
+    this.alarm.load();
   }
 
   updateDateTime() {
@@ -670,7 +633,6 @@ class GrindForge {
         if (stats.lastDate === this.getTodayDate()) {
           this.stats = stats;
         } else {
-          // Reset daily stats
           this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: this.getTodayDate() };
         }
       } else {
@@ -760,11 +722,9 @@ class GrindForge {
   timerComplete() {
     this.pauseTimer();
     
-    // Always update date first
     this.stats.lastDate = this.getTodayDate();
     
     if (this.isWorkMode) {
-      // Track actual work time completed
       this.stats.completedSeconds += (parseInt(this.workTimeInput.value) * 60);
       this.stats.sessionsCompleted++;
       this.saveStats();
@@ -772,7 +732,6 @@ class GrindForge {
     
     this.playAlarm();
     
-    // Switch modes
     this.isWorkMode = !this.isWorkMode;
     this.timeLeft = this.isWorkMode ? 
       parseInt(this.workTimeInput.value) * 60 : 
@@ -780,6 +739,13 @@ class GrindForge {
     
     this.updateModeLabel();
     this.updateTimerDisplay();
+  }
+
+  playAlarm() {
+    this.alarm.currentTime = 0;
+    this.alarm.play().catch(() => {
+      console.log('Alarm playback failed - check if alarm.mp3 exists');
+    });
   }
 
   loadQuotes() {
@@ -803,7 +769,7 @@ class GrindForge {
     const newQuote = prompt('Add a new motivational quote:');
     if (newQuote && newQuote.trim().length > 0) {
       this.quotes.unshift(newQuote.trim());
-      if (this.quotes.length > 50) this.quotes = this.quotes.slice(0, 50); // Limit storage
+      if (this.quotes.length > 50) this.quotes = this.quotes.slice(0, 50);
       localStorage.setItem(this.QUOTES_KEY, JSON.stringify(this.quotes));
       this.showRandomQuote();
     }
@@ -947,7 +913,6 @@ class GrindForge {
     this.endDaySummary.textContent = summary;
     this.endDayOverlay.classList.add('active');
     
-    // Reset daily stats for tomorrow
     this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: '' };
     localStorage.setItem(this.STATS_KEY, JSON.stringify(this.stats));
   }
