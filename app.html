@@ -24,8 +24,10 @@
 html,body{
   margin:0;
   padding:0;
-  min-height:100%;
+  height:100svh;
+  overflow:hidden; /* PREVENT PAGE SCROLL */
 }
+
 body{
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color:var(--text);
@@ -51,7 +53,8 @@ body{
   box-sizing:border-box;
   max-width:1400px;
   margin:0 auto var(--gap);
-  min-height:100vh;
+  height:100svh;     /* HARD LOCK */
+  min-height:0;   
 }
 
 .header{
@@ -393,11 +396,12 @@ li.quest:hover{
   flex-shrink:0;
 }
 
-.quest.button.del:hover{
+.quest button.del:hover{
   transform:translateY(-1px);
   box-shadow:0 6px 16px rgba(255,90,90,0.45);
   background:#ff7272;
 }
+
 
 .quest.done .desc{
   text-decoration:line-through;
