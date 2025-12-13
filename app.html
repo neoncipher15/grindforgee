@@ -446,7 +446,7 @@ li.quest:hover{
 
 .journal-box{
   margin-top:12px;
-  margin-bottom:16px; /* added space between journal and End Day */
+  margin-bottom:16px;
   flex:1;
 }
 
@@ -718,7 +718,8 @@ input[type=number]{
   </aside>
 </div>
 
-<audio id="alarm" preload="auto"></audio>
+<!-- FIXED ALARM - Using local alarm.mp3 file -->
+<audio id="alarm" preload="metadata" src="alarm.mp3"></audio>
 
 <div id="endDayOverlay">
   <div class="end-day-content">
@@ -759,12 +760,10 @@ class GrindForge {
     this.endDayJournal = document.getElementById('endDayJournal');
     this.saveJournalBtn = document.getElementById('saveJournalBtn');
 
-    
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
-    if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) e.preventDefault();
+      if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) e.preventDefault();
     });
-
 
     this.TASKS_KEY = 'gf_tasks_v2';
     this.STATS_KEY = 'gf_stats_v2';
@@ -819,9 +818,10 @@ class GrindForge {
     });
   }
 
+  // FIXED ALARM SETUP - Uses local alarm.mp3
   setupAlarm() {
-    this.alarm.src = 'https://cdn.pixabay.com/audio/2022/03/15/audio_0b1aefdd20.mp3';
     this.alarm.volume = 0.7;
+    this.alarm.load(); // Ensure local file is loaded
   }
 
   updateDateTime() {
@@ -952,7 +952,9 @@ class GrindForge {
 
   playAlarm() {
     this.alarm.currentTime = 0;
-    this.alarm.play().catch(() => {});
+    this.alarm.play().catch(() => {
+      console.log('Alarm playback failed - check if alarm.mp3 exists');
+    });
   }
 
   loadQuotes() {
@@ -1116,4 +1118,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
