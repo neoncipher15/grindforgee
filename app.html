@@ -462,8 +462,7 @@ li.quest:hover{
   backdrop-filter:blur(10px);
 }
 
-.quotes h3,
-.journal-box h4{
+.quotes h3{
   margin:0 0 12px 0;
   font-size:clamp(15px,2.5vw,16px);
 }
@@ -498,29 +497,6 @@ li.quest:hover{
 .small-btn:hover{
   transform:translateY(-2px);
   box-shadow:0 12px 32px rgba(78,205,196,0.5);
-}
-
-.journal-box{
-  margin-top:16px;
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
-#endDayJournal{
-  flex:1;
-  width:100%;
-  resize:vertical;
-  border-radius:12px;
-  padding:14px;
-  font-size:clamp(13px,2vw,14px);
-  background:rgba(255,255,255,0.08);
-  color:var(--text);
-  border:1px solid rgba(78,205,196,0.3);
-  min-height:100px;
-}
-#endDayJournal:focus{
-  outline:none;
-  box-shadow:0 0 0 2px rgba(78,205,196,0.4);
 }
 
 #endDayBtn{
@@ -749,9 +725,7 @@ input[type=number]{-moz-appearance:textfield;}
         <button class="small-btn" id="newQuoteBtn">New Quote</button>
         <button class="small-btn" id="saveQuoteBtn">Save Quote</button>
       </div>
-      
-    
-      
+
       <button id="endDayBtn">
         <span style="font-size:20px;">🌙</span>
         <span>End Day</span>
@@ -792,7 +766,6 @@ input[type=number]{-moz-appearance:textfield;}
   </aside>
 </div>
 
-<!-- Original audio file restored -->
 <audio id="alarm" preload="metadata" src="alarm.mp3"></audio>
 
 <div id="endDayOverlay">
@@ -831,8 +804,6 @@ class GrindForge {
     this.endDayBtn = document.getElementById('endDayBtn');
     this.endDayOverlay = document.getElementById('endDayOverlay');
     this.endDaySummary = document.getElementById('endDaySummary');
-    this.endDayJournal = document.getElementById('endDayJournal');
-    this.saveJournalBtn = document.getElementById('saveJournalBtn');
 
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
@@ -842,7 +813,6 @@ class GrindForge {
     this.TASKS_KEY = 'gf_tasks_v3';
     this.STATS_KEY = 'gf_stats_v3';
     this.QUOTES_KEY = 'gf_quotes_v2';
-    this.JOURNAL_KEY = 'gf_journal_v2';
 
     this.isRunning = false;
     this.timerInterval = null;
@@ -869,7 +839,6 @@ class GrindForge {
     setInterval(() => this.updateDateTime(), 1000);
     this.loadStats();
     this.loadQuotes();
-    this.loadJournal();
     this.updateTimerDisplay();
     this.updateModeLabel();
     this.updateButtons();
@@ -888,7 +857,6 @@ class GrindForge {
     });
     this.endDayBtn.addEventListener('click', () => this.endDay());
     this.endDayOverlay.addEventListener('click', () => this.closeEndDay());
-    this.saveJournalBtn.addEventListener('click', () => this.saveJournal());
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') this.closeEndDay();
     });
@@ -1164,15 +1132,6 @@ class GrindForge {
     this.renderTodos(tasks);
   }
 
-  loadJournal() {
-    try {
-      const saved = localStorage.getItem(this.JOURNAL_KEY);
-      this.endDayJournal.value = saved || '';
-    } catch (e) {}
-  }
-
-  
-
   endDay() {
     this.loadStats();
     const hours = (this.stats.completedSeconds / 3600).toFixed(2);
@@ -1181,11 +1140,10 @@ class GrindForge {
     const completedTodos = todos.filter(t => t.done).length;
     const totalTodos = todos.length;
     
-    const summary = `Today you completed ${sessions} session${sessions !== 1 ? 's' : ''} (${hours} hour${hours !== '1.00' ? 's' : ''})\n` +
-                   `✅ ${completedTodos}/${totalTodos} tasks done\n` +
-                  ;
-    
-    this.saveJournal();
+    const summary =
+      `Today you completed ${sessions} session${sessions !== 1 ? 's' : ''} (${hours} hour${hours !== '1.00' ? 's' : ''})\n` +
+      `✅ ${completedTodos}/${totalTodos} tasks done\n`;
+
     this.endDaySummary.textContent = summary;
     this.endDayOverlay.classList.add('active');
     
