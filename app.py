@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GrindForge — Pomodoro</title>
+<link rel="icon" type="image/png" href="/GrindForge.png" />
+<style>
+:root{
+  --accent:#4ecdc4;
+  --bg:#030612;
+  --card: rgba(4,6,10,0.85);
+  --glass: rgba(0,0,0,0.55);
+  --muted:#9adbd4;
+  --text:#dffcff;
+  --danger:#ff5a5a;
+  --success:#6ef0c9;
+  --shadow: rgba(2,6,10,0.6);
+  --radius:14px;
+  --gap:12px;
+}
+
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+}
+body{
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:var(--text);
+  background-image: url('img.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow-x:hidden;
+}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:-1;}
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:auto minmax(0,1fr) minmax(0,1fr);
+  grid-template-areas:"header header""sidebar timer""sidebar todo";
+  gap:var(--gap);
+  padding:var(--gap);
+  box-sizing:border-box;
+  max-width:1400px;
+  margin:0 auto var(--gap);
+  min-height:100vh;
+}
+
+.header{
+  grid-area:header;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  background:var(--card);
+  backdrop-filter:blur(16px);
+  border-radius:var(--radius);
+  padding:20px 24px;
+  box-shadow:0 16px 40px var(--shadow);
+  border:1px solid rgba(78,205,196,0.15);
+  position:relative;
+  overflow:hidden;
+}
+
+.header::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(78,205,196,0.1),transparent);
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+
+.header:hover::before{opacity:1;}
+.header:hover{transform:translateY(-2px);}
+
+.logo{width:44px;height:44px;border-radius:10px;box-shadow:0 8px 24px rgba(78,205,196,0.4);}
+
+.brand-section{display:flex;flex-direction:column;gap:2px;flex:1;}
+.brand-title{font-size:clamp(22px,3.5vw,26px);font-weight:800;background:linear-gradient(135deg,var(--accent),#6ef0c9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:0;}
+.brand-subtitle{font-size:clamp(11px,1.8vw,13px);color:var(--muted);margin:0;font-weight:400;}
+
+.creator-credit{
+  color:#39FF14;
+  font-weight:500;
+  font-size:clamp(11px,1.6vw,12px);
+  background:rgba(57,255,20,0.12);
+  padding:6px 10px;
+  border-radius:6px;
+  border:1px solid rgba(57,255,20,0.3);
+  white-space:nowrap;
+  transition:all 0.2s ease;
+}
+
+.creator-credit:hover{
+  background:rgba(57,255,20,0.22);
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(57,255,20,0.25);
+}
+
+.sidebar{
+  grid-area:sidebar;
+  display:flex;
+  flex-direction:column;
+  gap:var(--gap);
+  min-height:0;
+}
+
+.box,.timer-box,.todo-container{
+  background:var(--card);
+  backdrop-filter:blur(16px);
+  border-radius:var(--radius);
+  box-shadow:0 14px 36px var(--shadow);
+  transition:all 0.2s ease-out;
+  border:1px solid rgba(78,205,196,0.1);
+  display:flex;
+  flex-direction:column;
+}
+
+.box:hover,.timer-box:hover,.todo-container:hover{
+  transform:translateY(-3px);
+  box-shadow:0 22px 48px rgba(78,205,196,0.22);
+}
+
+.box{
+  padding:16px;
+}
+
+.timer-box{
+  grid-area:timer;
+  text-align:center;
+  padding:24px 20px;
+  justify-content:center;
+  align-items:center;
+  border:1px solid rgba(78,205,196,0.15);
+  min-height:0;
+}
+
+.todo-container{
+  grid-area:todo;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  background:var(--glass);
+  border:1px solid rgba(78,205,196,0.15);
+}
+
+.timer-box h1{margin:0 0 10px 0;font-size:clamp(19px,2.8vw,22px);font-weight:700}
+
+#timer{
+  font-size:clamp(40px,7vw,48px);
+  font-weight:800;
+  color:var(--accent);
+  margin:12px 0;
+  letter-spacing:-0.8px;
+}
+
+.timer-controls{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+
+.timer-controls button{
+  padding:10px 16px;
+  border-radius:10px;
+  border:0;
+  cursor:pointer;
+  background:var(--accent);
+  color:#042726;
+  font-weight:700;
+  font-size:clamp(13px,1.8vw,14px);
+  min-width:80px;
+  transition:all 0.15s ease;
+}
+
+.timer-controls button[disabled]{
+  opacity:0.6;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.timer-controls button:not([disabled]):hover{
+  transform:translateY(-1px) scale(1.02);
+  box-shadow:0 10px 24px rgba(78,205,196,0.45);
+}
+
+.settings{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  align-items:center;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+
+.settings label{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  font-size:clamp(12px,1.8vw,13px);
+}
+
+.settings input{
+  width:72px;
+  padding:10px;
+  border-radius:8px;
+  border:0;
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  text-align:center;
+  font-size:15px;
+  font-weight:600;
+}
+
+.progress-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:14px;
+  align-items:center;
+  font-size:clamp(12px,1.8vw,13px);
+  color:var(--muted);
+  width:100%;
+  flex-wrap:wrap;
+}
+
+.todo-container h2{
+  margin:0 0 14px 0;
+  font-size:clamp(19px,2.8vw,20px);
+  text-align:center;
+  flex-shrink:0;
+}
+
+.todo-input{
+  display:flex;
+  gap:10px;
+  margin-bottom:16px;
+  flex-direction:column;
+  flex-shrink:0;
+}
+
+.todo-input input{
+  padding:12px 14px;
+  border-radius:10px;
+  border:0;
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  font-size:14px;
+}
+
+.todo-input button{
+  padding:12px 16px;
+  border-radius:10px;
+  border:0;
+  background:var(--accent);
+  color:#042726;
+  font-weight:700;
+  font-size:14px;
+  transition:all 0.15s ease;
+}
+
+.todo-input button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 24px rgba(78,205,196,0.45);
+}
+
+.todo-list-container{
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+
+ul#todo-list{
+  flex:1;
+  list-style:none;
+  padding:0;
+  margin:0;
+  overflow-y:auto;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(78,205,196,0.5) transparent;
+}
+
+ul#todo-list::-webkit-scrollbar{
+  width:6px;
+}
+
+ul#todo-list::-webkit-scrollbar-track{
+  background:rgba(255,255,255,0.05);
+  border-radius:3px;
+}
+
+ul#todo-list::-webkit-scrollbar-thumb{
+  background:rgba(78,205,196,0.6);
+  border-radius:3px;
+}
+
+ul#todo-list::-webkit-scrollbar-thumb:hover{
+  background:rgba(78,205,196,0.9);
+}
+
+li.quest{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  margin-bottom:8px;
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.06);
+  transition:all 0.15s ease;
+}
+
+li.quest:hover{
+  transform:translateX(3px);
+  box-shadow:0 6px 20px rgba(78,205,196,0.18);
+}
+
+.quest .left{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex:1;
+  min-width:0;
+}
+
+.checkbox{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  border:2px solid rgba(255,255,255,0.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  background:rgba(255,255,255,0.02);
+  transition:all 0.15s ease;
+  flex-shrink:0;
+}
+
+.checkbox:hover{
+  transform:scale(1.04);
+  box-shadow:0 0 10px rgba(78,205,196,0.35);
+}
+
+.checkbox.done{
+  background:var(--success);
+  border-color:var(--success);
+  color:#042726;
+}
+
+.quest .desc{
+  font-weight:700;
+  font-size:14px;
+  flex:1;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.quest .meta{
+  font-size:12px;
+  color:var(--muted);
+  flex-shrink:0;
+  white-space:nowrap;
+}
+
+.quest button.del{
+  padding:6px 10px;
+  border-radius:8px;
+  border:0;
+  background:var(--danger);
+  color:#fff;
+  cursor:pointer;
+  font-weight:600;
+  font-size:12px;
+  transition:all 0.15s ease;
+  flex-shrink:0;
+}
+
+.quest.button.del:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(255,90,90,0.45);
+  background:#ff7272;
+}
+
+.quest.done .desc{
+  text-decoration:line-through;
+  opacity:0.6;
+  color:#bfeee5;
+}
+
+.quest.done .meta{opacity:0.7;}
+
+#datetime-box{
+  font-size:clamp(14px,2.2vw,15px);
+  letter-spacing:0.2px;
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.stats-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.stat-pill{
+  background:rgba(255,255,255,0.08);
+  padding:7px 12px;
+  border-radius:10px;
+  font-size:clamp(12px,1.8vw,13px);
+  border:1px solid rgba(78,205,196,0.18);
+}
+
+.quotes h3,.journal-box h4{margin:0 0 10px 0;font-size:clamp(14px,2.2vw,15px);}
+.quote-text{font-size:clamp(13px,2vw,14px);min-height:44px;margin-bottom:10px;}
+.quote-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.small-btn{
+  border:0;
+  padding:9px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  background:var(--accent);
+  color:#042726;
+  font-weight:700;
+  font-size:clamp(12px,1.8vw,13px);
+  transition:all 0.15s ease;
+  flex:1;
+  min-width:90px;
+}
+
+.small-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 20px rgba(78,205,196,0.4);
+}
+
+.journal-box{
+  margin-top:12px;
+  margin-bottom:16px; /* added space between journal and End Day */
+  flex:1;
+}
+
+#endDayJournal{
+  width:100%;
+  resize:vertical;
+  border-radius:10px;
+  padding:10px;
+  font-size:clamp(12px,1.8vw,13px);
+  background:rgba(255,255,255,0.06);
+  color:var(--text);
+  border:1px solid rgba(78,205,196,0.22);
+  min-height:90px;
+}
+
+#endDayJournal:focus{
+  outline:none;
+  box-shadow:0 0 10px rgba(78,205,196,0.45);
+}
+
+#endDayBtn{
+  margin-top:auto;
+  padding:12px;
+  border-radius:10px;
+  border:0;
+  cursor:pointer;
+  background:linear-gradient(135deg,#4ecdc4,#6ef0c9);
+  color:#042726;
+  font-weight:700;
+  font-size:clamp(14px,2.2vw,15px);
+  box-shadow:0 10px 28px rgba(78,205,196,0.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:all 0.2s ease;
+}
+
+#endDayBtn:hover{
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 18px 36px rgba(78,205,196,0.55);
+}
+
+@media (max-width:1024px){
+  .dashboard-grid{
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto auto;
+    grid-template-areas:"header" "timer" "sidebar" "todo";
+    padding:12px;
+    gap:12px;
+  }
+  .sidebar{
+    min-height:0;
+  }
+}
+
+@media (max-width:768px){
+  .dashboard-grid{
+    padding:10px;
+    gap:10px;
+  }
+  .header{
+    flex-direction:column;
+    text-align:center;
+    gap:16px;
+    padding:18px 16px;
+  }
+  .logo{
+    width:38px;
+    height:38px;
+  }
+  .timer-controls{
+    flex-direction:column;
+    align-items:center;
+  }
+  .timer-controls button{
+    width:100%;
+    max-width:220px;
+  }
+  .settings{
+    flex-direction:column;
+  }
+  .progress-row{
+    flex-direction:column;
+    gap:8px;
+    text-align:center;
+  }
+  .todo-input{
+    flex-direction:column;
+  }
+  .quote-actions{
+    flex-direction:column;
+  }
+}
+
+@media (max-width:480px){
+  .dashboard-grid{
+    padding:8px;
+    gap:8px;
+  }
+  .header{
+    padding:16px 12px;
+  }
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{
+  -webkit-appearance:none;
+  margin:0;
+}
+input[type=number]{
+  -moz-appearance:textfield;
+}
+
+#endDayOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(3,6,18,0.95);
+  backdrop-filter:blur(20px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.35s ease;
+  padding:16px;
+}
+
+#endDayOverlay.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.end-day-content{
+  text-align:center;
+  width:100%;
+  max-width:380px;
+  padding:28px 20px;
+  border-radius:18px;
+  background:rgba(8,10,20,0.98);
+  box-shadow:0 28px 72px rgba(0,0,0,0.9);
+  border:1px solid rgba(78,205,196,0.4);
+}
+
+.end-day-circle{
+  width:88px;
+  height:88px;
+  border-radius:50%;
+  margin:0 auto 20px;
+  background:radial-gradient(circle at 30% 20%,#ffffff,#4ecdc4);
+  position:relative;
+  overflow:hidden;
+  animation:endCircle 1.6s ease-out forwards;
+}
+
+.end-day-check{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(0.2);
+  opacity:0;
+  font-size:38px;
+  color:#042726;
+  font-weight:800;
+  animation:endCheck 1.4s 0.4s ease-out forwards;
+}
+
+@keyframes endCircle{
+  0%{transform:scale(0.4);opacity:0;}
+  60%{transform:scale(1.05);opacity:1;}
+  100%{transform:scale(1);opacity:1;}
+}
+
+@keyframes endCheck{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(0.2);}
+  40%{opacity:1;transform:translate(-50%,-50%) scale(1.1);}
+  100%{opacity:1;transform:translate(-50%,-50%) scale(1);}
+}
+
+.end-day-title{font-size:24px;margin-bottom:6px;font-weight:800;}
+.end-day-sub{font-size:14px;color:var(--muted);margin-bottom:18px;}
+#endDaySummary{
+  font-family:"Poppins",monospace;
+  font-size:16px;
+  min-height:60px;
+  white-space:pre-line;
+  margin-bottom:18px;
+}
+.end-day-hint{font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="overlay"></div>
+<div class="dashboard-grid">
+  <header class="header">
+    <div style="display:flex;align-items:center;gap:12px;flex:1;">
+      <img src="/GrindForge.png" alt="GrindForge Logo" class="logo">
+      <div class="brand-section">
+        <h1 class="brand-title">GrindForge</h1>
+        <p class="brand-subtitle">Pomodoro Productivity Dashboard</p>
+      </div>
+    </div>
+    <div class="creator-credit">Creator – Shaurya Chauhan</div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="box" id="dateBox">
+      <div id="datetime-box" aria-live="polite">Loading date...</div>
+      <div class="stats-row">
+        <div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
+        <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
+      </div>
+    </div>
+    
+    <div class="box quotes">
+      <h3>Quote</h3>
+      <div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
+      <div class="quote-actions">
+        <button class="small-btn" id="newQuoteBtn">New Quote</button>
+        <button class="small-btn" id="saveQuoteBtn" style="background:#2b3dff;color:white">Save</button>
+      </div>
+      <div style="margin-top:6px;font-size:12px;color:var(--muted)">Saved quotes persist locally.</div>
+      
+      <div class="journal-box">
+        <h4>Daily Journal</h4>
+        <textarea id="endDayJournal" placeholder="Write your thoughts about today..." rows="4"></textarea>
+        <button id="saveJournalBtn" class="small-btn" style="margin-top:10px;">Save Journal</button>
+      </div>
+      
+      <button id="endDayBtn">
+        <span style="font-size:18px;">🌙</span>
+        <span>End Day</span>
+      </button>
+    </div>
+  </aside>
+
+  <section class="timer-box" aria-label="Pomodoro Timer">
+    <h1>Pomodoro Timer</h1>
+    <div id="timer" aria-live="polite">25:00</div>
+    <div class="timer-controls">
+      <button id="startBtn">Start</button>
+      <button id="pauseBtn" disabled>Pause</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+    <div class="settings">
+      <label>Work
+        <input id="workTime" type="number" min="1" value="25"/>
+      </label>
+      <label>Break
+        <input id="breakTime" type="number" min="1" value="5"/>
+      </label>
+    </div>
+    <div class="progress-row">
+      <div id="modeLabel">Mode: Work</div>
+      <div id="sessionLabel">Completed: 0</div>
+    </div>
+  </section>
+
+  <aside class="todo-container" aria-label="To-Do">
+    <h2>To-Do List ✨</h2>
+    <div class="todo-input">
+      <input id="todoInput" type="text" placeholder="Write a task..."/>
+      <button id="addTaskBtn">Add Task</button>
+    </div>
+    <div class="todo-list-container">
+      <ul id="todo-list" aria-live="polite"></ul>
+    </div>
+  </aside>
+</div>
+
+<audio id="alarm" preload="auto"></audio>
+
+<div id="endDayOverlay">
+  <div class="end-day-content">
+    <div class="end-day-circle">
+      <div class="end-day-check">✓</div>
+    </div>
+    <div class="end-day-title">Day Complete</div>
+    <div class="end-day-sub">Here is what you achieved today:</div>
+    <div id="endDaySummary"></div>
+    <div class="end-day-hint">Press Esc or click anywhere to close.</div>
+  </div>
+</div>
+
+<script>
+class GrindForge {
+  constructor() {
+    this.alarm = document.getElementById('alarm');
+    this.startBtn = document.getElementById('startBtn');
+    this.pauseBtn = document.getElementById('pauseBtn');
+    this.resetBtn = document.getElementById('resetBtn');
+    this.timerDisplay = document.getElementById('timer');
+    this.workTimeInput = document.getElementById('workTime');
+    this.breakTimeInput = document.getElementById('breakTime');
+    this.modeLabel = document.getElementById('modeLabel');
+    this.sessionLabel = document.getElementById('sessionLabel');
+    this.newQuoteBtn = document.getElementById('newQuoteBtn');
+    this.saveQuoteBtn = document.getElementById('saveQuoteBtn');
+    this.quoteText = document.getElementById('quoteText');
+    this.todoInput = document.getElementById('todoInput');
+    this.addTaskBtn = document.getElementById('addTaskBtn');
+    this.todoList = document.getElementById('todo-list');
+    this.hoursCompleted = document.getElementById('hoursCompleted');
+    this.sessionsCompleted = document.getElementById('sessionsCompleted');
+    this.datetimeBox = document.getElementById('datetime-box');
+    this.endDayBtn = document.getElementById('endDayBtn');
+    this.endDayOverlay = document.getElementById('endDayOverlay');
+    this.endDaySummary = document.getElementById('endDaySummary');
+    this.endDayJournal = document.getElementById('endDayJournal');
+    this.saveJournalBtn = document.getElementById('saveJournalBtn');
+
+    
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+    if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) e.preventDefault();
+    });
+
+
+    this.TASKS_KEY = 'gf_tasks_v2';
+    this.STATS_KEY = 'gf_stats_v2';
+    this.QUOTES_KEY = 'gf_quotes_v1';
+    this.JOURNAL_KEY = 'gf_journal_v1';
+
+    this.isRunning = false;
+    this.timerInterval = null;
+    this.isWorkMode = true;
+    this.timeLeft = 25 * 60;
+    this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: '' };
+
+    this.quotes = [
+      "Focus is a skill - practice it daily.",
+      "You don't have to be perfect, just persistent.",
+      "Small progress each day adds up to big results.",
+      "Work in silence, let success make the noise.",
+      "One task at a time. Win the moment."
+    ];
+
+    this.init();
+  }
+
+  init() {
+    this.setupAlarm();
+    this.updateDateTime();
+    setInterval(() => this.updateDateTime(), 1000);
+    this.loadStats();
+    this.loadQuotes();
+    this.loadJournal();
+    this.updateTimerDisplay();
+    this.updateModeLabel();
+    this.updateButtons();
+    this.loadTodos();
+    
+    this.startBtn.addEventListener('click', () => this.startTimer());
+    this.pauseBtn.addEventListener('click', () => this.pauseTimer());
+    this.resetBtn.addEventListener('click', () => this.resetTimer());
+    this.workTimeInput.addEventListener('change', () => this.updateWorkTime());
+    this.breakTimeInput.addEventListener('change', () => this.updateBreakTime());
+    this.newQuoteBtn.addEventListener('click', () => this.newQuote());
+    this.saveQuoteBtn.addEventListener('click', () => this.saveQuote());
+    this.addTaskBtn.addEventListener('click', () => this.addTask());
+    this.todoInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') this.addTask();
+    });
+    this.endDayBtn.addEventListener('click', () => this.endDay());
+    this.endDayOverlay.addEventListener('click', () => this.closeEndDay());
+    this.saveJournalBtn.addEventListener('click', () => this.saveJournal());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') this.closeEndDay();
+    });
+  }
+
+  setupAlarm() {
+    this.alarm.src = 'https://cdn.pixabay.com/audio/2022/03/15/audio_0b1aefdd20.mp3';
+    this.alarm.volume = 0.7;
+  }
+
+  updateDateTime() {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('en-IN', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    this.datetimeBox.textContent = formatter.format(now);
+  }
+
+  getTodayDate() {
+    const now = new Date();
+    return now.getFullYear() + '-' +
+           String(now.getMonth() + 1).padStart(2, '0') + '-' +
+           String(now.getDate()).padStart(2, '0');
+  }
+
+  loadStats() {
+    try {
+      const saved = localStorage.getItem(this.STATS_KEY);
+      if (saved) {
+        const stats = JSON.parse(saved);
+        if (stats.lastDate === this.getTodayDate()) {
+          this.stats = stats;
+        }
+      }
+    } catch (e) {}
+    this.updateStatsDisplay();
+  }
+
+  saveStats() {
+    localStorage.setItem(this.STATS_KEY, JSON.stringify(this.stats));
+    this.updateStatsDisplay();
+  }
+
+  updateStatsDisplay() {
+    const hours = (this.stats.completedSeconds / 3600).toFixed(2);
+    this.hoursCompleted.textContent = `Hours: ${hours}`;
+    this.sessionsCompleted.textContent = `Sessions: ${this.stats.sessionsCompleted}`;
+    this.sessionLabel.textContent = `Completed: ${this.stats.sessionsCompleted}`;
+  }
+
+  updateTimerDisplay() {
+    const minutes = Math.floor(this.timeLeft / 60);
+    const seconds = this.timeLeft % 60;
+    this.timerDisplay.textContent =
+      String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+  }
+
+  updateModeLabel() {
+    this.modeLabel.textContent = `Mode: ${this.isWorkMode ? 'Work' : 'Break'}`;
+  }
+
+  updateButtons() {
+    this.startBtn.disabled = this.isRunning;
+    this.pauseBtn.disabled = !this.isRunning;
+  }
+
+  startTimer() {
+    if (this.isRunning) return;
+    this.isRunning = true;
+    this.updateButtons();
+    this.updateTimerDisplay();
+    this.timerInterval = setInterval(() => {
+      if (this.timeLeft > 0) {
+        this.timeLeft--;
+        this.updateTimerDisplay();
+      } else {
+        this.timerComplete();
+      }
+    }, 1000);
+  }
+
+  pauseTimer() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+    this.isRunning = false;
+    this.updateButtons();
+  }
+
+  resetTimer() {
+    this.pauseTimer();
+    this.isWorkMode = true;
+    this.timeLeft = parseInt(this.workTimeInput.value) * 60;
+    this.updateModeLabel();
+    this.updateTimerDisplay();
+  }
+
+  updateWorkTime() {
+    if (!this.isRunning && this.isWorkMode) {
+      this.timeLeft = parseInt(this.workTimeInput.value) * 60;
+      this.updateTimerDisplay();
+    }
+  }
+
+  updateBreakTime() {
+    if (!this.isRunning && !this.isWorkMode) {
+      this.timeLeft = parseInt(this.breakTimeInput.value) * 60;
+      this.updateTimerDisplay();
+    }
+  }
+
+  timerComplete() {
+    this.pauseTimer();
+    if (this.isWorkMode) {
+      const workMinutes = parseInt(this.workTimeInput.value);
+      this.stats.completedSeconds += workMinutes * 60;
+      this.stats.sessionsCompleted++;
+      this.stats.lastDate = this.getTodayDate();
+      this.saveStats();
+      this.playAlarm();
+      this.isWorkMode = false;
+      this.timeLeft = parseInt(this.breakTimeInput.value) * 60;
+    } else {
+      this.playAlarm();
+      this.isWorkMode = true;
+      this.timeLeft = parseInt(this.workTimeInput.value) * 60;
+    }
+    this.updateModeLabel();
+    this.updateTimerDisplay();
+  }
+
+  playAlarm() {
+    this.alarm.currentTime = 0;
+    this.alarm.play().catch(() => {});
+  }
+
+  loadQuotes() {
+    try {
+      const saved = localStorage.getItem(this.QUOTES_KEY);
+      if (saved) {
+        this.quotes = JSON.parse(saved);
+      }
+    } catch (e) {}
+    this.showRandomQuote();
+  }
+
+  newQuote() {
+    this.showRandomQuote();
+  }
+
+  showRandomQuote() {
+    const randomQuote = this.quotes[Math.floor(Math.random() * this.quotes.length)];
+    this.quoteText.textContent = `"${randomQuote}"`;
+  }
+
+  saveQuote() {
+    const newQuote = prompt('Add a new quote:');
+    if (newQuote && newQuote.trim()) {
+      this.quotes.unshift(newQuote.trim());
+      localStorage.setItem(this.QUOTES_KEY, JSON.stringify(this.quotes));
+      this.showRandomQuote();
+    }
+  }
+
+  loadTodos() {
+    try {
+      const saved = localStorage.getItem(this.TASKS_KEY);
+      if (saved) {
+        this.renderTodos(JSON.parse(saved));
+      }
+    } catch (e) {
+      this.renderTodos([]);
+    }
+  }
+
+  addTask() {
+    const text = this.todoInput.value.trim();
+    if (!text) return;
+    const tasks = this.getTodos();
+    tasks.push({
+      id: Date.now().toString(36),
+      text,
+      done: false,
+      createdAt: Date.now()
+    });
+    this.saveTodos(tasks);
+    this.todoInput.value = '';
+    this.renderTodos(tasks);
+  }
+
+  getTodos() {
+    try {
+      return JSON.parse(localStorage.getItem(this.TASKS_KEY) || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  saveTodos(tasks) {
+    localStorage.setItem(this.TASKS_KEY, JSON.stringify(tasks));
+  }
+
+  renderTodos(tasks) {
+    this.todoList.innerHTML = '';
+    const incomplete = tasks.filter(task => !task.done);
+    const complete = tasks.filter(task => task.done);
+    [...incomplete, ...complete].forEach(task => {
+      const li = document.createElement('li');
+      li.className = `quest ${task.done ? 'done' : ''}`;
+
+      const left = document.createElement('div');
+      left.className = 'left';
+
+      const checkbox = document.createElement('div');
+      checkbox.className = `checkbox ${task.done ? 'done' : ''}`;
+      checkbox.innerHTML = task.done ? '✓' : '';
+      checkbox.addEventListener('click', () => this.toggleTask(task.id));
+
+      const desc = document.createElement('span');
+      desc.className = 'desc';
+      desc.textContent = task.text;
+
+      const meta = document.createElement('span');
+      meta.className = 'meta';
+      meta.textContent = task.done ? 'Completed' : 'Quest';
+
+      left.appendChild(checkbox);
+      left.appendChild(desc);
+      left.appendChild(meta);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'del';
+      delBtn.textContent = '✕';
+      delBtn.addEventListener('click', () => this.deleteTask(task.id));
+
+      li.appendChild(left);
+      li.appendChild(delBtn);
+      this.todoList.appendChild(li);
+    });
+  }
+
+  toggleTask(id) {
+    const tasks = this.getTodos();
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+      task.done = !task.done;
+      this.saveTodos(tasks);
+      this.renderTodos(tasks);
+    }
+  }
+
+  deleteTask(id) {
+    const tasks = this.getTodos().filter(t => t.id !== id);
+    this.saveTodos(tasks);
+    this.renderTodos(tasks);
+  }
+
+  loadJournal() {
+    try {
+      const saved = localStorage.getItem(this.JOURNAL_KEY);
+      this.endDayJournal.value = saved || '';
+    } catch (e) {}
+  }
+
+  saveJournal() {
+    try {
+      localStorage.setItem(this.JOURNAL_KEY, this.endDayJournal.value.trim());
+      this.saveJournalBtn.textContent = 'Saved ✔';
+      setTimeout(() => {
+        this.saveJournalBtn.textContent = 'Save Journal';
+      }, 1200);
+    } catch (e) {
+      alert('Failed to save journal.');
+    }
+  }
+
+  endDay() {
+    this.loadStats();
+    const hours = (this.stats.completedSeconds / 3600).toFixed(2);
+    const sessions = this.stats.sessionsCompleted;
+    const summary = `Today you completed ${sessions} session${sessions !== 1 ? 's' : ''}\nand studied ${hours} hour${hours !== '1.00' ? 's' : ''}.`;
+    this.saveJournal();
+    this.endDaySummary.textContent = summary;
+    this.endDayOverlay.classList.add('active');
+  }
+
+  closeEndDay() {
+    this.endDayOverlay.classList.remove('active');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  new GrindForge();
+});
+</script>
+</body>
+</html>
+
