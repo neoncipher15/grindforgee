@@ -26,9 +26,85 @@ body{
   font-family: "Poppins", sans-serif;
   color:var(--text);
   background:var(--bg);
-  overflow:hidden;
+  overflow-y:auto;
   min-height:100vh;
   position:relative;
+}
+
+.header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(78,205,196,0.2);
+  z-index:100;
+  padding:15px 0;
+}
+
+.nav-container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:24px;
+  font-weight:700;
+  background:var(--gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.logo-icon{
+  width:36px;
+  height:36px;
+  background:var(--gradient);
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  font-weight:700;
+  color:#042726;
+}
+
+.nav-links{
+  display:flex;
+  gap:30px;
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.nav-links a{
+  color:var(--muted);
+  text-decoration:none;
+  font-weight:500;
+  transition:all 0.3s ease;
+  position:relative;
+}
+
+.nav-links a:hover{
+  color:var(--accent);
+}
+
+.nav-links a.active::after{
+  content:'';
+  position:absolute;
+  bottom:-5px;
+  left:0;
+  width:100%;
+  height:2px;
+  background:var(--gradient);
 }
 
 .hero-bg{
@@ -49,27 +125,35 @@ body{
 }
 
 .main-content{
-  height:100vh;
+  min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:0 20px;
+  padding:120px 20px 80px;
   position:relative;
   z-index:1;
 }
 
+.hero-section{
+  text-align:center;
+  max-width:800px;
+  margin-bottom:100px;
+}
+
 .launch-logo{
-  width:140px;
-  height:140px;
+  width:160px;
+  height:160px;
   background:var(--gradient);
   border-radius:50%;
-  margin-bottom:40px;
+  margin:0 auto 50px;
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
   box-shadow: 0 0 60px rgba(78,205,196,0.4);
   animation: logoFloat 3s ease-in-out infinite;
+  padding:20px;
 }
 
 @keyframes logoFloat {
@@ -77,15 +161,22 @@ body{
   50% { transform: translateY(-10px) rotate(5deg); }
 }
 
-.launch-logo img{
-  width:90%;
-  height:90%;
-  object-fit:cover;
-  border-radius:50%;
+.launch-logo .logo-icon{
+  width:80px;
+  height:80px;
+  margin-bottom:8px;
+  font-size:28px;
+}
+
+.launch-logo span{
+  font-size:18px;
+  font-weight:700;
+  color:#042726;
+  letter-spacing:1px;
 }
 
 h1{
-  font-size:clamp(36px,8vw,52px);
+  font-size:clamp(42px,8vw,64px);
   font-weight:700;
   margin:0 0 24px;
   background:linear-gradient(135deg, var(--accent), #6ef0c9);
@@ -101,13 +192,11 @@ h1{
 }
 
 .tagline{
-  font-size:clamp(16px,3vw,22px);
+  font-size:clamp(18px,3vw,24px);
   color:var(--muted);
-  margin:0 0 50px;
+  margin:0 0 60px;
   line-height:1.7;
   font-weight:300;
-  max-width:600px;
-  text-align:center;
   opacity:0.9;
 }
 
@@ -116,8 +205,8 @@ h1{
   background:var(--gradient);
   color:#042726;
   border:none;
-  padding:22px 60px;
-  font-size:clamp(18px,4vw,24px);
+  padding:24px 70px;
+  font-size:clamp(20px,4vw,26px);
   font-weight:700;
   border-radius:50px;
   cursor:pointer;
@@ -139,119 +228,278 @@ h1{
   transform:translateY(-4px) scale(0.98);
 }
 
+.section{
+  max-width:1200px;
+  margin:0 auto;
+  padding:80px 20px;
+}
+
 .features-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
-  gap:24px;
-  margin-top:60px;
-  max-width:800px;
-  width:100%;
+  grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  gap:30px;
+  margin-top:20px;
 }
 
 .feature{
-  background:rgba(255,255,255,0.08);
+  background:var(--card);
   backdrop-filter: blur(15px);
-  padding:20px 24px;
-  border-radius:25px;
+  padding:32px 28px;
+  border-radius:var(--radius);
   color:var(--muted);
   text-align:center;
   border:1px solid rgba(78,205,196,0.15);
-  transition:all 0.3s ease;
-  font-size:15px;
+  transition:all 0.4s ease;
+  font-size:16px;
   font-weight:500;
+  position:relative;
+  overflow:hidden;
+}
+
+.feature::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:4px;
+  background:var(--gradient);
+  transform:scaleX(0);
+  transition:transform 0.3s ease;
+}
+
+.feature:hover::before{
+  transform:scaleX(1);
 }
 
 .feature:hover{
-  background:rgba(78,205,196,0.15);
+  background:rgba(78,205,196,0.08);
   border-color:var(--accent);
-  transform:translateY(-5px);
+  transform:translateY(-8px);
   color:var(--text);
 }
 
-.shortcut-hint{
-  position:absolute;
-  bottom:40px;
-  left:50%;
-  transform:translateX(-50%);
-  padding:18px 30px;
-  background:rgba(78,205,196,0.12);
-  backdrop-filter: blur(20px);
-  border-radius:16px;
-  border:1px solid rgba(78,205,196,0.25);
-  font-size:14px;
-  color:var(--muted);
-  max-width:90%;
-  text-align:center;
+.feature-icon{
+  font-size:48px;
+  display:block;
+  margin-bottom:16px;
 }
 
+.developers-section{
+  background:rgba(255,255,255,0.03);
+  border-radius:var(--radius);
+  border:1px solid rgba(78,205,196,0.1);
+  text-align:center;
+  padding:60px 40px;
+  margin:40px 0;
+}
 
+.developer-avatar{
+  width:120px;
+  height:120px;
+  background:var(--gradient);
+  border-radius:50%;
+  margin:0 auto 24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  font-weight:700;
+  color:#042726;
+  box-shadow:0 20px 40px rgba(78,205,196,0.2);
+}
 
-@keyframes scrollPulse {
-  0%, 100% { opacity:0; transform:translateX(-50%) translateY(0px) scaleY(1); }
-  50% { opacity:1; transform:translateX(-50%) translateY(-10px) scaleY(1.2); }
+.developer-name{
+  font-size:32px;
+  font-weight:700;
+  background:var(--gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin:0 0 12px;
+}
+
+.developer-title{
+  font-size:20px;
+  color:var(--accent);
+  font-weight:600;
+  margin:0 0 20px;
+}
+
+.developer-desc{
+  font-size:16px;
+  color:var(--muted);
+  line-height:1.7;
+  max-width:600px;
+  margin:0 auto 30px;
+}
+
+.dev-links{
+  display:flex;
+  gap:20px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.dev-link{
+  background:rgba(78,205,196,0.15);
+  color:var(--accent);
+  padding:12px 24px;
+  border-radius:25px;
+  text-decoration:none;
+  font-weight:500;
+  transition:all 0.3s ease;
+  border:1px solid rgba(78,205,196,0.3);
+}
+
+.dev-link:hover{
+  background:var(--gradient);
+  color:#042726;
+  transform:translateY(-2px);
+}
+
+.footer{
+  background:var(--card);
+  border-top:1px solid rgba(78,205,196,0.1);
+  text-align:center;
+  padding:40px 20px;
+  color:var(--muted);
+  font-size:14px;
 }
 
 @media (max-width:768px){
-  .main-content{ padding:0 15px; }
-  .features-grid{ grid-template-columns:repeat(2, 1fr); gap:16px; }
-  .launch-btn{ padding:18px 45px; }
-  .shortcut-hint{ bottom:25px; padding:14px 20px; font-size:13px; }
+  .nav-links{ display:none; }
+  .logo-header{ font-size:20px; }
+  .features-grid{ grid-template-columns:1fr; }
+  .dev-links{ flex-direction:column; align-items:center; }
 }
 
 @media (max-width:480px){
-  .features-grid{ grid-template-columns:1fr; }
-  h1{ font-size:clamp(32px,9vw,42px); }
+  .section{ padding:60px 15px; }
+  h1{ font-size:clamp(36px,9vw,48px); }
 }
 </style>
 </head>
 <body>
 <div class="hero-bg"></div>
 
-<div class="main-content">
-  <div class="launch-logo">
-    <img src="GrindForge.png" alt="GrindForge logo">
-  </div>
-  
-  <h1>GrindForge</h1>
-  <p class="tagline">Master your focus with the ultimate Pomodoro experience. Timer • Tasks • Quotes • Stats. Built for relentless grinders.</p>
-  
-  <button type="button" class="launch-btn">Launch App</button>
-  
-  <div class="features-grid">
-    <div class="feature">⏱️ Smart Timer</div>
-    <div class="feature">✅ Todo List</div>
-    <div class="feature">📊 Daily Stats</div>
-    <div class="feature">💬 Motivational Quotes</div>
-  </div>
-  
-  <div class="scroll-indicator"></div>
+<header class="header">
+  <nav class="nav-container">
+    <div class="logo-header">
+      <div class="logo-icon">⚡</div>
+      GrindForge
+    </div>
+    <ul class="nav-links">
+      <li><a href="#home" class="active">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#developer">Developer</a></li>
+    </ul>
+  </nav>
+</header>
 
-</div>
+<main>
+  <section id="home" class="main-content hero-section">
+    <div class="launch-logo">
+      <div class="logo-icon">⚡</div>
+      <span>GrindForge</span>
+    </div>
+    
+    <h1>GrindForge</h1>
+    <p class="tagline">Master your focus with the ultimate Pomodoro experience. Timer • Tasks • Quotes • Stats. Built for relentless grinders.</p>
+    
+    <a href="app.html" class="launch-btn">Launch App</a>
+  </section>
+
+  <section id="features" class="section">
+    <h2 style="text-align:center; font-size:42px; margin-bottom:10px; background:linear-gradient(135deg, var(--accent), #6ef0c9); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Features</h2>
+    <p style="text-align:center; color:var(--muted); font-size:18px; margin-bottom:50px;">Everything you need to crush your grind</p>
+    
+    <div class="features-grid">
+      <div class="feature">
+        <span class="feature-icon">⏱️</span>
+        <div>Smart Timer</div>
+        <div style="font-size:14px; opacity:0.8; margin-top:12px;">Customizable Pomodoro with smart breaks and session tracking</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">✅</span>
+        <div>Todo List</div>
+        <div style="font-size:14px; opacity:0.8; margin-top:12px;">Drag & drop tasks with priority levels and completion streaks</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">📊</span>
+        <div>Daily Stats</div>
+        <div style="font-size:14px; opacity:0.8; margin-top:12px;">Visual progress charts and productivity insights</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">💬</span>
+        <div>Motivational Quotes</div>
+        <div style="font-size:14px; opacity:0.8; margin-top:12px;">Fresh inspiration with every session from top grinders</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="developer" class="section">
+    <div class="developers-section">
+      <div class="developer-avatar">🧠</div>
+      <h2 class="developer-name">Shaurya Chauhan</h2>
+      <p class="developer-title">Creator & Lead Developer</p>
+      <p class="developer-desc">
+        Class 7 student and coding enthusiast from Noida, UP. Passionate about mathematics olympiads (IOQM), cybersecurity (TryHackMe), and building tools that help students like me stay focused. When not grinding code, you'll find me solving math problems or watching anime.
+      </p>
+      <div class="dev-links">
+        <a href="https://youtube.com/@shauryachauhan" class="dev-link" target="_blank">YouTube</a>
+        <a href="mailto:shaurya@example.com" class="dev-link">Contact</a>
+        <a href="https://github.com/shauryachauhan" class="dev-link" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p>&copy; 2025 GrindForge by Shaurya Chauhan. Built with ❤️ for relentless grinders. ⚡</p>
+</footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const btn = document.querySelector('.launch-btn');
-  
-  btn.addEventListener('click', function() {
-    btn.textContent = 'Launching...';
-    btn.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-      window.location.href = 'app.html';
-    }, 400);
-  });
-  
-  // Enhanced keyboard shortcuts
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
+  // Smooth scrolling for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
       e.preventDefault();
-      btn.click();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      
+      // Update active nav link
+      document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Launch button functionality
+  const launchBtn = document.querySelector('.launch-btn');
+  launchBtn.addEventListener('click', function(e) {
+    if (this.getAttribute('href') === 'app.html') {
+      e.preventDefault();
+      this.textContent = 'Launching...';
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        window.location.href = 'app.html';
+      }, 600);
     }
   });
   
-  // Focus trap for better UX
-  document.querySelector('.launch-btn').focus();
+  // Keyboard shortcuts
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (document.activeElement === launchBtn || document.activeElement.tagName === 'BODY') {
+        e.preventDefault();
+        launchBtn.click();
+      }
+    }
+  });
   
-  console.log('🌟 GrindForge Launch Pad - Fullscreen Edition ready!');
+  console.log('🌟 GrindForge Launch Pad - Full Developer Edition ready!');
 });
 </script>
 </body>
