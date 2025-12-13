@@ -149,11 +149,10 @@ body{
   padding: 20px;
   display: flex;
   flex-direction: column;
-  min-height: 0;      /* IMPORTANT */
-  max-height: 100%;   /* IMPORTANT */
-  overflow: hidden;   /* PREVENT expansion */
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden; /* stops card growth */
 }
-
 
 .timer-box h1{margin:0 0 10px 0;font-size:clamp(19px,2.8vw,22px);font-weight:700}
 
@@ -280,33 +279,39 @@ body{
 
 .todo-list-container{
   flex: 1;
-  min-height: 0;      /* CRITICAL for flexbox scrolling */
+  min-height: 0;
   overflow: hidden;
 }
 
+/* VERTICAL SCROLLBAR */
 ul#todo-list{
   flex: 1;
-  overflow-y: auto;   /* ENABLE overlay scroll */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;     /* vertical only */
+  overflow-x: hidden;   /* no horizontal */
 }
 
 
 ul#todo-list::-webkit-scrollbar{
-  width:6px;
+  width: 6px;
 }
 
 ul#todo-list::-webkit-scrollbar-track{
-  background:rgba(255,255,255,0.05);
-  border-radius:3px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
 }
 
 ul#todo-list::-webkit-scrollbar-thumb{
-  background:rgba(78,205,196,0.6);
-  border-radius:3px;
+  background: rgba(78,205,196,0.7);
+  border-radius: 4px;
 }
 
 ul#todo-list::-webkit-scrollbar-thumb:hover{
-  background:rgba(78,205,196,0.9);
+  background: rgba(78,205,196,1);
 }
+
 
 li.quest{
   display:flex;
