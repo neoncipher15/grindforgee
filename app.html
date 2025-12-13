@@ -145,14 +145,15 @@ body{
 }
 
 .todo-container{
-  grid-area:todo;
-  padding:20px;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-  background:var(--glass);
-  border:1px solid rgba(78,205,196,0.15);
+  grid-area: todo;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;      /* IMPORTANT */
+  max-height: 100%;   /* IMPORTANT */
+  overflow: hidden;   /* PREVENT expansion */
 }
+
 
 .timer-box h1{margin:0 0 10px 0;font-size:clamp(19px,2.8vw,22px);font-weight:700}
 
@@ -278,21 +279,16 @@ body{
 }
 
 .todo-list-container{
-  flex:1;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
+  flex: 1;
+  min-height: 0;      /* CRITICAL for flexbox scrolling */
+  overflow: hidden;
 }
 
 ul#todo-list{
-  flex:1;
-  list-style:none;
-  padding:0;
-  margin:0;
-  overflow-y:auto;
-  scrollbar-width:thin;
-  scrollbar-color:rgba(78,205,196,0.5) transparent;
+  flex: 1;
+  overflow-y: auto;   /* ENABLE overlay scroll */
 }
+
 
 ul#todo-list::-webkit-scrollbar{
   width:6px;
