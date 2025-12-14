@@ -805,6 +805,7 @@ class GrindForge {
     this.endDayOverlay = document.getElementById('endDayOverlay');
     this.endDaySummary = document.getElementById('endDaySummary');
 
+    // Prevent right-click and dev tools
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
       if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) e.preventDefault();
@@ -827,12 +828,11 @@ class GrindForge {
       "Work in silence, let success make the noise.",
       "One task at a time. Win the moment.",
       "Discipline is choosing between what you want now and what you want most.",
-      "The best way to get started is to quit talking and begin doing."
-      "Hardwork Beats Talent, When Talent Doesn't Work Hard"
-      “The only limit to our realization of tomorrow will be our doubts of today.” 
-      “It is never too late to be what you might have been.” 
-      “Success is not final, failure is not fatal: it is the courage to continu that counts.”
-      
+      "The best way to get started is to quit talking and begin doing.",
+      "Hardwork Beats Talent, When Talent Doesn't Work Hard",
+      "The only limit to our realization of tomorrow will be our doubts of today.",
+      "It is never too late to be what you might have been.",
+      "Success is not final, failure is not fatal: it is the courage to continue that counts."
     ];
 
     this.init();
@@ -849,6 +849,7 @@ class GrindForge {
     this.updateButtons();
     this.loadTodos();
     
+    // Event listeners
     this.startBtn.addEventListener('click', () => this.startTimer());
     this.pauseBtn.addEventListener('click', () => this.pauseTimer());
     this.resetBtn.addEventListener('click', () => this.resetTimer());
@@ -985,13 +986,13 @@ class GrindForge {
   timerComplete() {
     this.pauseTimer();
     
-    this.stats.lastDate = this.getTodayDate();
-    
     if (this.isWorkMode) {
       this.stats.completedSeconds += (parseInt(this.workTimeInput.value) * 60);
       this.stats.sessionsCompleted++;
-      this.saveStats();
     }
+    
+    this.stats.lastDate = this.getTodayDate();
+    this.saveStats();
     
     this.playAlarm();
     
@@ -1125,7 +1126,11 @@ class GrindForge {
     const task = tasks.find(t => t.id === id);
     if (task) {
       task.done = !task.done;
-      task.done ? (task.completedAt = Date.now()) : delete task.completedAt;
+      if (task.done) {
+        task.completedAt = Date.now();
+      } else {
+        delete task.completedAt;
+      }
       this.saveTodos(tasks);
       this.renderTodos(tasks);
     }
@@ -1146,14 +1151,18 @@ class GrindForge {
     const totalTodos = todos.length;
     
     const summary =
-      `Today you completed ${sessions} session${sessions !== 1 ? 's' : ''} (${hours} hour${hours !== '1.00' ? 's' : ''})\n` +
-      `✅ ${completedTodos}/${totalTodos} tasks done\n`;
+      `🎉 DAY COMPLETE! 🎉\n\n` +
+      `⏰ ${sessions} session${sessions !== 1 ? 's' : ''} completed\n` +
+      `📊 ${hours} hour${hours !== '1.00' ? 's' : ''} of deep work\n` +
+      `✅ ${completedTodos}/${totalTodos} tasks done\n\n` +
+      `Great job today! 💪`;
 
     this.endDaySummary.textContent = summary;
     this.endDayOverlay.classList.add('active');
     
-    this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: '' };
-    localStorage.setItem(this.STATS_KEY, JSON.stringify(this.stats));
+    // Reset stats for new day
+    this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: this.getTodayDate() };
+    this.saveStats();
   }
 
   closeEndDay() {
