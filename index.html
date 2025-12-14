@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>GrindForge </title>
+<title>GrindForge</title>
 <link rel="icon" type="image/png" href="/GrindForge.png" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -183,6 +183,18 @@ body{
   0% { transform: scale(1) rotate(0deg); }
   100% { transform: scale(1.08) rotate(0.8deg); }
 }
+
+.main-content{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:120px 24px 80px;
+  position:relative;
+  z-index:10;
+}
+
 .hero-content {
   display: flex;
   flex-direction: column;
@@ -194,12 +206,9 @@ body{
   padding: 0 24px;
 }
 
-.main-content {
-  padding: 120px 24px 80px !important; /* Reduced top padding */
-}
-
-.hero-section {
-  margin-bottom: 0 !important; /* Remove bottom margin */
+.hero-section{
+  text-align:center;
+  margin-bottom: 0 !important;
 }
 
 .launch-logo{
@@ -207,7 +216,7 @@ body{
   height:180px;
   background:var(--gradient);
   border-radius:50%;
-  margin:0 auto 60px;
+  margin:0 auto 0;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -268,7 +277,7 @@ body{
 h1{
   font-size:clamp(48px,9vw,72px);
   font-weight:900;
-  margin:0 0 28px;
+  margin:0;
   background:linear-gradient(135deg, var(--accent), #6ef0c9, var(--accent-dark));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -289,7 +298,7 @@ h1{
 .tagline{
   font-size:clamp(20px,3.5vw,26px);
   color:var(--text-secondary);
-  margin:0 0 70px;
+  margin:0;
   line-height:1.8;
   font-weight:300;
   opacity:0.95;
@@ -545,9 +554,10 @@ h1{
   .feature{ padding:32px 24px; }
 }
 
-
-  
-
+@keyframes pulse {
+  0%, 100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.7; transform:scale(1.2); }
+}
 </style>
 </head>
 <body>
@@ -568,16 +578,16 @@ h1{
 </header>
 
 <main>
- <section id="home" class="main-content hero-section">
-  <div class="hero-content">
-    <div class="launch-logo">
-      <div class="logo-icon"><img src="./GrindForge.png"></div>
+  <section id="home" class="main-content hero-section">
+    <div class="hero-content">
+      <div class="launch-logo">
+        <div class="logo-icon"><img src="./GrindForge.png"></div>
+      </div>
+      <h1>GrindForge</h1>
+      <p class="tagline">Master your focus with the ultimate Pomodoro experience. Timer • Tasks • Quotes • Stats. Built for relentless grinders.</p>
+      <a href="app.html" class="launch-btn">Launch App</a>
     </div>
-    <h1>GrindForge</h1>
-    <p class="tagline">Master your focus with the ultimate Pomodoro experience. Timer • Tasks • Quotes • Stats. Built for relentless grinders.</p>
-    <a href="app.html" class="launch-btn">Launch App</a>
-  </div>
-</section>
+  </section>
 
   <section id="features" class="section">
     <h2 style="text-align:center; font-size:48px; margin-bottom:16px; background:linear-gradient(135deg, var(--accent), #6ef0c9); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-weight:900; letter-spacing:-0.5px;">Features</h2>
@@ -615,7 +625,6 @@ h1{
       <p class="developer-desc">
         Class 7 student and coding enthusiast from Noida, UP. Passionate about mathematics olympiads (IOQM), cybersecurity (TryHackMe), and building tools that help students like me stay focused. When not grinding code, you'll find me solving math problems or watching anime.
       </p>
-      
     </div>
   </section>
 </main>
@@ -626,7 +635,6 @@ h1{
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Smooth scrolling for nav links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       e.preventDefault();
@@ -634,14 +642,11 @@ document.addEventListener('DOMContentLoaded', function() {
       if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-      
-      // Update active nav link
       document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
       this.classList.add('active');
     });
   });
 
-  // Launch button functionality
   const launchBtn = document.querySelector('.launch-btn');
   launchBtn.addEventListener('click', function(e) {
     if (this.getAttribute('href') === 'app.html') {
@@ -655,7 +660,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Keyboard shortcuts
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' || e.key === ' ') {
       if (document.activeElement === launchBtn || document.activeElement.tagName === 'BODY') {
@@ -665,14 +669,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  console.log('🌟 GrindForge Launch Pad - Ultra Premium Edition ready!');
+  console.log('🌟 GrindForge Launch Pad - Perfectly Centered & Ultra Premium Edition ready!');
 });
 </script>
-<style>
-@keyframes pulse {
-  0%, 100% { opacity:1; transform:scale(1); }
-  50% { opacity:0.7; transform:scale(1.2); }
-}
-</style>
 </body>
 </html>
