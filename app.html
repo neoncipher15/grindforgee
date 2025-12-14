@@ -3,235 +3,102 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>GrindForge — Ultimate Pomodoro</title>
+<title>GrindForge — Pomodoro</title>
 <link rel="icon" type="image/png" href="/GrindForge.png" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --accent:#4ecdc4;
-  --accent-dark:#44a08d;
-  --accent-gold:#f4d03f;
-  --bg:#02050a;
-  --bg-secondary:#040a12;
-  --card: rgba(4,10,18,0.92);
-  --glass: rgba(4,10,18,0.78);
-  --glass-light: rgba(255,255,255,0.06);
-  --muted:#a8d8dc;
-  --text:#e8f9fb;
-  --text-secondary:#b8e2e7;
-  --danger:#ff5a5a;
-  --success:#6ef0c9;
-  --shadow: 0 28px 60px rgba(2,6,10,0.65);
-  --shadow-glow: 0 0 45px rgba(78,205,196,0.4);
-  --radius:20px;
-  --radius-large:32px;
-  --gap:20px;
-  --gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 50%, #2e8b7a 100%);
-  --gradient-glass: linear-gradient(135deg, rgba(78,205,196,0.2) 0%, rgba(68,160,141,0.15) 100%);
+  --accent:#4ecdc4;--bg:#02050a;--card:rgba(4,10,18,0.92);--glass:rgba(4,10,18,0.78);--muted:#a8d8dc;--text:#e8f9fb;--danger:#ff5a5a;--success:#6ef0c9;--shadow:0 28px 60px rgba(2,6,10,0.65);--radius:20px;--gap:20px;--gradient:linear-gradient(135deg,#4ecdc4 0%,#44a08d 50%,#2e8b7a 100%);
 }
 
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;padding:0;}
+*{box-sizing:border-box}html,body{height:100%;margin:0;padding:0;}
+body{min-height:100svh;font-family:"Poppins",sans-serif;color:var(--text);background:var(--bg);position:relative;overflow-x:hidden;}
+.hero-bg{position:fixed;inset:0;background:radial-gradient(circle at 20% 80%,rgba(78,205,196,0.5)0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(68,160,141,0.4)0%,transparent 50%),linear-gradient(160deg,rgba(2,5,10,0.98)0%,var(--bg)85%);z-index:-2;animation:bgShift 35s ease-in-out infinite alternate;}
+@keyframes bgShift{0%{transform:scale(1);}100%{transform:scale(1.12);}}.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:-1;pointer-events:none;}
 
-body{
-  min-height:100svh;
-  font-family: "Poppins", system-ui, sans-serif;
-  color:var(--text);
-  background:var(--bg);
-  position:relative;
-  overflow-x:hidden;
-}
-
-.hero-bg{
-  position:fixed;inset:0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(78,205,196,0.5) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(68,160,141,0.4) 0%, transparent 50%),
-    radial-gradient(circle at 35% 30%, rgba(244,208,63,0.25) 0%, transparent 55%),
-    radial-gradient(circle at 65% 70%, rgba(78,205,196,0.15) 0%, transparent 60%),
-    linear-gradient(160deg, rgba(2,5,10,0.98) 0%, var(--bg) 85%);
-  z-index:-2;
-  animation: bgShift 35s ease-in-out infinite alternate;
-}
-
-@keyframes bgShift{0%{transform:scale(1) rotate(0deg);}100%{transform:scale(1.12) rotate(1.2deg);}}
-
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:-1;pointer-events:none;}
-
-/* SYMMETRICAL GRID */
-.dashboard-grid{
-  display:grid;
-  grid-template-columns:1fr minmax(380px,420px) 1fr;
-  grid-template-rows:auto 1fr 1fr;
-  grid-template-areas:". header ."" . sidebar timer ."" . sidebar todo .";
-  gap:var(--gap);
-  padding:40px var(--gap);
-  max-width:1600px;
-  margin:0 auto;
-  height:100svh;
-  box-sizing:border-box;
-  align-content:center;
-}
-
-.header{
-  grid-area:header;
-  background:var(--card);
-  backdrop-filter:blur(35px) saturate(180%);
-  border-radius:var(--radius-large);
-  padding:32px 40px;
-  box-shadow:var(--shadow);
-  border:2px solid rgba(78,205,196,0.25);
-  position:relative;
-  overflow:hidden;
-  display:flex;align-items:center;justify-content:center;gap:24px;
-  max-width:800px;margin:0 auto;
-}
-
-.header::before{
-  content:'';position:absolute;inset:0;background:var(--gradient-glass);
-  padding:2px;border-radius:var(--radius-large);
-  mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);mask-composite:exclude;
-  animation:borderPulse 3s ease-in-out infinite;
-}
-
-@keyframes borderPulse{0%,100%{opacity:0.6;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
-
-.logo{width:56px;height:56px;border-radius:16px;box-shadow:var(--shadow-glow);background:var(--gradient);padding:6px;}
-.brand-section{text-align:center;gap:4px;display:flex;flex-direction:column;}
-.brand-title{font-size:clamp(28px,5vw,36px);font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:0;letter-spacing:-1px;}
-.brand-subtitle{font-size:clamp(14px,2.5vw,16px);color:var(--muted);margin:0;font-weight:500;}
-
-.creator-credit{
-  background:linear-gradient(135deg,rgba(57,255,20,0.2),rgba(57,255,20,0.1));
-  color:#39FF14;font-weight:700;font-size:clamp(13px,2vw,15px);padding:14px 24px;border-radius:16px;
-  border:2px solid rgba(57,255,20,0.4);backdrop-filter:blur(20px);transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-  white-space:nowrap;box-shadow:0 8px 32px rgba(57,255,20,0.2);
-}
-
-.creator-credit:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 16px 48px rgba(57,255,20,0.35);}
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.2fr);grid-template-rows:auto minmax(0,1fr) minmax(0,1fr);grid-template-areas:"header header""sidebar timer""sidebar todo";gap:var(--gap);padding:var(--gap);max-width:1400px;margin:0 auto var(--gap);height:100svh;box-sizing:border-box;}
+.header{grid-area:header;background:var(--card);backdrop-filter:blur(35px);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);border:2px solid rgba(78,205,196,0.25);display:flex;justify-content:space-between;align-items:center;}
+.logo{width:44px;height:44px;border-radius:10px;background:var(--gradient);padding:4px;box-shadow:0 8px 24px rgba(78,205,196,0.5);}
+.brand-title{font-size:clamp(22px,3.5vw,26px);font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;}
+.brand-subtitle{font-size:clamp(12px,2vw,14px);color:var(--muted);margin:0;font-weight:400;}
+.creator-credit{color:#39FF14;font-weight:600;font-size:13px;padding:8px 16px;border-radius:12px;background:rgba(57,255,20,0.15);border:1px solid rgba(57,255,20,0.4);white-space:nowrap;}
 
 .sidebar{grid-area:sidebar;display:flex;flex-direction:column;gap:var(--gap);min-height:0;}
+.box,.timer-box,.todo-container{background:var(--card);backdrop-filter:blur(30px);border-radius:var(--radius);box-shadow:var(--shadow);border:2px solid rgba(78,205,196,0.2);transition:all 0.3s ease;display:flex;flex-direction:column;}
+.box:hover,.timer-box:hover,.todo-container:hover{transform:translateY(-4px);box-shadow:0 32px 64px rgba(78,205,196,0.3);}
+.box{padding:20px;height:100%;}
 
-.box,.timer-box,.todo-container{
-  background:var(--card);backdrop-filter:blur(40px) saturate(180%);border-radius:var(--radius);
-  box-shadow:var(--shadow);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);border:2px solid rgba(78,205,196,0.2);
-  position:relative;overflow:hidden;height:100%;display:flex;flex-direction:column;
-}
+.timer-box{grid-area:timer;text-align:center;padding:28px;border:3px solid rgba(78,205,196,0.35);}
+#timer{font-size:clamp(56px,10vw,72px);font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:20px 0 16px 0;letter-spacing:-1px;}
+.timer-controls{display:flex;gap:12px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;}
+.timer-controls button{padding:14px 20px;border-radius:12px;border:0;cursor:pointer;background:var(--gradient);color:#042726;font-weight:800;font-size:15px;min-width:90px;transition:all 0.3s ease;box-shadow:0 6px 20px rgba(78,205,196,0.4);}
+.timer-controls button[disabled]{opacity:0.5;cursor:not-allowed;}
+.timer-controls button:not([disabled]):hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(78,205,196,0.6);}
+.settings{display:flex;gap:16px;justify-content:center;align-items:center;margin:16px 0;flex-wrap:wrap;}
+.settings label{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:14px;}
+.settings input{width:80px;padding:12px;border-radius:10px;border:0;background:rgba(255,255,255,0.1);color:var(--text);text-align:center;font-size:16px;font-weight:700;}
+.progress-row{display:flex;justify-content:space-between;font-size:14px;color:var(--muted);width:100%;flex-wrap:wrap;}
 
-.box:hover,.timer-box:hover,.todo-container:hover{transform:translateY(-8px);box-shadow:0 40px 80px rgba(78,205,196,0.3);}
+.todo-container{grid-area:todo;padding:24px;display:flex;flex-direction:column;min-height:260px;}
+.todo-container h2{margin:0 0 16px 0;font-size:22px;text-align:center;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.todo-input{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.todo-input input{flex:1;padding:14px 16px;border-radius:12px;border:0;background:rgba(255,255,255,0.1);color:var(--text);font-size:15px;}
+.todo-input button{padding:14px 20px;border-radius:12px;border:0;background:var(--gradient);color:#042726;font-weight:800;font-size:15px;box-shadow:0 6px 20px rgba(78,205,196,0.4);}
+.todo-list-container{flex:1;min-height:0;overflow:hidden;}
+#todo-list{list-style:none;padding:0;margin:0;overflow-y:auto;height:100%;max-height:100%;}
+#todo-list::-webkit-scrollbar{width:6px;}#todo-list::-webkit-scrollbar-track{background:rgba(255,255,255,0.08);border-radius:4px;}#todo-list::-webkit-scrollbar-thumb{background:rgba(78,205,196,0.8);border-radius:4px;}
 
-.box::before,.timer-box::before,.todo-container::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--gradient);
-  transform:scaleX(0);transition:transform 0.4s ease;
-}
+li.quest{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;margin-bottom:10px;border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03));border:1px solid rgba(255,255,255,0.1);transition:all 0.2s ease;}
+li.quest:hover{transform:translateX(4px);box-shadow:0 8px 28px rgba(78,205,196,0.25);}
+.checkbox{width:32px;height:32px;border-radius:10px;border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,0.05);transition:all 0.2s ease;font-weight:800;font-size:16px;}
+.checkbox:hover{transform:scale(1.05);box-shadow:0 0 12px rgba(78,205,196,0.4);}
+.checkbox.done{background:var(--success);border-color:var(--success);color:#042726;}
+.quest .desc{font-weight:700;font-size:15px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.quest .meta{font-size:13px;color:var(--muted);flex-shrink:0;white-space:nowrap;}
+.quest button.del{padding:8px 12px;border-radius:10px;border:0;background:var(--danger);color:#fff;cursor:pointer;font-weight:700;font-size:13px;}
+.quest button.del:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,90,90,0.5);}
+.quest.done .desc{text-decoration:line-through;opacity:0.7;color:#bfeee5;}
 
-.box:hover::before,.timer-box:hover::before,.todo-container:hover::before{transform:scaleX(1);}
+#datetime-box{font-size:16px;letter-spacing:0.3px;text-align:center;margin-bottom:12px;}
+.stats-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.stat-pill{background:rgba(255,255,255,0.1);padding:10px 16px;border-radius:12px;font-size:14px;border:1px solid rgba(78,205,196,0.25);backdrop-filter:blur(10px);}
+.quotes h3{margin:0 0 12px 0;font-size:16px;}
+.quote-text{font-size:15px;min-height:48px;margin-bottom:12px;padding:12px;background:rgba(255,255,255,0.05);border-radius:10px;border-left:3px solid var(--accent);}
+.quote-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.small-btn{border:0;padding:12px 18px;border-radius:12px;cursor:pointer;background:var(--gradient);color:#042726;font-weight:800;font-size:14px;flex:1 1 120px;min-width:100px;box-shadow:0 4px 16px rgba(78,205,196,0.3);}
+.small-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(78,205,196,0.5);}
+#endDayBtn{margin-top:16px;padding:16px;border-radius:12px;border:0;cursor:pointer;background:var(--gradient);color:#042726;font-weight:800;font-size:16px;box-shadow:0 12px 32px rgba(78,205,196,0.5);display:flex;align-items:center;justify-content:center;gap:10px;}
+#endDayBtn:hover{transform:translateY(-3px);box-shadow:0 20px 48px rgba(78,205,196,0.6);}
 
-.timer-box{grid-area:timer;text-align:center;padding:40px 32px;justify-content:center;align-items:center;border:3px solid rgba(78,205,196,0.35);}
-
-#timer{
-  font-size:clamp(64px,12vw,88px);font-weight:900;
-  background:linear-gradient(135deg,var(--accent),#6ef0c9,var(--accent-gold));background-size:200% 200%;
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin:32px 0 24px 0;letter-spacing:-2px;animation:timerGlow 3s ease-in-out infinite alternate;
-  text-shadow:0 8px 32px rgba(78,205,196,0.4);
-}
-
-@keyframes timerGlow{0%{filter:drop-shadow(0 0 20px rgba(78,205,196,0.6));}100%{filter:drop-shadow(0 0 40px rgba(78,205,196,1));}}
-
-.timer-controls{display:flex;gap:16px;justify-content:center;margin-bottom:24px;flex-wrap:wrap;}
-.timer-controls button{
-  padding:18px 28px;border-radius:16px;border:0;cursor:pointer;background:var(--gradient);color:#042726;
-  font-weight:800;font-size:clamp(16px,2.5vw,18px);min-width:110px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-  box-shadow:0 8px 32px rgba(78,205,196,0.4);position:relative;overflow:hidden;
-}
-.timer-controls button[disabled]{opacity:0.6;cursor:not-allowed;transform:none;box-shadow:0 4px 16px rgba(78,205,196,0.2);}
-.timer-controls button:not([disabled]):hover{transform:translateY(-6px) scale(1.05);box-shadow:0 20px 48px rgba(78,205,196,0.6);}
-
-.settings{display:flex;gap:24px;justify-content:center;align-items:center;margin:24px 0;flex-wrap:wrap;}
-.settings label{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:clamp(14px,2.2vw,16px);font-weight:600;min-width:100px;}
-.settings input{
-  width:90px;padding:16px;border-radius:14px;border:2px solid rgba(78,205,196,0.3);background:rgba(255,255,255,0.12);
-  color:var(--text);text-align:center;font-size:18px;font-weight:800;backdrop-filter:blur(20px);transition:all 0.3s ease;
-}
-.settings input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 24px rgba(78,205,196,0.4);}
-
-.progress-row{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-top:28px;font-size:clamp(15px,2.5vw,17px);color:var(--text-secondary);width:100%;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(78,205,196,0.2);}
-
-.todo-container{grid-area:todo;padding:32px;min-height:0;}
-.todo-container h2{margin:0 0 24px 0;font-size:clamp(24px,4vw,28px);text-align:center;font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px;}
-.todo-input{display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap;}
-.todo-input input{flex:1;min-width:220px;padding:18px 24px;border-radius:16px;border:2px solid rgba(78,205,196,0.3);background:rgba(255,255,255,0.12);color:var(--text);font-size:16px;font-weight:600;backdrop-filter:blur(20px);transition:all 0.3s ease;}
-.todo-input input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 24px rgba(78,205,196,0.4);}
-.todo-input button{padding:18px 28px;border-radius:16px;border:0;background:var(--gradient);color:#042726;font-weight:800;font-size:16px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:0 8px 32px rgba(78,205,196,0.4);white-space:nowrap;flex-shrink:0;}
-.todo-input button:hover{transform:translateY(-6px) scale(1.05);box-shadow:0 20px 48px rgba(78,205,196,0.6);}
-
-.todo-list-container{flex:1;min-height:0;overflow:hidden;border-radius:16px;border:2px solid rgba(78,205,196,0.2);background:rgba(255,255,255,0.03);}
-ul#todo-list{list-style:none;padding:20px;margin:0;overflow-y:auto;overflow-x:hidden;max-height:100%;height:100%;scrollbar-width:thin;scrollbar-color:rgba(78,205,196,0.8) rgba(255,255,255,0.1);}
-ul#todo-list::-webkit-scrollbar{width:8px;}
-ul#todo-list::-webkit-scrollbar-track{background:rgba(255,255,255,0.08);border-radius:8px;}
-ul#todo-list::-webkit-scrollbar-thumb{background:var(--gradient);border-radius:8px;}
-ul#todo-list::-webkit-scrollbar-thumb:hover{background:var(--accent);}
-
-li.quest{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 24px;margin-bottom:16px;border-radius:16px;background:linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0.04));border:2px solid rgba(255,255,255,0.15);transition:all 0.3s cubic-bezier(0.4,0,0.2,1);backdrop-filter:blur(20px);}
-li.quest:hover{transform:translateX(8px);box-shadow:0 12px 40px rgba(78,205,196,0.3);}
-.quest .left{display:flex;gap:16px;align-items:center;flex:1;min-width:0;}
-.checkbox{width:40px;height:40px;border-radius:14px;border:3px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,0.08);transition:all 0.3s cubic-bezier(0.4,0,0.2,1);flex-shrink:0;font-weight:900;font-size:18px;backdrop-filter:blur(20px);}
-.checkbox:hover{transform:scale(1.08);box-shadow:0 0 20px rgba(78,205,196,0.5);border-color:var(--accent);}
-.checkbox.done{background:var(--gradient);border-color:var(--accent);color:#042726;animation:checkPulse 0.6s ease-out;}
-@keyframes checkPulse{0%{transform:scale(0.8);}50%{transform:scale(1.2);}100%{transform:scale(1);}}
-.quest .desc{font-weight:700;font-size:16px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.quest .meta{font-size:14px;color:var(--muted);font-weight:600;flex-shrink:0;white-space:nowrap;padding:4px 12px;background:rgba(255,255,255,0.1);border-radius:12px;}
-.quest button.del{padding:12px 16px;border-radius:12px;border:0;background:linear-gradient(135deg,var(--danger),#ff7272);color:#fff;cursor:pointer;font-weight:800;font-size:14px;transition:all 0.3s ease;flex-shrink:0;box-shadow:0 6px 24px rgba(255,90,90,0.4);}
-.quest button.del:hover{transform:translateY(-4px) scale(1.05);box-shadow:0 16px 40px rgba(255,90,90,0.6);}
-.quest.done .desc{text-decoration:line-through;opacity:0.75;color:var(--text-secondary);}
-.quest.done .meta{background:var(--success);color:#042726;opacity:1;}
-
-#datetime-box{font-size:clamp(16px,3vw,18px);letter-spacing:0.5px;text-align:center;margin-bottom:20px;font-weight:600;}
-.stats-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;}
-.stat-pill{background:rgba(255,255,255,0.12);backdrop-filter:blur(20px);padding:16px 24px;border-radius:16px;font-size:clamp(15px,2.5vw,17px);font-weight:700;border:2px solid rgba(78,205,196,0.3);transition:all 0.3s ease;box-shadow:0 8px 24px rgba(78,205,196,0.2);}
-.stat-pill:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(78,205,196,0.35);}
-
-.quotes h3{margin:0 0 20px 0;font-size:clamp(18px,3vw,20px);font-weight:800;text-align:center;}
-.quote-text{font-size:clamp(15px,2.8vw,17px);min-height:64px;margin-bottom:24px;padding:24px;background:rgba(255,255,255,0.08);border-radius:16px;border-left:4px solid var(--accent);font-style:italic;font-weight:500;line-height:1.6;box-shadow:inset 0 2px 8px rgba(0,0,0,0.2);}
-.quote-actions{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px;}
-.small-btn{border:0;padding:16px 24px;border-radius:16px;cursor:pointer;background:var(--gradient);color:#042726;font-weight:800;font-size:clamp(14px,2.2vw,16px);transition:all 0.3s cubic-bezier(0.4,0,0.2,1);flex:1 1 140px;min-width:120px;box-shadow:0 8px 32px rgba(78,205,196,0.4);}
-.small-btn:hover{transform:translateY(-6px) scale(1.05);box-shadow:0 20px 48px rgba(78,205,196,0.6);}
-
-#endDayBtn{margin-top:auto;padding:20px;border-radius:16px;border:0;cursor:pointer;background:var(--gradient);color:#042726;font-weight:800;font-size:clamp(16px,2.8vw,18px);box-shadow:0 12px 40px rgba(78,205,196,0.5);display:flex;align-items:center;justify-content:center;gap:12px;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
-#endDayBtn:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 28px 64px rgba(78,205,196,0.7);}
-
-#endDayOverlay{position:fixed;inset:0;background:rgba(2,5,10,0.98);backdrop-filter:blur(50px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:all 0.5s cubic-bezier(0.4,0,0.2,1);padding:40px;}
+#endDayOverlay{position:fixed;inset:0;background:rgba(3,6,18,0.98);backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity 0.4s ease;padding:20px;}
 #endDayOverlay.active{opacity:1;pointer-events:auto;}
-.end-day-content{text-align:center;width:100%;max-width:500px;padding:48px 40px;border-radius:var(--radius-large);background:var(--card);box-shadow:0 50px 120px rgba(0,0,0,0.95);border:3px solid rgba(78,205,196,0.5);backdrop-filter:blur(50px);animation:modalSlide 0.6s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden;}
-.end-day-content::before{content:'';position:absolute;inset:0;background:var(--gradient-glass);padding:3px;border-radius:var(--radius-large);mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);mask-composite:exclude;}
-@keyframes modalSlide{from{opacity:0;transform:scale(0.85) translateY(40px);}to{opacity:1;transform:scale(1) translateY(0);}}
-.end-day-circle{width:120px;height:120px;border-radius:50%;margin:0 auto 32px;background:var(--gradient);position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(78,205,196,0.5);animation:endCircle 2s ease-out forwards;}
-.end-day-check{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);opacity:0;font-size:52px;color:#042726;font-weight:900;animation:endCheck 1.8s 0.6s ease-out forwards;}
-@keyframes endCircle{0%{transform:scale(0.4) rotate(0deg);opacity:0;}70%{transform:scale(1.1) rotate(180deg);opacity:1;}100%{transform:scale(1) rotate(360deg);opacity:1;}}
-@keyframes endCheck{0%{opacity:0;transform:translate(-50%,-50%) scale(0.3);}50%{opacity:1;transform:translate(-50%,-50%) scale(1.3);}100%{opacity:1;transform:translate(-50%,-50%) scale(1);}}
-.end-day-title{font-size:clamp(32px,6vw,40px);margin:0 0 12px 0;font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.end-day-sub{font-size:18px;color:var(--text-secondary);margin-bottom:28px;font-weight:500;}
-#endDaySummary{font-family:"Poppins",monospace;font-size:18px;min-height:90px;white-space:pre-line;margin-bottom:32px;background:rgba(255,255,255,0.08);padding:24px;border-radius:16px;border-left:5px solid var(--accent);backdrop-filter:blur(20px);font-weight:600;line-height:1.6;}
-.end-day-hint{font-size:15px;color:var(--muted);opacity:0.85;font-weight:500;}
+.end-day-content{text-align:center;width:100%;max-width:420px;padding:32px 24px;border-radius:20px;background:rgba(8,10,20,0.99);box-shadow:0 32px 80px rgba(0,0,0,0.95);border:2px solid rgba(78,205,196,0.5);animation:modalSlide 0.4s ease-out;}
+@keyframes modalSlide{from{opacity:0;transform:scale(0.8) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.end-day-circle{width:96px;height:96px;border-radius:50%;margin:0 auto 24px;background:radial-gradient(circle at 30% 20%,#ffffff20,#4ecdc4);position:relative;overflow:hidden;animation:endCircle 1.8s ease-out forwards;}
+.end-day-check{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.2);opacity:0;font-size:42px;color:#042726;font-weight:900;animation:endCheck 1.6s 0.5s ease-out forwards;}
+@keyframes endCircle{0%{transform:scale(0.3);opacity:0;}60%{transform:scale(1.08);opacity:1;}100%{transform:scale(1);opacity:1;}}
+@keyframes endCheck{0%{opacity:0;transform:translate(-50%,-50%) scale(0.2);}40%{opacity:1;transform:translate(-50%,-50%) scale(1.15);}100%{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+.end-day-title{font-size:28px;margin-bottom:8px;font-weight:900;}
+.end-day-sub{font-size:15px;color:var(--muted);margin-bottom:20px;}
+#endDaySummary{font-family:"Poppins",monospace;font-size:17px;min-height:70px;white-space:pre-line;margin-bottom:20px;background:rgba(255,255,255,0.05);padding:16px;border-radius:12px;border-left:4px solid var(--accent);}
+.end-day-hint{font-size:13px;color:var(--muted);opacity:0.8;}
 
-@media (max-width:1200px){.dashboard-grid{grid-template-columns:1fr;grid-template-rows:auto 1fr 1fr 1fr;grid-template-areas:"header""sidebar""timer""todo";padding:32px 24px;gap:24px;}}
-@media (max-width:768px){.dashboard-grid{padding:24px 20px;gap:20px;}.header{flex-direction:column;gap:28px;padding:32px 24px;}.timer-controls{flex-direction:column;align-items:center;}.timer-controls button{width:100%;max-width:280px;}.settings{flex-direction:column;gap:20px;}.progress-row{flex-direction:column;gap:20px;text-align:center;}.todo-input{flex-direction:column;}.todo-input input{min-width:100%;}.quote-actions{flex-direction:column;}.stats-row{flex-direction:column;align-items:center;}}
-@media (max-width:480px){.dashboard-grid{padding:20px 16px;gap:16px;}.header{padding:28px 20px;}.box,.timer-box,.todo-container{padding:24px;}}
+@media (max-width:1024px){.dashboard-grid{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"header""sidebar""timer""todo";padding:16px;gap:16px;}}
+@media (max-width:768px){.header{flex-direction:column;text-align:center;gap:20px;}.timer-controls{flex-direction:column;}.timer-controls button{width:100%;max-width:260px;}.settings{flex-direction:column;}.progress-row{flex-direction:column;text-align:center;}.todo-input{flex-direction:column;}.quote-actions{flex-direction:column;}}
 </style>
 </head>
 <body>
 <div class="hero-bg"></div><div class="overlay"></div>
 <div class="dashboard-grid">
   <header class="header">
-    <div style="display:flex;align-items:center;gap:24px;">
+    <div style="display:flex;align-items:center;gap:16px;flex:1;">
       <img src="/GrindForge.png" alt="Logo" class="logo">
       <div class="brand-section">
         <h1 class="brand-title">GrindForge</h1>
-        <p class="brand-subtitle">⚡ Ultimate Pomodoro Dashboard</p>
+        <p class="brand-subtitle">Pomodoro Dashboard</p>
       </div>
     </div>
-    <div class="creator-credit">✨ Shaurya Chauhan</div>
+    <div class="creator-credit">Shaurya Chauhan</div>
   </header>
 
   <aside class="sidebar">
@@ -242,23 +109,23 @@ li.quest:hover{transform:translateX(8px);box-shadow:0 12px 40px rgba(78,205,196,
         <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
       </div>
     </div>
-    <div class="box" style="flex:1;">
-      <h3>💎 Daily Motivation</h3>
-      <div class="quote-text" id="quoteText">"Discipline is choosing what you want most over what you want right now."</div>
+    <div class="box quotes" style="flex:1;">
+      <h3>Daily Quote</h3>
+      <div class="quote-text" id="quoteText">"Focus is saying no to 1000 good ideas."</div>
       <div class="quote-actions">
-        <button class="small-btn" id="newQuoteBtn">New Quote</button>
-        <button class="small-btn" id="saveQuoteBtn">Save Quote</button>
+        <button class="small-btn" id="newQuoteBtn">New</button>
+        <button class="small-btn" id="saveQuoteBtn">Save</button>
       </div>
-      <button id="endDayBtn"><span style="font-size:24px;">🌙</span> End Day</button>
+      <button id="endDayBtn">🌙 End Day</button>
     </div>
   </aside>
 
-  <section class="timer-box" style="height:100%;">
+  <section class="timer-box">
     <div id="timer" aria-live="polite">25:00</div>
     <div class="timer-controls">
-      <button id="startBtn">▶️ Start</button>
-      <button id="pauseBtn" disabled>⏸️ Pause</button>
-      <button id="resetBtn">🔄 Reset</button>
+      <button id="startBtn">Start</button>
+      <button id="pauseBtn" disabled>Pause</button>
+      <button id="resetBtn">Reset</button>
     </div>
     <div class="settings">
       <label>Work<input id="workTime" type="number" min="1" value="25"/></label>
@@ -270,11 +137,11 @@ li.quest:hover{transform:translateX(8px);box-shadow:0 12px 40px rgba(78,205,196,
     </div>
   </section>
 
-  <aside class="todo-container" style="height:100%;">
-    <h2>📝 To-Do Quests</h2>
+  <aside class="todo-container">
+    <h2>To-Do ✨</h2>
     <div class="todo-input">
-      <input id="todoInput" type="text" placeholder="Enter your next quest..."/>
-      <button id="addTaskBtn">➕ Add Quest</button>
+      <input id="todoInput" placeholder="Add task..."/>
+      <button id="addTaskBtn">Add</button>
     </div>
     <div class="todo-list-container">
       <ul id="todo-list" aria-live="polite"></ul>
@@ -286,10 +153,10 @@ li.quest:hover{transform:translateX(8px);box-shadow:0 12px 40px rgba(78,205,196,
 <div id="endDayOverlay">
   <div class="end-day-content">
     <div class="end-day-circle"><div class="end-day-check">✓</div></div>
-    <div class="end-day-title">Day Complete! 🎉</div>
-    <div class="end-day-sub">Your epic achievement summary:</div>
+    <div class="end-day-title">Day Complete!</div>
+    <div class="end-day-sub">Your achievements:</div>
     <div id="endDaySummary"></div>
-    <div class="end-day-hint">Press Esc or click to keep grinding ➡️</div>
+    <div class="end-day-hint">Click or Esc to close</div>
   </div>
 </div>
 
@@ -300,9 +167,9 @@ class GrindForge{
     this.startBtn=document.getElementById('startBtn');
     this.pauseBtn=document.getElementById('pauseBtn');
     this.resetBtn=document.getElementById('resetBtn');
-    this.timerDisplay=document.getElementById('timer');
-    this.workTimeInput=document.getElementById('workTime');
-    this.breakTimeInput=document.getElementById('breakTime');
+    this.timer=document.getElementById('timer');
+    this.workTime=document.getElementById('workTime');
+    this.breakTime=document.getElementById('breakTime');
     this.modeLabel=document.getElementById('modeLabel');
     this.sessionLabel=document.getElementById('sessionLabel');
     this.newQuoteBtn=document.getElementById('newQuoteBtn');
@@ -318,232 +185,60 @@ class GrindForge{
     this.endDayOverlay=document.getElementById('endDayOverlay');
     this.endDaySummary=document.getElementById('endDaySummary');
 
-    this.TASKS_KEY='gf_tasks_v3';this.STATS_KEY='gf_stats_v3';this.QUOTES_KEY='gf_quotes_v2';
-    this.isRunning=false;this.timerInterval=null;this.isWorkMode=true;this.timeLeft=25*60;
-    this.stats={completedSeconds:0,sessionsCompleted:0,lastDate:''};
-    this.quotes=[
-      "Focus is a skill - practice it daily.",
-      "Small progress each day adds up to big results.",
-      "Work in silence, let success make the noise.",
-      "Discipline beats motivation every time.",
-      "One task at a time. Win the moment.",
-      "Hardwork beats talent when talent doesn't work hard.",
-      "The best way to get started is to quit talking and begin doing."
-    ];
-
+    this.isRunning=false;this.timeLeft=25*60;this.isWorkMode=true;this.stats={completedSeconds:0,sessionsCompleted:0};
+    this.quotes=["Focus wins.","Small steps daily.","Work silently.","Discipline > Motivation","One task at a time"];
     this.init();
   }
-
   init(){
-    this.setupSecurity();
-    this.alarm.volume=0.3;this.alarm.load();
     this.updateDateTime();setInterval(()=>this.updateDateTime(),1000);
-    this.loadStats();this.loadQuotes();this.updateTimerDisplay();this.updateModeLabel();this.updateButtons();this.loadTodos();
-
-    this.startBtn.onclick=()=>this.startTimer();
-    this.pauseBtn.onclick=()=>this.pauseTimer();
-    this.resetBtn.onclick=()=>this.resetTimer();
-    this.workTimeInput.onchange=()=>this.updateWorkTime();
-    this.breakTimeInput.onchange=()=>this.updateBreakTime();
+    this.loadData();this.updateDisplay();
+    this.startBtn.onclick=()=>this.start();
+    this.pauseBtn.onclick=()=>this.pause();
+    this.resetBtn.onclick=()=>this.reset();
+    this.workTime.onchange=()=>this.updateWork();
+    this.breakTime.onchange=()=>this.updateBreak();
     this.newQuoteBtn.onclick=()=>this.newQuote();
     this.saveQuoteBtn.onclick=()=>this.saveQuote();
     this.addTaskBtn.onclick=()=>this.addTask();
-    this.todoInput.onkeypress=e=>e.key==='Enter'&&this.addTask();
+    this.todoInput.onkeypress=e=>e.key=='Enter'&&this.addTask();
     this.endDayBtn.onclick=()=>this.endDay();
-    this.endDayOverlay.onclick=()=>this.closeEndDay();
-    document.onkeydown=e=>e.key==='Escape'&&this.closeEndDay();
+    this.endDayOverlay.onclick=this.closeEndDay.bind(this);
+    document.onkeydown=e=>e.key=='Escape'&&this.closeEndDay();
   }
-
-  setupSecurity(){
-    document.oncontextmenu=e=>e.preventDefault();
-    document.onkeydown=e=>{
-      if(e.keyCode===123||(e.ctrlKey&&(e.keyCode===85||e.keyCode===83)))e.preventDefault();
-    };
+  updateDateTime(){this.datetimeBox.textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});}
+  updateDisplay(){
+    const m=Math.floor(this.timeLeft/60),s=this.timeLeft%60;this.timer.textContent=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    this.modeLabel.textContent=`Mode: ${this.isWorkMode?'Work':'Break'}`;
+    const h=(this.stats.completedSeconds/3600).toFixed(2);this.hoursCompleted.textContent=`Hours: ${h}`;this.sessionsCompleted.textContent=`Sessions: ${this.stats.sessionsCompleted}`;this.sessionLabel.textContent=`Sessions: ${this.stats.sessionsCompleted}`;
+    this.startBtn.disabled=this.isRunning;this.pauseBtn.disabled=!this.isRunning;
   }
-
-  updateDateTime(){
-    const now=new Date();
-    const formatter=new Intl.DateTimeFormat('en-IN',{weekday:'long',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});
-    this.datetimeBox.textContent=formatter.format(now);
+  start(){if(this.isRunning)return;this.isRunning=true;this.timerInterval=setInterval(()=>{if(this.timeLeft>0){this.timeLeft--;this.updateDisplay();}else this.complete();},1000);}
+  pause(){clearInterval(this.timerInterval);this.isRunning=false;this.updateDisplay();}
+  reset(){this.pause();this.isWorkMode=true;this.timeLeft=25*60;this.updateDisplay();}
+  updateWork(){if(!this.isRunning&&this.isWorkMode)this.timeLeft=parseInt(this.workTime.value)*60||1500,this.updateDisplay();}
+  updateBreak(){if(!this.isRunning&&!this.isWorkMode)this.timeLeft=parseInt(this.breakTime.value)*60||300,this.updateDisplay();}
+  complete(){
+    this.pause();
+    if(this.isWorkMode){this.stats.completedSeconds+=parseInt(this.workTime.value)*60;this.stats.sessionsCompleted++;}
+    this.alarm.play().catch(()=>{});this.isWorkMode=!this.isWorkMode;this.timeLeft=this.isWorkMode?parseInt(this.workTime.value)*60:parseInt(this.breakTime.value)*60;this.updateDisplay();
   }
-
-  getTodayDate(){
-    const now=new Date();
-    return`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  loadData(){
+    try{this.stats=JSON.parse(localStorage.gf_stats||'{}');}catch(e){this.stats={completedSeconds:0,sessionsCompleted:0};}
+    try{this.quotes=JSON.parse(localStorage.gf_quotes||'["Focus wins."]');}catch(e){}
+    try{this.renderTodos(JSON.parse(localStorage.gf_tasks||'[]'));}catch(e){}
   }
-
-  loadStats(){
-    try{
-      const saved=localStorage.getItem(this.STATS_KEY);
-      if(saved){
-        const stats=JSON.parse(saved);
-        if(stats.lastDate===this.getTodayDate())this.stats=stats;
-        else this.stats={completedSeconds:0,sessionsCompleted:0,lastDate:this.getTodayDate()};
-      }else this.stats.lastDate=this.getTodayDate();
-    }catch(e){this.stats.lastDate=this.getTodayDate();}
-    this.updateStatsDisplay();
-  }
-
-  saveStats(){localStorage.setItem(this.STATS_KEY,JSON.stringify(this.stats));this.updateStatsDisplay();}
-
-  updateStatsDisplay(){
-    const hours=(this.stats.completedSeconds/3600).toFixed(2);
-    this.hoursCompleted.textContent=`Hours: ${hours}`;
-    this.sessionsCompleted.textContent=`Sessions: ${this.stats.sessionsCompleted}`;
-    this.sessionLabel.textContent=`Sessions: ${this.stats.sessionsCompleted}`;
-  }
-
-  updateTimerDisplay(){
-    const minutes=Math.floor(this.timeLeft/60),seconds=this.timeLeft%60;
-    this.timerDisplay.textContent=`${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-  }
-
-  updateModeLabel(){this.modeLabel.textContent=`Mode: ${this.isWorkMode?'Work':'Break'}`;}
-  updateButtons(){this.startBtn.disabled=this.isRunning;this.pauseBtn.disabled=!this.isRunning;}
-
-  startTimer(){
-    if(this.isRunning)return;
-    this.isRunning=true;this.updateButtons();this.updateTimerDisplay();
-    this.timerInterval=setInterval(()=>{
-      if(this.timeLeft>0){this.timeLeft--;this.updateTimerDisplay();}
-      else this.timerComplete();
-    },1000);
-  }
-
-  pauseTimer(){
-    if(this.timerInterval){clearInterval(this.timerInterval);this.timerInterval=null;}
-    this.isRunning=false;this.updateButtons();
-  }
-
-  resetTimer(){
-    this.pauseTimer();
-    this.isWorkMode=true;
-    this.timeLeft=parseInt(this.workTimeInput.value)*60;
-    this.updateModeLabel();this.updateTimerDisplay();
-  }
-
-  updateWorkTime(){
-    const workTime=parseInt(this.workTimeInput.value);
-    if(!this.isRunning&&this.isWorkMode&&workTime>=1){this.timeLeft=workTime*60;this.updateTimerDisplay();}
-  }
-
-  updateBreakTime(){
-    const breakTime=parseInt(this.breakTimeInput.value);
-    if(!this.isRunning&&!this.isWorkMode&&breakTime>=1){this.timeLeft=breakTime*60;this.updateTimerDisplay();}
-  }
-
-  timerComplete(){
-    this.pauseTimer();
-    if(this.isWorkMode){
-      this.stats.completedSeconds+=(parseInt(this.workTimeInput.value)*60);
-      this.stats.sessionsCompleted++;
-    }
-    this.stats.lastDate=this.getTodayDate();
-    this.saveStats();
-    this.playAlarm();
-    this.isWorkMode=!this.isWorkMode;
-    this.timeLeft=this.isWorkMode?parseInt(this.workTimeInput.value)*60:parseInt(this.breakTimeInput.value)*60;
-    this.updateModeLabel();this.updateTimerDisplay();
-  }
-
-  playAlarm(){
-    this.alarm.currentTime=0;
-    this.alarm.play().catch(()=>console.log('No alarm sound'));
-  }
-
-  loadQuotes(){
-    try{
-      const saved=localStorage.getItem(this.QUOTES_KEY);
-      if(saved)this.quotes=JSON.parse(saved);
-    }catch(e){}
-    this.showRandomQuote();
-  }
-
-  newQuote(){this.showRandomQuote();}
-  showRandomQuote(){
-    const randomQuote=this.quotes[Math.floor(Math.random()*this.quotes.length)];
-    this.quoteText.textContent=`"${randomQuote}"`;
-  }
-
-  saveQuote(){
-    const newQuote=prompt('Add motivational quote:');
-    if(newQuote&&newQuote.trim().length>0&&newQuote.trim().length<=200){
-      this.quotes.unshift(newQuote.trim());
-      if(this.quotes.length>50)this.quotes=this.quotes.slice(0,50);
-      localStorage.setItem(this.QUOTES_KEY,JSON.stringify(this.quotes));
-      this.showRandomQuote();
-    }
-  }
-
-  loadTodos(){
-    try{
-      const saved=localStorage.getItem(this.TASKS_KEY);
-      if(saved)this.renderTodos(JSON.parse(saved));
-      else this.renderTodos([]);
-    }catch(e){this.renderTodos([]);}
-  }
-
-  addTask(){
-    const text=this.todoInput.value.trim();
-    if(!text||text.length>100)return;
-    const tasks=this.getTodos();
-    tasks.push({id:Date.now().toString(36)+Math.random().toString(36).substr(2),text,done:false,createdAt:Date.now()});
-    this.saveTodos(tasks);this.todoInput.value='';this.renderTodos(tasks);
-  }
-
-  getTodos(){
-    try{return JSON.parse(localStorage.getItem(this.TASKS_KEY)||'[]');}
-    catch(e){return[];}
-  }
-
-  saveTodos(tasks){localStorage.setItem(this.TASKS_KEY,JSON.stringify(tasks));}
-
-  renderTodos(tasks){
-    this.todoList.innerHTML='';
-    const incomplete=tasks.filter(task=>!task.done),complete=tasks.filter(task=>task.done);
-    [...incomplete,...complete].forEach(task=>{
-      const li=document.createElement('li');li.className=`quest ${task.done?'done':''}`;
-      const left=document.createElement('div');left.className='left';
-      const checkbox=document.createElement('div');checkbox.className=`checkbox ${task.done?'done':''}`;checkbox.innerHTML=task.done?'✓':'';checkbox.onclick=()=>this.toggleTask(task.id);
-      const desc=document.createElement('span');desc.className='desc';desc.textContent=task.text;
-      const meta=document.createElement('span');meta.className='meta';meta.textContent=task.done?'Completed':'Quest';
-      left.append(checkbox,desc,meta);
-      const delBtn=document.createElement('button');delBtn.className='del';delBtn.textContent='✕';delBtn.onclick=e=>{e.stopPropagation();this.deleteTask(task.id);};
-      li.append(left,delBtn);this.todoList.appendChild(li);
-    });
-  }
-
-  toggleTask(id){
-    const tasks=this.getTodos();
-    const task=tasks.find(t=>t.id===id);
-    if(task){
-      task.done=!task.done;
-      if(task.done)task.completedAt=Date.now();else delete task.completedAt;
-      this.saveTodos(tasks);this.renderTodos(tasks);
-    }
-  }
-
-  deleteTask(id){
-    const tasks=this.getTodos().filter(t=>t.id!==id);
-    this.saveTodos(tasks);this.renderTodos(tasks);
-  }
-
-  endDay(){
-    this.loadStats();
-    const hours=(this.stats.completedSeconds/3600).toFixed(2);
-    const sessions=this.stats.sessionsCompleted;
-    const todos=this.getTodos();
-    const completedTodos=todos.filter(t=>t.done).length;
-    const totalTodos=todos.length;
-    const summary=`🎉 DAY COMPLETE! 🎉\n\n⏰ ${sessions} session${sessions!==1?'s':''} completed\n📊 ${hours} hour${hours!=='1.00'?'s':''} of deep work\n✅ ${completedTodos}/${totalTodos} tasks done\n\nGreat job today! 💪`;
-    this.endDaySummary.textContent=summary;this.endDayOverlay.classList.add('active');
-    this.stats={completedSeconds:0,sessionsCompleted:0,lastDate:this.getTodayDate()};this.saveStats();
-  }
-
+  saveData(){localStorage.gf_stats=JSON.stringify(this.stats);localStorage.gf_quotes=JSON.stringify(this.quotes);}
+  newQuote(){this.quoteText.textContent='"'+this.quotes[Math.floor(Math.random()*this.quotes.length)]+'"';}
+  saveQuote(){const q=prompt('New quote:');if(q&&q.trim()){this.quotes.unshift(q.trim());if(this.quotes.length>20)this.quotes.pop();localStorage.gf_quotes=JSON.stringify(this.quotes);this.newQuote();}}
+  addTask(){const text=this.todoInput.value.trim();if(!text||text.length>80)return;const tasks=this.getTodos();tasks.push({id:Date.now()+Math.random(),text,done:false});localStorage.gf_tasks=JSON.stringify(tasks);this.todoInput.value='';this.renderTodos(tasks);}
+  getTodos(){try{return JSON.parse(localStorage.gf_tasks||'[]');}catch{return[];}}
+  renderTodos(tasks){this.todoList.innerHTML='';tasks.forEach(t=>{const li=document.createElement('li');li.className='quest'+(t.done?' done':'');li.innerHTML=`<div class="left"><div class="checkbox${t.done?' done':''}" onclick="grindforge.toggleTask('${t.id}')">${t.done?'✓':''}</div><span class="desc">${t.text}</span><span class="meta">${t.done?'Done':'Active'}</span></div><button class="del" onclick="grindforge.deleteTask('${t.id}')">✕</button>`;this.todoList.appendChild(li);});}
+  toggleTask(id){const tasks=this.getTodos();const task=tasks.find(t=>t.id==id);if(task){task.done=!task.done;localStorage.gf_tasks=JSON.stringify(tasks);this.renderTodos(tasks);}}
+  deleteTask(id){localStorage.gf_tasks=JSON.stringify(this.getTodos().filter(t=>t.id!=id));this.renderTodos(this.getTodos());}
+  endDay(){const todos=this.getTodos(),complete=todos.filter(t=>t.done).length;this.endDaySummary.textContent=`🎉 DAY COMPLETE!\n\n📊 ${this.stats.sessionsCompleted} sessions\n⏰ ${(this.stats.completedSeconds/3600).toFixed(1)} hours\n✅ ${complete}/${todos.length} tasks\n\nGreat work! 💪`;this.endDayOverlay.classList.add('active');this.stats={completedSeconds:0,sessionsCompleted:0};this.saveData();}
   closeEndDay(){this.endDayOverlay.classList.remove('active');}
 }
-
-document.addEventListener('DOMContentLoaded',()=>new GrindForge());
+let grindforge=new GrindForge();
 </script>
 </body>
 </html>
