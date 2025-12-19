@@ -33,16 +33,13 @@ body{
   overflow:hidden;
 }
 
-/* ⭐ stars */
 #stars{
   position:fixed;
   inset:0;
   z-index:-2;
-  pointer-events:none; /* ⭐ THIS FIX */
+  pointer-events:none;
 }
 
-
-/* overlay */
 .overlay{
   position:fixed;
   inset:0;
@@ -50,7 +47,6 @@ body{
   z-index:-1;
 }
 
-/* layout */
 .container{
   max-width:1200px;
   margin:auto;
@@ -62,7 +58,6 @@ body{
   min-height:100vh;
 }
 
-/* header */
 header{
   grid-column:1/3;
   display:flex;
@@ -85,74 +80,16 @@ header{
   width:46px;
   height:46px;
   border-radius:50%;
-  object-fit:cover;
-  box-shadow:0 0 0 3px rgba(37,99,235,.4);
 }
 
-.brand h2{
-  margin:0;
-  color:var(--accent-soft);
-}
-
-/* cards */
 .card{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:22px;
   backdrop-filter:blur(18px);
-  box-shadow:0 25px 60px rgba(0,0,0,.6);
 }
 
-/* timer */
-.timer-box{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:14px;
-}
-
-svg{width:240px;height:240px}
-
-#timerText{
-  font-size:32px;
-  font-weight:900;
-  fill:var(--accent-soft);
-}
-
-#modeText{
-  font-size:14px;
-  fill:var(--muted);
-  letter-spacing:2px;
-}
-
-.controls button{
-  padding:10px 18px;
-  margin:4px;
-  border:0;
-  border-radius:12px;
-  font-weight:700;
-  cursor:pointer;
-  color:white;
-  background:linear-gradient(135deg,var(--accent),var(--accent-soft));
-}
-
-.settings{
-  display:flex;
-  gap:10px;
-}
-
-.settings input{
-  width:70px;
-  padding:8px;
-  border-radius:8px;
-  border:0;
-  background:rgba(255,255,255,.1);
-  color:white;
-  text-align:center;
-}
-
-/* todo */
 .todo-input{
   display:flex;
   gap:10px;
@@ -166,18 +103,12 @@ svg{width:240px;height:240px}
   border:0;
   background:rgba(255,255,255,.08);
   color:white;
- 
-  pointer-events:auto;
-  z-index:5;
-
-
 }
 
 .todo-input button{
   padding:12px 16px;
   border-radius:10px;
   border:0;
-  font-weight:700;
   cursor:pointer;
   color:white;
   background:linear-gradient(135deg,var(--accent),var(--accent-soft));
@@ -216,7 +147,6 @@ li{
 
 .delete{
   cursor:pointer;
-  font-size:18px;
   color:var(--danger);
 }
 </style>
@@ -237,36 +167,11 @@ li{
   <div id="date"></div>
 </header>
 
-<!-- TIMER -->
-<section class="card timer-box">
-<svg viewBox="0 0 200 200">
-<circle cx="100" cy="100" r="90" stroke="#1f2933" stroke-width="12" fill="none"/>
-<circle id="progress" cx="100" cy="100" r="90"
-stroke="var(--accent)" stroke-width="12" fill="none"
-stroke-dasharray="565"
-transform="rotate(-90 100 100)"/>
-<text id="modeText" x="100" y="85" text-anchor="middle">WORK</text>
-<text id="timerText" x="100" y="115" text-anchor="middle">25:00</text>
-</svg>
-
-<div class="controls">
-<button id="startBtn">Start</button>
-<button id="pauseBtn">Pause</button>
-<button id="resetBtn">Reset</button>
-</div>
-
-<div class="settings">
-<label>Work <input id="workTime" value="25"></label>
-<label>Break <input id="breakTime" value="5"></label>
-</div>
-</section>
-
-<!-- TODO -->
 <section class="card">
 <h3>📝 To-Do</h3>
 <div class="todo-input">
-<input id="todoInput" placeholder="Add a task…">
-<button id="addTask">Add</button>
+  <input id="todoInput" placeholder="Add a task…">
+  <button id="addTask">Add</button>
 </div>
 <ul id="todoList"></ul>
 </section>
@@ -274,110 +179,92 @@ transform="rotate(-90 100 100)"/>
 </div>
 
 <script>
-/* stars */
-const c=stars,ctx=c.getContext("2d");
-function resize(){c.width=innerWidth;c.height=innerHeight}
-resize();addEventListener("resize",resize);
-let S=[...Array(130)].map(()=>({
-x:Math.random()*c.width,
-y:Math.random()*c.height,
-r:Math.random()*1.2+.3,
-s:Math.random()*.25+.05
-}));
-(function anim(){
-ctx.clearRect(0,0,c.width,c.height);
-ctx.fillStyle="rgba(255,255,255,.7)";
-S.forEach(s=>{
-s.y+=s.s;
-if(s.y>c.height){s.y=0;s.x=Math.random()*c.width}
-ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
-});
-requestAnimationFrame(anim);
-})();
+/* ===== DOM ===== */
+const todoInput = document.getElementById("todoInput");
+const addTaskBtn = document.getElementById("addTask");
+const todoList = document.getElementById("todoList");
+const dateBox = document.getElementById("date");
 
-/* date */
+/* ===== DATE ===== */
 setInterval(()=>{
-date.textContent=new Date().toLocaleString("en-IN",{
-weekday:"long",day:"numeric",month:"short",
-year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
-});
+  dateBox.textContent = new Date().toLocaleString("en-IN",{
+    weekday:"long",day:"numeric",month:"short",
+    year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",
+    hour12:false
+  });
 },1000);
 
-/* pomodoro */
-let work=true,running=false;
-let time=25*60,total=time,interval;
-const progress=document.getElementById("progress");
+/* ===== TODO ===== */
+let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
 
-function renderTimer(){
-const m=String(Math.floor(time/60)).padStart(2,"0");
-const s=String(time%60).padStart(2,"0");
-timerText.textContent=`${m}:${s}`;
-modeText.textContent=work?"WORK":"BREAK";
-progress.style.strokeDashoffset=565-(time/total)*565;
+function save(){
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
-
-startBtn.onclick=()=>{
-if(running)return;
-running=true;
-interval=setInterval(()=>{
-if(time<=0){pause();work=!work;time=(work?workTime.value:breakTime.value)*60;total=time}
-time--;renderTimer();
-},1000);
-};
-
-function pause(){clearInterval(interval);running=false}
-pauseBtn.onclick=pause;
-
-resetBtn.onclick=()=>{
-pause();
-work=true;
-time=workTime.value*60;
-total=time;
-renderTimer();
-};
-
-renderTimer();
-
-/* todo */
-let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
-
-function save(){localStorage.setItem("tasks",JSON.stringify(tasks))}
 
 function renderTodos(){
-todoList.innerHTML="";
-tasks.forEach((t,i)=>{
-const li=document.createElement("li");
+  todoList.innerHTML="";
+  tasks.forEach((t,i)=>{
+    const li=document.createElement("li");
 
-const cb=document.createElement("div");
-cb.className="checkbox"+(t.done?" done":"");
-cb.textContent=t.done?"✓":"";
-cb.onclick=()=>{t.done=!t.done;save();renderTodos()};
+    const cb=document.createElement("div");
+    cb.className="checkbox"+(t.done?" done":"");
+    cb.textContent=t.done?"✓":"";
+    cb.onclick=()=>{
+      t.done=!t.done;
+      save(); renderTodos();
+    };
 
-const span=document.createElement("span");
-span.className="desc"+(t.done?" done":"");
-span.textContent=t.text;
+    const span=document.createElement("span");
+    span.className="desc"+(t.done?" done":"");
+    span.textContent=t.text;
 
-const del=document.createElement("span");
-del.className="delete";
-del.textContent="✕";
-del.onclick=()=>{tasks.splice(i,1);save();renderTodos()};
+    const del=document.createElement("span");
+    del.className="delete";
+    del.textContent="✕";
+    del.onclick=()=>{
+      tasks.splice(i,1);
+      save(); renderTodos();
+    };
 
-li.append(cb,span,del);
-todoList.appendChild(li);
-});
+    li.append(cb,span,del);
+    todoList.appendChild(li);
+  });
 }
 
-addTask.onclick=()=>{
-const t=todoInput.value.trim();
-if(!t)return;
-tasks.push({text:t,done:false});
-todoInput.value="";
-save();renderTodos();
+addTaskBtn.onclick=()=>{
+  const t = todoInput.value.trim();
+  if(!t) return;
+  tasks.push({text:t,done:false});
+  todoInput.value="";
+  save(); renderTodos();
 };
 
-todoInput.onkeydown=e=>e.key==="Enter"&&addTask.onclick();
+todoInput.addEventListener("keydown",e=>{
+  if(e.key==="Enter") addTaskBtn.click();
+});
 
 renderTodos();
+
+/* ===== STARS ===== */
+const c=document.getElementById("stars"),ctx=c.getContext("2d");
+function resize(){c.width=innerWidth;c.height=innerHeight}
+resize(); addEventListener("resize",resize);
+let stars=[...Array(130)].map(()=>({
+  x:Math.random()*c.width,
+  y:Math.random()*c.height,
+  r:Math.random()*1.2+.3,
+  s:Math.random()*.25+.05
+}));
+(function anim(){
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.fillStyle="rgba(255,255,255,.7)";
+  stars.forEach(s=>{
+    s.y+=s.s;
+    if(s.y>c.height){s.y=0;s.x=Math.random()*c.width}
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+  });
+  requestAnimationFrame(anim);
+})();
 </script>
 
 </body>
