@@ -19,14 +19,14 @@
 body{
 margin:0;
 font-family:Poppins,system-ui;
-background:url(img.jpg) center/cover fixed;
+background:#05080f;
 color:var(--text);
 }
 
 .overlay{
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.5);
+background:rgba(0,0,0,.45);
 z-index:-1;
 }
 
@@ -80,22 +80,10 @@ align-items:center;
 gap:12px;
 }
 
-svg{
-width:240px;
-height:240px;
-}
+svg{width:240px;height:240px}
 
-#timerText{
-font-size:32px;
-font-weight:900;
-fill:#4ecdc4;
-}
-
-#modeText{
-font-size:14px;
-fill:#9adbd4;
-letter-spacing:2px;
-}
+#timerText{font-size:32px;font-weight:900;fill:#4ecdc4}
+#modeText{font-size:14px;fill:#9adbd4;letter-spacing:2px}
 
 .controls button{
 padding:10px 18px;
@@ -107,12 +95,7 @@ cursor:pointer;
 background:linear-gradient(135deg,#4ecdc4,#6ef0c9);
 }
 
-.settings{
-display:flex;
-gap:10px;
-margin-top:8px;
-}
-
+.settings{display:flex;gap:10px;margin-top:8px}
 .settings input{
 width:70px;
 padding:8px;
@@ -137,8 +120,6 @@ border-radius:10px;
 border:0;
 background:rgba(255,255,255,.1);
 color:white;
-pointer-events:auto;
-z-index:2;
 }
 
 .todo-input button{
@@ -148,8 +129,6 @@ border:0;
 font-weight:700;
 background:linear-gradient(135deg,#4ecdc4,#6ef0c9);
 cursor:pointer;
-pointer-events:auto;
-z-index:2;
 }
 
 li{
@@ -180,10 +159,16 @@ border-color:#6ef0c9;
 color:#042726;
 }
 
-.desc.done{
-text-decoration:line-through;
-opacity:.6;
+.desc{flex:1}
+.desc.done{text-decoration:line-through;opacity:.6}
+
+.delete{
+cursor:pointer;
+font-size:18px;
+color:#ff5a5a;
+transition:.2s;
 }
+.delete:hover{transform:scale(1.2)}
 </style>
 </head>
 
@@ -251,16 +236,16 @@ this.progress=document.getElementById("progress");
 this.timerText=document.getElementById("timerText");
 this.modeText=document.getElementById("modeText");
 
-this.startBtn=document.getElementById("startBtn");
-this.pauseBtn=document.getElementById("pauseBtn");
-this.resetBtn=document.getElementById("resetBtn");
+this.startBtn=startBtn;
+this.pauseBtn=pauseBtn;
+this.resetBtn=resetBtn;
 
-this.workInput=document.getElementById("workTime");
-this.breakInput=document.getElementById("breakTime");
+this.workInput=workTime;
+this.breakInput=breakTime;
 
-this.todoInput=document.getElementById("todoInput");
-this.todoList=document.getElementById("todoList");
-this.addBtn=document.getElementById("addTask");
+this.todoInput=todoInput;
+this.todoList=todoList;
+this.addBtn=addTask;
 
 this.tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
 
@@ -276,12 +261,9 @@ this.pauseBtn.onclick=()=>this.pause();
 this.resetBtn.onclick=()=>this.reset();
 
 this.addBtn.onclick=()=>this.addTask();
-this.todoInput.addEventListener("keydown",e=>{
-if(e.key==="Enter"){
-e.preventDefault();
-this.addTask();
-}
-});
+this.todoInput.onkeydown=e=>{
+if(e.key==="Enter")this.addTask();
+};
 }
 
 start(){
@@ -294,10 +276,7 @@ this.render();
 },1000);
 }
 
-pause(){
-clearInterval(this.interval);
-this.running=false;
-}
+pause(){clearInterval(this.interval);this.running=false}
 
 reset(){
 this.pause();
@@ -321,8 +300,7 @@ const m=String(Math.floor(this.time/60)).padStart(2,"0");
 const s=String(this.time%60).padStart(2,"0");
 this.timerText.textContent=`${m}:${s}`;
 this.modeText.textContent=this.work?"WORK":"BREAK";
-const offset=565-(this.time/this.total)*565;
-this.progress.style.strokeDashoffset=offset;
+this.progress.style.strokeDashoffset=565-(this.time/this.total)*565;
 this.progress.style.stroke=this.work?"#4ecdc4":"#ff5a5a";
 }
 
@@ -331,14 +309,13 @@ const t=this.todoInput.value.trim();
 if(!t)return;
 this.tasks.push({id:Date.now(),text:t,done:false});
 this.todoInput.value="";
-this.todoInput.focus();
-this.saveTodos();
+this.save();
 this.renderTodos();
 }
 
 renderTodos(){
 this.todoList.innerHTML="";
-this.tasks.forEach(task=>{
+this.tasks.forEach((task,i)=>{
 const li=document.createElement("li");
 
 const cb=document.createElement("div");
@@ -347,81 +324,59 @@ cb.textContent=task.done?"✓":"";
 cb.onclick=()=>{
 task.done=!task.done;
 ting.play();
-this.saveTodos();
+this.save();
 this.renderTodos();
 };
 
 const span=document.createElement("span");
-span.textContent=task.text;
 span.className="desc"+(task.done?" done":"");
+span.textContent=task.text;
 
-li.append(cb,span);
+const del=document.createElement("span");
+del.className="delete";
+del.textContent="✕";
+del.onclick=()=>{
+this.tasks.splice(i,1);
+this.save();
+this.renderTodos();
+};
+
+li.append(cb,span,del);
 this.todoList.appendChild(li);
 });
 }
 
-saveTodos(){
+save(){
 localStorage.setItem("tasks",JSON.stringify(this.tasks));
 }
 
 updateDate(){
-const dateEl=document.getElementById("date");
-const update=()=>{
-const now=new Date();
-dateEl.textContent=now.toLocaleString("en-IN",{
-weekday:"long",
-day:"numeric",
-month:"short",
-year:"numeric",
-hour:"2-digit",
-minute:"2-digit",
-second:"2-digit",
-hour12:false
+const d=document.getElementById("date");
+setInterval(()=>{
+d.textContent=new Date().toLocaleString("en-IN",{
+weekday:"long",day:"numeric",month:"short",
+year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
 });
-};
-update();
-setInterval(update,1000);
+},1000);
 }
 }
 
 /* STARS */
-const canvas=document.getElementById("stars");
-const ctx=canvas.getContext("2d");
-let stars=[];
-const STAR_COUNT=120;
-
-function resize(){
-canvas.width=innerWidth;
-canvas.height=innerHeight;
-}
-resize();
-addEventListener("resize",resize);
-
-for(let i=0;i<STAR_COUNT;i++){
-stars.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-r:Math.random()*1.2+.3,
-s:Math.random()*.2+.05
-});
-}
-
-function animate(){
+const canvas=stars,ctx=canvas.getContext("2d");
+let S=[];
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
+resize();addEventListener("resize",resize);
+for(let i=0;i<120;i++)S.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()+.3,s:Math.random()*.2+.05});
+(function anim(){
 ctx.clearRect(0,0,canvas.width,canvas.height);
 ctx.fillStyle="rgba(255,255,255,.8)";
-stars.forEach(star=>{
-star.y+=star.s;
-if(star.y>canvas.height){
-star.y=0;
-star.x=Math.random()*canvas.width;
-}
-ctx.beginPath();
-ctx.arc(star.x,star.y,star.r,0,Math.PI*2);
-ctx.fill();
+S.forEach(st=>{
+st.y+=st.s;
+if(st.y>canvas.height){st.y=0;st.x=Math.random()*canvas.width}
+ctx.beginPath();ctx.arc(st.x,st.y,st.r,0,Math.PI*2);ctx.fill();
 });
-requestAnimationFrame(animate);
-}
-animate();
+requestAnimationFrame(anim);
+})();
 
 new Pomodoro();
 </script>
