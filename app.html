@@ -64,13 +64,13 @@ margin:0 auto;
 height: 100svh;
 }
 
-/* HEADER - Full Width with 3 Sections */
+/* HEADER - Full Width - DATE CENTERED */
 .header{
 grid-area:header;
 display:flex;
-justify-content:space-between;
+justify-content:center;
 align-items:center;
-gap:32px;
+gap:40px;
 background:var(--card);
 backdrop-filter:blur(20px);
 border-radius:var(--radius);
@@ -108,6 +108,7 @@ transition: all 0.3s ease;
 display:flex;
 flex-direction:column;
 gap:4px;
+text-align:center;
 }
 
 .brand-title{
@@ -128,39 +129,29 @@ margin:0;
 font-weight:500;
 }
 
-/* DATE SECTION */
+/* DATE SECTION - NOW CENTER POSITION */
 .header-datetime{
-font-size:clamp(16px,2.8vw,18px);
-letter-spacing:0.5px;
+font-size:clamp(18px,3vw,22px);
+letter-spacing:0.8px;
 text-align:center;
-min-width:160px;
-padding:16px 24px;
-background:linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));
-border-radius:16px;
-border:1px solid rgba(78,205,196,0.3);
-backdrop-filter:blur(15px);
-box-shadow:0 8px 24px rgba(0,0,0,0.3);
-font-weight:600;
+min-width:200px;
+padding:20px 32px;
+background:linear-gradient(135deg,rgba(255,255,255,0.15),rgba(255,255,255,0.05));
+border-radius:20px;
+border:2px solid rgba(78,205,196,0.4);
+backdrop-filter:blur(20px);
+box-shadow:0 12px 32px rgba(0,0,0,0.4);
+font-weight:700;
+position:relative;
 }
 
-.creator-credit{
-color:#39FF14;
-font-weight:600;
-font-size:clamp(13px,2vw,14px);
-background:linear-gradient(135deg,rgba(57,255,20,0.2),rgba(57,255,20,0.1));
-padding:12px 20px;
-border-radius:12px;
-border:1px solid rgba(57,255,20,0.5);
-white-space:nowrap;
-transition:all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
-backdrop-filter:blur(15px);
-box-shadow:0 8px 24px rgba(57,255,20,0.2);
-}
-
-.creator-credit:hover{
-background:linear-gradient(135deg,rgba(57,255,20,0.35),rgba(57,255,20,0.2));
-transform:translateY(-3px) scale(1.02);
-box-shadow:0 16px 40px rgba(57,255,20,0.4);
+.header-datetime::before{
+content:'📅';
+position:absolute;
+top:8px;
+right:12px;
+font-size:20px;
+opacity:0.8;
 }
 
 /* CARDS - PERFECT MARGINS */
@@ -530,9 +521,6 @@ transform:translateY(-6px) scale(1.05);
 box-shadow:0 24px 64px rgba(255,90,90,0.6);
 background:linear-gradient(135deg,#ff8787,#ff6b6b);
 }
-#endDayBtn:active{
-transform:translateY(-2px) scale(1.02);
-}
 
 /* INPUT FIXES */
 input[type=number]::-webkit-outer-spin-button,
@@ -663,7 +651,7 @@ font-weight:500;
 @media (max-width:1024px){
 .dashboard-grid{
 grid-template-columns:1fr;
-grid-template-rows:auto 1fr;
+grid-template-rows:auto 1fr 1fr;
 grid-template-areas:
 "header"
 "timer"
@@ -674,7 +662,6 @@ height: auto;
 min-height:100svh;
 }
 .timer-box{height:auto;}
-#endDayBtn{bottom:20px;right:20px;}
 }
 
 @media (max-width:768px){
@@ -685,14 +672,14 @@ gap:16px;
 .header{
 flex-direction:column;
 text-align:center;
-gap:24px;
+gap:32px;
 padding:28px 24px;
 }
 .logo{width:56px;height:56px;}
 .header-datetime{
 width:100%;
 min-width:auto;
-order:3;
+margin-top:16px;
 }
 #timer{font-size:clamp(48px,12vw,64px);}
 .timer-controls{flex-direction:column;align-items:center;}
@@ -702,7 +689,6 @@ order:3;
 .todo-input{flex-direction:column;}
 .todo-container{padding:24px;}
 .timer-box{padding:32px 24px;}
-#endDayBtn{bottom:16px;right:16px;padding:16px 24px;font-size:14px;}
 }
 
 @media (max-width:480px){
@@ -710,14 +696,13 @@ order:3;
 .header{padding:24px 20px;}
 .todo-container{padding:20px;}
 .timer-box{padding:24px 20px;}
-#endDayBtn{bottom:12px;right:12px;padding:14px 20px;}
 }
 </style>
 </head>
 <body>
 <div class="overlay"></div>
 <div class="dashboard-grid">
-<!-- HEADER: PERFECT 3-COLUMN LAYOUT -->
+<!-- HEADER: LOGO LEFT + DATE CENTER -->
 <header class="header">
 <!-- Logo + Text (Left) -->
 <div style="display:flex;align-items:center;gap:20px;">
@@ -728,11 +713,8 @@ order:3;
 </div>
 </div>
 
-<!-- DATE (Center) -->
+<!-- DATE (CENTER - LARGER & PROMINENT) -->
 <div id="datetime-box" class="header-datetime" aria-live="polite">Loading date...</div>
-
-<!-- Creator (Right) -->
-<div class="creator-credit">Creator – Shaurya Chauhan</div>
 </header>
 
 <!-- TODO LIST (left column) -->
@@ -771,9 +753,7 @@ order:3;
 </div>
 
 <!-- END DAY BUTTON - FIXED POSITION -->
-<button id="endDayBtn">
-🌙 End Day
-</button>
+<button id="endDayBtn">🌙 End Day</button>
 
 <audio id="alarm" preload="metadata" src="alarm.mp3"></audio>
 
@@ -792,343 +772,355 @@ order:3;
 <script>
 class GrindForge {
 constructor() {
-this.alarm = document.getElementById('alarm');
-this.startBtn = document.getElementById('startBtn');
-this.pauseBtn = document.getElementById('pauseBtn');
-this.resetBtn = document.getElementById('resetBtn');
-this.timerDisplay = document.getElementById('timer');
-this.workTimeInput = document.getElementById('workTime');
-this.breakTimeInput = document.getElementById('breakTime');
-this.modeLabel = document.getElementById('modeLabel');
-this.sessionLabel = document.getElementById('sessionLabel');
-this.todoInput = document.getElementById('todoInput');
-this.addTaskBtn = document.getElementById('addTaskBtn');
-this.todoList = document.getElementById('todo-list');
-this.datetimeBox = document.getElementById('datetime-box');
-this.endDayBtn = document.getElementById('endDayBtn');
-this.endDayOverlay = document.getElementById('endDayOverlay');
-this.endDaySummary = document.getElementById('endDaySummary');
+    // ✅ ALL ELEMENTS PROPERLY SELECTED
+    this.alarm = document.getElementById('alarm');
+    this.startBtn = document.getElementById('startBtn');
+    this.pauseBtn = document.getElementById('pauseBtn');
+    this.resetBtn = document.getElementById('resetBtn');
+    this.timerDisplay = document.getElementById('timer');
+    this.workTimeInput = document.getElementById('workTime');
+    this.breakTimeInput = document.getElementById('breakTime');
+    this.modeLabel = document.getElementById('modeLabel');
+    this.sessionLabel = document.getElementById('sessionLabel');
+    this.todoInput = document.getElementById('todoInput');
+    this.addTaskBtn = document.getElementById('addTaskBtn');
+    this.todoList = document.getElementById('todo-list');
+    this.datetimeBox = document.getElementById('datetime-box');
+    this.endDayBtn = document.getElementById('endDayBtn');
+    this.endDayOverlay = document.getElementById('endDayOverlay');
+    this.endDaySummary = document.getElementById('endDaySummary');
 
-// Security
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', e => {
-if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) e.preventDefault();
-if (e.ctrlKey && e.shiftKey && e.keyCode == 73) e.preventDefault();
-});
+    // Storage keys
+    this.TASKS_KEY = 'gf_tasks_v4';
+    this.STATS_KEY = 'gf_stats_v4';
 
-this.TASKS_KEY = 'gf_tasks_v4';
-this.STATS_KEY = 'gf_stats_v4';
+    // Timer state
+    this.isRunning = false;
+    this.timerInterval = null;
+    this.isWorkMode = true;
+    this.timeLeft = 25 * 60;
+    this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: '' };
 
-this.isRunning = false;
-this.timerInterval = null;
-this.isWorkMode = true;
-this.timeLeft = 25 * 60;
-this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: '' };
-
-this.init();
+    this.init();
 }
 
 init() {
-this.setupAlarm();
-this.updateDateTime();
-setInterval(() => this.updateDateTime(), 1000);
-this.loadStats();
-this.updateTimerDisplay();
-this.updateModeLabel();
-this.updateButtons();
-this.loadTodos();
+    console.log('✅ GrindForge Initialized'); // Debug log
+    
+    this.setupAlarm();
+    this.updateDateTime();
+    setInterval(() => this.updateDateTime(), 1000);
+    this.loadStats();
+    this.updateTimerDisplay();
+    this.updateModeLabel();
+    this.updateButtons();
+    this.loadTodos();
 
-// ✅ ALL BUTTON EVENT LISTENERS FIXED
-this.startBtn.addEventListener('click', () => this.startTimer());
-this.pauseBtn.addEventListener('click', () => this.pauseTimer());
-this.resetBtn.addEventListener('click', () => this.resetTimer());
-this.workTimeInput.addEventListener('change', () => this.updateWorkTime());
-this.breakTimeInput.addEventListener('change', () => this.updateBreakTime());
-this.addTaskBtn.addEventListener('click', () => this.addTask());
-this.todoInput.addEventListener('keypress', (e) => {
-if (e.key === 'Enter') this.addTask();
-});
-this.endDayBtn.addEventListener('click', () => this.endDay());  // ✅ FIXED
-this.endDayOverlay.addEventListener('click', () => this.closeEndDay());
-document.addEventListener('keydown', (e) => {
-if (e.key === 'Escape') this.closeEndDay();
-});
+    // ✅ ALL EVENT LISTENERS ATTACHED
+    this.startBtn.addEventListener('click', () => this.startTimer());
+    this.pauseBtn.addEventListener('click', () => this.pauseTimer());
+    this.resetBtn.addEventListener('click', () => this.resetTimer());
+    this.workTimeInput.addEventListener('change', () => this.updateWorkTime());
+    this.breakTimeInput.addEventListener('change', () => this.updateBreakTime());
+    this.addTaskBtn.addEventListener('click', () => this.addTask());
+    this.todoInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') this.addTask();
+    });
+    this.endDayBtn.addEventListener('click', () => this.endDay());
+    this.endDayOverlay.addEventListener('click', () => this.closeEndDay());
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') this.closeEndDay();
+    });
+
+    console.log('✅ All event listeners attached'); // Debug log
 }
 
 setupAlarm() {
-this.alarm.volume = 0.8;
-this.alarm.load();
+    this.alarm.volume = 0.8;
+    this.alarm.load();
 }
 
 updateDateTime() {
-const now = new Date();
-const formatter = new Intl.DateTimeFormat('en-IN', {
-weekday: 'long', month: 'long', day: 'numeric',
-hour: '2-digit', minute: '2-digit', hour12: false
-});
-this.datetimeBox.textContent = formatter.format(now);
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('en-IN', {
+        weekday: 'long', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: false
+    });
+    this.datetimeBox.textContent = formatter.format(now);
 }
 
 getTodayDate() {
-const now = new Date();
-return now.getFullYear() + '-' +
-String(now.getMonth() + 1).padStart(2, '0') + '-' +
-String(now.getDate()).padStart(2, '0');
+    const now = new Date();
+    return now.getFullYear() + '-' +
+        String(now.getMonth() + 1).padStart(2, '0') + '-' +
+        String(now.getDate()).padStart(2, '0');
 }
 
 loadStats() {
-try {
-const saved = localStorage.getItem(this.STATS_KEY);
-if (saved) {
-const stats = JSON.parse(saved);
-if (stats.lastDate === this.getTodayDate()) {
-this.stats = stats;
-} else {
-this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: this.getTodayDate() };
-}
-} else {
-this.stats.lastDate = this.getTodayDate();
-}
-} catch (e) {
-this.stats.lastDate = this.getTodayDate();
-}
-this.updateStatsDisplay();
+    try {
+        const saved = localStorage.getItem(this.STATS_KEY);
+        if (saved) {
+            const stats = JSON.parse(saved);
+            if (stats.lastDate === this.getTodayDate()) {
+                this.stats = stats;
+            } else {
+                this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: this.getTodayDate() };
+            }
+        } else {
+            this.stats.lastDate = this.getTodayDate();
+        }
+    } catch (e) {
+        this.stats.lastDate = this.getTodayDate();
+    }
+    this.updateStatsDisplay();
 }
 
 saveStats() {
-localStorage.setItem(this.STATS_KEY, JSON.stringify(this.stats));
-this.updateStatsDisplay();
+    localStorage.setItem(this.STATS_KEY, JSON.stringify(this.stats));
+    this.updateStatsDisplay();
 }
 
 updateStatsDisplay() {
-this.sessionLabel.textContent = `Sessions: ${this.stats.sessionsCompleted}`;
+    this.sessionLabel.textContent = `Sessions: ${this.stats.sessionsCompleted}`;
 }
 
 updateTimerDisplay() {
-const minutes = Math.floor(this.timeLeft / 60);
-const seconds = this.timeLeft % 60;
-this.timerDisplay.textContent =
-String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    const minutes = Math.floor(this.timeLeft / 60);
+    const seconds = this.timeLeft % 60;
+    this.timerDisplay.textContent = 
+        String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
 }
 
 updateModeLabel() {
-this.modeLabel.textContent = `Mode: ${this.isWorkMode ? 'Work' : 'Break'}`;
+    this.modeLabel.textContent = `Mode: ${this.isWorkMode ? 'Work' : 'Break'}`;
 }
 
 updateButtons() {
-this.startBtn.disabled = this.isRunning;
-this.pauseBtn.disabled = !this.isRunning;
+    this.startBtn.disabled = this.isRunning;
+    this.pauseBtn.disabled = !this.isRunning;
 }
 
 startTimer() {
-if (this.isRunning) return;
-this.isRunning = true;
-this.updateButtons();
-this.updateTimerDisplay();
+    console.log('▶️ Start clicked'); // Debug
+    if (this.isRunning) return;
+    this.isRunning = true;
+    this.updateButtons();
+    this.updateTimerDisplay();
 
-this.timerInterval = setInterval(() => {
-if (this.timeLeft > 0) {
-this.timeLeft--;
-this.updateTimerDisplay();
-} else {
-this.timerComplete();
-}
-}, 1000);
+    this.timerInterval = setInterval(() => {
+        if (this.timeLeft > 0) {
+            this.timeLeft--;
+            this.updateTimerDisplay();
+        } else {
+            this.timerComplete();
+        }
+    }, 1000);
 }
 
 pauseTimer() {
-if (this.timerInterval) {
-clearInterval(this.timerInterval);
-this.timerInterval = null;
-}
-this.isRunning = false;
-this.updateButtons();
+    console.log('⏸️ Pause clicked'); // Debug
+    if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+    }
+    this.isRunning = false;
+    this.updateButtons();
 }
 
 resetTimer() {
-this.pauseTimer();
-this.isWorkMode = true;
-this.timeLeft = parseInt(this.workTimeInput.value) * 60;
-this.updateModeLabel();
-this.updateTimerDisplay();
+    console.log('🔄 Reset clicked'); // Debug
+    this.pauseTimer();
+    this.isWorkMode = true;
+    this.timeLeft = parseInt(this.workTimeInput.value) * 60;
+    this.updateModeLabel();
+    this.updateTimerDisplay();
 }
 
 updateWorkTime() {
-if (!this.isRunning && this.isWorkMode) {
-this.timeLeft = parseInt(this.workTimeInput.value) * 60;
-this.updateTimerDisplay();
-}
+    if (!this.isRunning && this.isWorkMode) {
+        this.timeLeft = parseInt(this.workTimeInput.value) * 60;
+        this.updateTimerDisplay();
+    }
 }
 
 updateBreakTime() {
-if (!this.isRunning && !this.isWorkMode) {
-this.timeLeft = parseInt(this.breakTimeInput.value) * 60;
-this.updateTimerDisplay();
-}
+    if (!this.isRunning && !this.isWorkMode) {
+        this.timeLeft = parseInt(this.breakTimeInput.value) * 60;
+        this.updateTimerDisplay();
+    }
 }
 
 timerComplete() {
-this.pauseTimer();
+    console.log('⏰ Timer complete!'); // Debug
+    this.pauseTimer();
 
-if (this.isWorkMode) {
-this.stats.completedSeconds += (parseInt(this.workTimeInput.value) * 60);
-this.stats.sessionsCompleted++;
-}
+    if (this.isWorkMode) {
+        this.stats.completedSeconds += (parseInt(this.workTimeInput.value) * 60);
+        this.stats.sessionsCompleted++;
+    }
 
-this.stats.lastDate = this.getTodayDate();
-this.saveStats();
+    this.stats.lastDate = this.getTodayDate();
+    this.saveStats();
 
-this.playAlarm();
+    this.playAlarm();
 
-this.isWorkMode = !this.isWorkMode;
-this.timeLeft = this.isWorkMode ?
-parseInt(this.workTimeInput.value) * 60 :
-parseInt(this.breakTimeInput.value) * 60;
+    this.isWorkMode = !this.isWorkMode;
+    this.timeLeft = this.isWorkMode ?
+        parseInt(this.workTimeInput.value) * 60 :
+        parseInt(this.breakTimeInput.value) * 60;
 
-this.updateModeLabel();
-this.updateTimerDisplay();
+    this.updateModeLabel();
+    this.updateTimerDisplay();
 }
 
 playAlarm() {
-this.alarm.currentTime = 0;
-this.alarm.play().catch(() => {
-console.log('Alarm playback failed - check if alarm.mp3 exists');
-});
+    this.alarm.currentTime = 0;
+    this.alarm.play().catch(() => {
+        console.log('Alarm playback failed - check if alarm.mp3 exists');
+    });
 }
 
 loadTodos() {
-try {
-const saved = localStorage.getItem(this.TASKS_KEY);
-if (saved) {
-this.renderTodos(JSON.parse(saved));
-}
-} catch (e) {
-this.renderTodos([]);
-}
+    try {
+        const saved = localStorage.getItem(this.TASKS_KEY);
+        if (saved) {
+            this.renderTodos(JSON.parse(saved));
+        }
+    } catch (e) {
+        this.renderTodos([]);
+    }
 }
 
 addTask() {
-const text = this.todoInput.value.trim();
-if (!text || text.length > 100) return;
+    console.log('➕ Add task clicked'); // Debug
+    const text = this.todoInput.value.trim();
+    if (!text || text.length > 100) return;
 
-const tasks = this.getTodos();
-tasks.push({
-id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
-text,
-done: false,
-createdAt: Date.now()
-});
-this.saveTodos(tasks);
-this.todoInput.value = '';
-this.renderTodos(tasks);
+    const tasks = this.getTodos();
+    tasks.push({
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+        text,
+        done: false,
+        createdAt: Date.now()
+    });
+    this.saveTodos(tasks);
+    this.todoInput.value = '';
+    this.renderTodos(tasks);
 }
 
 getTodos() {
-try {
-return JSON.parse(localStorage.getItem(this.TASKS_KEY) || '[]');
-} catch (e) {
-return [];
-}
+    try {
+        return JSON.parse(localStorage.getItem(this.TASKS_KEY) || '[]');
+    } catch (e) {
+        return [];
+    }
 }
 
 saveTodos(tasks) {
-localStorage.setItem(this.TASKS_KEY, JSON.stringify(tasks));
+    localStorage.setItem(this.TASKS_KEY, JSON.stringify(tasks));
 }
 
 renderTodos(tasks) {
-this.todoList.innerHTML = '';
-const incomplete = tasks.filter(task => !task.done);
-const complete = tasks.filter(task => task.done);
+    this.todoList.innerHTML = '';
+    const incomplete = tasks.filter(task => !task.done);
+    const complete = tasks.filter(task => task.done);
 
-[...incomplete, ...complete].forEach(task => {
-const li = document.createElement('li');
-li.className = `quest ${task.done ? 'done' : ''}`;
+    [...incomplete, ...complete].forEach(task => {
+        const li = document.createElement('li');
+        li.className = `quest ${task.done ? 'done' : ''}`;
 
-const left = document.createElement('div');
-left.className = 'left';
+        const left = document.createElement('div');
+        left.className = 'left';
 
-const checkbox = document.createElement('div');
-checkbox.className = `checkbox ${task.done ? 'done' : ''}`;
-checkbox.innerHTML = task.done ? '✓' : '';
-checkbox.addEventListener('click', () => this.toggleTask(task.id));
+        const checkbox = document.createElement('div');
+        checkbox.className = `checkbox ${task.done ? 'done' : ''}`;
+        checkbox.innerHTML = task.done ? '✓' : '';
+        checkbox.addEventListener('click', () => this.toggleTask(task.id));
 
-const desc = document.createElement('span');
-desc.className = 'desc';
-desc.textContent = task.text;
+        const desc = document.createElement('span');
+        desc.className = 'desc';
+        desc.textContent = task.text;
 
-const meta = document.createElement('span');
-meta.className = 'meta';
-meta.textContent = task.done ? 'Completed' : 'Active';
+        const meta = document.createElement('span');
+        meta.className = 'meta';
+        meta.textContent = task.done ? 'Completed' : 'Active';
 
-left.appendChild(checkbox);
-left.appendChild(desc);
-left.appendChild(meta);
+        left.appendChild(checkbox);
+        left.appendChild(desc);
+        left.appendChild(meta);
 
-const delBtn = document.createElement('button');
-delBtn.className = 'del';
-delBtn.textContent = '✕';
-delBtn.addEventListener('click', (e) => {
-e.stopPropagation();
-this.deleteTask(task.id);
-});
+        const delBtn = document.createElement('button');
+        delBtn.className = 'del';
+        delBtn.textContent = '✕';
+        delBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.deleteTask(task.id);
+        });
 
-li.appendChild(left);
-li.appendChild(delBtn);
-this.todoList.appendChild(li);
-});
+        li.appendChild(left);
+        li.appendChild(delBtn);
+        this.todoList.appendChild(li);
+    });
 }
 
 toggleTask(id) {
-const tasks = this.getTodos();
-const task = tasks.find(t => t.id === id);
-if (task) {
-task.done = !task.done;
-if (task.done) {
-task.completedAt = Date.now();
-} else {
-delete task.completedAt;
-}
-this.saveTodos(tasks);
-this.renderTodos(tasks);
-}
+    const tasks = this.getTodos();
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+        task.done = !task.done;
+        if (task.done) {
+            task.completedAt = Date.now();
+        } else {
+            delete task.completedAt;
+        }
+        this.saveTodos(tasks);
+        this.renderTodos(tasks);
+    }
 }
 
 deleteTask(id) {
-const tasks = this.getTodos().filter(t => t.id !== id);
-this.saveTodos(tasks);
-this.renderTodos(tasks);
+    const tasks = this.getTodos().filter(t => t.id !== id);
+    this.saveTodos(tasks);
+    this.renderTodos(tasks);
 }
 
 endDay() {
-this.loadStats();
-const hours = (this.stats.completedSeconds / 3600).toFixed(2);
-const sessions = this.stats.sessionsCompleted;
-const todos = this.getTodos();
-const completedTodos = todos.filter(t => t.done).length;
-const totalTodos = todos.length;
+    console.log('🌙 End Day clicked'); // Debug
+    this.loadStats();
+    const hours = (this.stats.completedSeconds / 3600).toFixed(2);
+    const sessions = this.stats.sessionsCompleted;
+    const todos = this.getTodos();
+    const completedTodos = todos.filter(t => t.done).length;
+    const totalTodos = todos.length;
 
-const summary =
-`🎉 DAY COMPLETE! 🎉\n\n` +
-`⏰ ${sessions} session${sessions !== 1 ? 's' : ''} completed\n` +
-`📊 ${hours} hour${hours !== '1.00' ? 's' : ''} of deep work\n` +
-`✅ ${completedTodos}/${totalTodos} tasks completed\n\n` +
-`Keep grinding! 💪`;
+    const summary =
+        `🎉 DAY COMPLETE! 🎉\n\n` +
+        `⏰ ${sessions} session${sessions !== 1 ? 's' : ''} completed\n` +
+        `📊 ${hours} hour${hours !== '1.00' ? 's' : ''} of deep work\n` +
+        `✅ ${completedTodos}/${totalTodos} tasks completed\n\n` +
+        `Keep grinding! 💪`;
 
-this.endDaySummary.textContent = summary;
-this.endDayOverlay.classList.add('active');
+    this.endDaySummary.textContent = summary;
+    this.endDayOverlay.classList.add('active');
 
-// Reset stats for new day
-this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: this.getTodayDate() };
-this.saveStats();
+    // Reset stats for new day
+    this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: this.getTodayDate() };
+    this.saveStats();
 }
 
 closeEndDay() {
-this.endDayOverlay.classList.remove('active');
+    this.endDayOverlay.classList.remove('active');
 }
 }
 
+// ✅ START APP WHEN PAGE LOADS
 document.addEventListener('DOMContentLoaded', () => {
-new GrindForge();
+    console.log('🚀 DOM Loaded - Starting GrindForge');
+    new GrindForge();
 });
 </script>
 </body>
