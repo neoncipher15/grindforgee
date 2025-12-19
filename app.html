@@ -340,7 +340,16 @@ function renderTodos(){
     const cb=document.createElement("div");
     cb.className="checkbox"+(t.done?" done":"");
     cb.textContent=t.done?"✓":"";
-    cb.onclick=()=>{t.done=!t.done;save();renderTodos()};
+    cb.onclick=()=>{
+       t.done=!t.done;
+       if(t.done){
+       ting.currentTime = 0;
+       ting.play();       // ✨ ting
+     }
+     save();
+     renderTodos();
+};
+
 
     const span=document.createElement("span");
     span.className="desc"+(t.done?" done":"");
