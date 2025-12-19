@@ -26,7 +26,6 @@ margin:0;
 padding:0;
 }
 
-/* allow page to grow and scroll; use svh for mobile chrome UI */
 body{
 min-height:100svh;
 font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -49,20 +48,21 @@ z-index:-1;
 pointer-events:none;
 }
 
-/* ===== MAIN GRID ===== */
+/* ===== NEW LAYOUT GRID ===== */
 .dashboard-grid{
 display:grid;
-grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
-grid-template-rows:auto minmax(0,1fr) minmax(0,1fr);
-grid-template-areas:
-"header header"
-"sidebar timer"
-"sidebar todo";
+grid-template-columns: 1fr 1.2fr;
+grid-template-rows: auto 1fr auto;
+grid-template-areas: 
+"header timer" 
+"todo timer" 
+"sidebar sidebar";
 gap:var(--gap);
 padding:var(--gap);
 box-sizing:border-box;
 max-width:1400px;
 margin:0 auto var(--gap);
+height: 100svh;
 }
 
 /* HEADER */
@@ -145,19 +145,11 @@ transform:translateY(-1px);
 box-shadow:0 6px 20px rgba(57,255,20,0.3);
 }
 
-/* SIDEBAR COLUMN */
-.sidebar{
-grid-area:sidebar;
-display:flex;
-flex-direction:column;
-gap:var(--gap);
-min-height:0;
-}
-
 /* CARDS */
 .box,
 .timer-box,
-.todo-container{
+.todo-container,
+.quotes-box{
 background:var(--card);
 backdrop-filter:blur(20px);
 border-radius:var(--radius);
@@ -170,115 +162,19 @@ flex-direction:column;
 
 .box:hover,
 .timer-box:hover,
-.todo-container:hover{
+.todo-container:hover,
+.quotes-box:hover{
 transform:translateY(-4px);
 box-shadow:0 28px 60px rgba(78,205,196,0.25);
 }
 
 .box{padding:20px;}
 
-/* TIMER SECTION */
-.timer-box{
-grid-area:timer;
-text-align:center;
-padding:28px 24px;
-justify-content:center;
-align-items:center;
-border:2px solid rgba(78,205,196,0.25);
-}
-
-.timer-box h1{display:none;}
-
-#timer{
-font-size:clamp(48px,6vw,64px);
-font-weight:900;
-background:linear-gradient(135deg,var(--accent),#6ef0c9);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-background-clip:text;
-margin:24px 0 16px 0;
-letter-spacing:-1px;
-text-shadow:0 4px 20px rgba(78,205,196,0.3);
-}
-
-.timer-controls{
-display:flex;
-gap:12px;
-justify-content:center;
-margin-bottom:16px;
-flex-wrap:wrap;
-}
-.timer-controls button{
-padding:12px 20px;
-border-radius:12px;
-border:0;
-cursor:pointer;
-background:linear-gradient(135deg,var(--accent),#6ef0c9);
-color:#042726;
-font-weight:800;
-font-size:clamp(14px,2vw,15px);
-min-width:90px;
-transition:all 0.2s ease;
-box-shadow:0 4px 16px rgba(78,205,196,0.3);
-}
-.timer-controls button[disabled]{
-opacity:0.5;
-cursor:not-allowed;
-transform:none;
-box-shadow:none;
-}
-.timer-controls button:not([disabled]):hover{
-transform:translateY(-2px) scale(1.03);
-box-shadow:0 12px 32px rgba(78,205,196,0.5);
-}
-
-.settings{
-display:flex;
-gap:16px;
-justify-content:center;
-align-items:center;
-margin-top:12px;
-flex-wrap:wrap;
-}
-.settings label{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:6px;
-font-size:clamp(13px,2vw,14px);
-}
-.settings input{
-width:80px;
-padding:12px;
-border-radius:10px;
-border:0;
-background:rgba(255,255,255,0.1);
-color:var(--text);
-text-align:center;
-font-size:16px;
-font-weight:700;
-backdrop-filter:blur(10px);
-}
-
-.progress-row{
-display:flex;
-justify-content:space-between;
-gap:16px;
-margin-top:20px;
-align-items:center;
-font-size:clamp(13px,2vw,14px);
-color:var(--muted);
-width:100%;
-flex-wrap:wrap;
-}
-
-/* TODO COLUMN */
+/* TODO */
 .todo-container{
 grid-area:todo;
 padding:24px;
-display:flex;
-flex-direction:column;
-min-height:260px;
+min-height:0;
 }
 
 .todo-container h2{
@@ -440,7 +336,110 @@ color:#bfeee5;
 }
 .quest.done .meta{opacity:0.8;}
 
-/* TOP STATS + QUOTES */
+/* TIMER */
+.timer-box{
+grid-area:timer;
+text-align:center;
+padding:28px 24px;
+justify-content:center;
+align-items:center;
+border:2px solid rgba(78,205,196,0.25);
+height: 100%;
+}
+
+.timer-box h1{display:none;}
+
+#timer{
+font-size:clamp(48px,6vw,64px);
+font-weight:900;
+background:linear-gradient(135deg,var(--accent),#6ef0c9);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+background-clip:text;
+margin:24px 0 16px 0;
+letter-spacing:-1px;
+text-shadow:0 4px 20px rgba(78,205,196,0.3);
+}
+
+.timer-controls{
+display:flex;
+gap:12px;
+justify-content:center;
+margin-bottom:16px;
+flex-wrap:wrap;
+}
+.timer-controls button{
+padding:12px 20px;
+border-radius:12px;
+border:0;
+cursor:pointer;
+background:linear-gradient(135deg,var(--accent),#6ef0c9);
+color:#042726;
+font-weight:800;
+font-size:clamp(14px,2vw,15px);
+min-width:90px;
+transition:all 0.2s ease;
+box-shadow:0 4px 16px rgba(78,205,196,0.3);
+}
+.timer-controls button[disabled]{
+opacity:0.5;
+cursor:not-allowed;
+transform:none;
+box-shadow:none;
+}
+.timer-controls button:not([disabled]):hover{
+transform:translateY(-2px) scale(1.03);
+box-shadow:0 12px 32px rgba(78,205,196,0.5);
+}
+
+.settings{
+display:flex;
+gap:16px;
+justify-content:center;
+align-items:center;
+margin-top:12px;
+flex-wrap:wrap;
+}
+.settings label{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:6px;
+font-size:clamp(13px,2vw,14px);
+}
+.settings input{
+width:80px;
+padding:12px;
+border-radius:10px;
+border:0;
+background:rgba(255,255,255,0.1);
+color:var(--text);
+text-align:center;
+font-size:16px;
+font-weight:700;
+backdrop-filter:blur(10px);
+}
+
+.progress-row{
+display:flex;
+justify-content:space-between;
+gap:16px;
+margin-top:20px;
+align-items:center;
+font-size:clamp(13px,2vw,14px);
+color:var(--muted);
+width:100%;
+flex-wrap:wrap;
+}
+
+/* QUOTES & STATS */
+.sidebar{
+grid-area:sidebar;
+display:flex;
+flex-direction:column;
+gap:var(--gap);
+}
+
 #datetime-box{
 font-size:clamp(15px,2.5vw,16px);
 letter-spacing:0.3px;
@@ -460,6 +459,11 @@ border-radius:12px;
 font-size:clamp(13px,2vw,14px);
 border:1px solid rgba(78,205,196,0.25);
 backdrop-filter:blur(10px);
+}
+
+.quotes-box{
+flex:1;
+padding:24px;
 }
 
 .quotes h3{
@@ -619,27 +623,23 @@ opacity:0.8;
 }
 
 /* ===== RESPONSIVE BREAKPOINTS ===== */
-
-/* Medium screens: stack timer and todo, sidebar full-width above */
 @media (max-width:1024px){
 .dashboard-grid{
 grid-template-columns:1fr;
-grid-template-rows:auto auto auto auto;
+grid-template-rows:auto auto auto auto auto;
 grid-template-areas:
 "header"
-"sidebar"
+"datetime"
+"todo"
 "timer"
-"todo";
-padding:16px;
+"sidebar";
 gap:16px;
+padding:16px;
+height: auto;
 }
-.header{
-flex-direction:row;
-flex-wrap:wrap;
-}
+.timer-box{height:auto;}
 }
 
-/* Small tablets & phones */
 @media (max-width:768px){
 .dashboard-grid{
 padding:12px;
@@ -683,7 +683,6 @@ flex-direction:column;
 }
 }
 
-/* very small phones */
 @media (max-width:480px){
 .dashboard-grid{
 padding:10px;
@@ -698,6 +697,7 @@ padding:20px 16px;
 <body>
 <div class="overlay"></div>
 <div class="dashboard-grid">
+<!-- HEADER: GrindForge text/logo + creator name -->
 <header class="header">
 <div style="display:flex;align-items:center;gap:16px;flex:1;">
 <img src="/GrindForge.png" alt="GrindForge Logo" class="logo">
@@ -709,30 +709,19 @@ padding:20px 16px;
 <div class="creator-credit">Creator – Shaurya Chauhan</div>
 </header>
 
-<aside class="sidebar">
-<div class="box" id="dateBox">
-<div id="datetime-box" aria-live="polite">Loading date...</div>
-<div class="stats-row">
-<div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
-<div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
+<!-- TODO LIST (left column) -->
+<aside class="todo-container" aria-label="To-Do">
+<h2>To-Do List ✨</h2>
+<div class="todo-input">
+<input id="todoInput" type="text" placeholder="Write a task..."/>
+<button id="addTaskBtn">Add Task</button>
 </div>
-</div>
-
-<div class="box quotes">
-<h3>Quote</h3>
-<div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
-<div class="quote-actions">
-<button class="small-btn" id="newQuoteBtn">New Quote</button>
-<button class="small-btn" id="saveQuoteBtn">Save Quote</button>
-</div>
-
-<button id="endDayBtn">
-<span style="font-size:20px;">🌙</span>
-<span>End Day</span>
-</button>
+<div class="todo-list-container">
+<ul id="todo-list" aria-live="polite"></ul>
 </div>
 </aside>
 
+<!-- TIMER (right column - spans full height) -->
 <section class="timer-box" aria-label="Pomodoro Timer">
 <div id="timer" aria-live="polite">25:00</div>
 <div class="timer-controls">
@@ -754,14 +743,29 @@ padding:20px 16px;
 </div>
 </section>
 
-<aside class="todo-container" aria-label="To-Do">
-<h2>To-Do List ✨</h2>
-<div class="todo-input">
-<input id="todoInput" type="text" placeholder="Write a task..."/>
-<button id="addTaskBtn">Add Task</button>
+<!-- SIDEBAR: Date/stats + quotes + end day (bottom full width) -->
+<aside class="sidebar">
+<!-- Date & Stats -->
+<div class="box" id="dateBox">
+<div id="datetime-box" aria-live="polite">Loading date...</div>
+<div class="stats-row">
+<div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
+<div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
 </div>
-<div class="todo-list-container">
-<ul id="todo-list" aria-live="polite"></ul>
+</div>
+
+<!-- Quotes -->
+<div class="quotes-box quotes">
+<h3>Quote</h3>
+<div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
+<div class="quote-actions">
+<button class="small-btn" id="newQuoteBtn">New Quote</button>
+<button class="small-btn" id="saveQuoteBtn">Save Quote</button>
+</div>
+<button id="endDayBtn">
+<span style="font-size:20px;">🌙</span>
+<span>End Day</span>
+</button>
 </div>
 </aside>
 </div>
@@ -780,6 +784,7 @@ padding:20px 16px;
 </div>
 </div>
 
+<!-- SAME JAVASCRIPT - NO CHANGES NEEDED -->
 <script>
 class GrindForge {
 constructor() {
@@ -838,6 +843,7 @@ this.quotes = [
 this.init();
 }
 
+// ... [REST OF THE JAVASCRIPT REMAINS EXACTLY THE SAME - no changes needed]
 init() {
 this.setupAlarm();
 this.updateDateTime();
@@ -849,7 +855,6 @@ this.updateModeLabel();
 this.updateButtons();
 this.loadTodos();
 
-// Event listeners
 this.startBtn.addEventListener('click', () => this.startTimer());
 this.pauseBtn.addEventListener('click', () => this.pauseTimer());
 this.resetBtn.addEventListener('click', () => this.resetTimer());
@@ -1160,7 +1165,6 @@ const summary =
 this.endDaySummary.textContent = summary;
 this.endDayOverlay.classList.add('active');
 
-// Reset stats for new day
 this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: this.getTodayDate() };
 this.saveStats();
 }
