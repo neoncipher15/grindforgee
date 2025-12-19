@@ -1,108 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>GrindForge — Pomodoro</title>
-<link rel="icon" href="/GrindForge.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GrindForge Pomodoro</title>
+<link rel="icon" href="/GrindForge.png">
+
 <style>
 :root{
 --accent:#4ecdc4;
---bg:#030612;
---card:rgba(4,6,10,.9);
---text:#dffcff;
---muted:#9adbd4;
 --danger:#ff5a5a;
---success:#6ef0c9;
---radius:14px;
+--card:rgba(5,8,15,.9);
+--text:#eaffff;
+--radius:16px;
 }
 *{box-sizing:border-box}
+
 body{
 margin:0;
 font-family:Poppins,system-ui;
-color:var(--text);
 background:url(img.jpg) center/cover fixed;
+color:var(--text);
 }
+
 .overlay{
-position:fixed;inset:0;
-background:rgba(0,0,0,.45);
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.5);
 z-index:-1;
 }
-.dashboard{
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:16px;
 display:grid;
 grid-template-columns:1fr 1fr;
 grid-template-rows:auto 1fr;
-gap:14px;
-padding:14px;
-max-width:1300px;
-margin:auto;
+gap:16px;
 min-height:100vh;
 }
+
 header{
 grid-column:1/3;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:18px 22px;
+padding:18px 24px;
 background:var(--card);
 border-radius:var(--radius);
 }
+
 .brand{
 display:flex;
 gap:12px;
 align-items:center;
 }
+
 .brand img{width:42px}
-.brand h1{
-margin:0;
-font-size:20px;
-background:linear-gradient(135deg,var(--accent),var(--success));
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
-.header-info{
-text-align:right;
-font-size:13px;
-color:var(--muted);
-}
+
 .card{
 background:var(--card);
 border-radius:var(--radius);
 padding:20px;
 }
-.hidden{display:none}
 
 /* TIMER */
-.timer{
+.timer-box{
 display:flex;
 flex-direction:column;
 align-items:center;
 gap:12px;
 }
-.progress-ring{
-width:200px;
-height:200px;
+
+svg{
+width:240px;
+height:240px;
 }
-#timer{
-font-size:48px;
+
+#timerText{
+font-size:32px;
 font-weight:900;
-background:linear-gradient(135deg,var(--accent),var(--success));
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
+fill:#4ecdc4;
 }
+
+#modeText{
+font-size:14px;
+fill:#9adbd4;
+letter-spacing:2px;
+}
+
 .controls button{
+padding:10px 18px;
 margin:4px;
-padding:10px 16px;
-border-radius:10px;
 border:0;
+border-radius:12px;
 font-weight:700;
 cursor:pointer;
-background:linear-gradient(135deg,var(--accent),var(--success));
+background:linear-gradient(135deg,#4ecdc4,#6ef0c9);
 }
+
 .settings{
 display:flex;
 gap:10px;
+margin-top:8px;
 }
+
 .settings input{
 width:70px;
 padding:8px;
@@ -119,6 +122,7 @@ display:flex;
 gap:10px;
 margin-bottom:12px;
 }
+
 .todo-input input{
 flex:1;
 padding:12px;
@@ -127,25 +131,30 @@ border:0;
 background:rgba(255,255,255,.1);
 color:white;
 }
+
 .todo-input button{
 padding:12px 16px;
 border-radius:10px;
 border:0;
 font-weight:700;
-background:linear-gradient(135deg,var(--accent),var(--success));
+background:linear-gradient(135deg,#4ecdc4,#6ef0c9);
+cursor:pointer;
 }
+
 li{
 list-style:none;
 display:flex;
-justify-content:space-between;
 align-items:center;
+gap:10px;
 padding:12px;
 margin-bottom:8px;
 border-radius:10px;
 background:rgba(255,255,255,.08);
 }
+
 .checkbox{
-width:26px;height:26px;
+width:26px;
+height:26px;
 border-radius:8px;
 border:2px solid #aaa;
 display:flex;
@@ -153,57 +162,66 @@ align-items:center;
 justify-content:center;
 cursor:pointer;
 }
+
 .checkbox.done{
-background:var(--success);
-border-color:var(--success);
+background:#6ef0c9;
+border-color:#6ef0c9;
 color:#042726;
 }
-.desc.done{text-decoration:line-through;opacity:.6}
+
+.desc.done{
+text-decoration:line-through;
+opacity:.6;
+}
 </style>
 </head>
 
 <body>
 <div class="overlay"></div>
 
-<div class="dashboard">
+<div class="container">
 
 <header>
 <div class="brand">
 <img src="/GrindForge.png">
-<h1>GrindForge</h1>
+<h2>GrindForge</h2>
 </div>
-<div class="header-info">
 <div id="date"></div>
-<div>🔥 Streak: <span id="streak">0</span></div>
-</div>
 </header>
 
-<section class="card timer">
-<svg class="progress-ring">
+<!-- TIMER -->
+<section class="card timer-box">
+<svg viewBox="0 0 200 200">
 <circle cx="100" cy="100" r="90" stroke="#233" stroke-width="12" fill="none"/>
-<circle id="ring" cx="100" cy="100" r="90" stroke="#4ecdc4" stroke-width="12" fill="none"
-stroke-dasharray="565" stroke-dashoffset="0"/>
+<circle id="progress" cx="100" cy="100" r="90"
+stroke="#4ecdc4" stroke-width="12" fill="none"
+stroke-dasharray="565" stroke-dashoffset="0"
+transform="rotate(-90 100 100)"/>
+
+<text id="modeText" x="100" y="85" text-anchor="middle">WORK</text>
+<text id="timerText" x="100" y="115" text-anchor="middle">25:00</text>
 </svg>
-<div id="mode">WORK</div>
-<div id="timer">25:00</div>
+
 <div class="controls">
-<button id="start">Start</button>
-<button id="pause">Pause</button>
-<button id="reset">Reset</button>
+<button id="startBtn">Start</button>
+<button id="pauseBtn">Pause</button>
+<button id="resetBtn">Reset</button>
 </div>
+
 <div class="settings">
-<label>Work <input id="work" value="25"></label>
-<label>Break <input id="break" value="5"></label>
+<label>Work <input id="workTime" value="25"></label>
+<label>Break <input id="breakTime" value="5"></label>
 </div>
 </section>
 
-<section id="todoCard" class="card">
+<!-- TODO -->
+<section class="card">
 <h3>📝 To-Do</h3>
 <div class="todo-input">
-<input id="todoInput" placeholder="Type your task...">
-<button id="add">Add</button>
+<input id="todoInput" placeholder="Type your task…">
+<button id="addTask">Add</button>
 </div>
-<ul id="list"></ul>
+<ul id="todoList"></ul>
 </section>
 
 </div>
@@ -212,137 +230,134 @@ stroke-dasharray="565" stroke-dashoffset="0"/>
 <audio id="ting" src="ting.mp3"></audio>
 
 <script>
-class GrindForge{
+class Pomodoro{
 constructor(){
-this.time=25*60;
-this.total=this.time;
 this.work=true;
 this.running=false;
-this.timer=null;
+this.time=25*60;
+this.total=this.time;
+
+this.progress=document.getElementById("progress");
+this.timerText=document.getElementById("timerText");
+this.modeText=document.getElementById("modeText");
+
+this.startBtn=startBtn;
+this.pauseBtn=pauseBtn;
+this.resetBtn=resetBtn;
+
+this.workInput=workTime;
+this.breakInput=breakTime;
+
+this.todoInput=todoInput;
+this.todoList=todoList;
 
 this.tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
-this.streak=+localStorage.getItem("streak")||0;
-this.lastDate=localStorage.getItem("date");
 
-this.el={
-timer:timer,mode:mode,ring:ring,
-todo:list,input:todoInput,streak:streak,
-todoCard:todoCard
-};
-
-this.updateDate();
-this.loadTodos();
-this.updateRing();
 this.bind();
-}
-
-updateDate(){
-const d=new Date().toLocaleString("en-IN",{weekday:"long",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",hour12:false});
-date.textContent=d;
+this.render();
+this.renderTodos();
+this.updateDate();
 }
 
 bind(){
-start.onclick=()=>this.start();
-pause.onclick=()=>this.pause();
-reset.onclick=()=>this.reset();
-add.onclick=()=>this.addTask();
-todoInput.onkeydown=e=>e.key==="Enter"&&this.addTask();
+this.startBtn.onclick=()=>this.start();
+this.pauseBtn.onclick=()=>this.pause();
+this.resetBtn.onclick=()=>this.reset();
+addTask.onclick=()=>this.addTask();
+this.todoInput.onkeydown=e=>e.key==="Enter"&&this.addTask();
 }
 
 start(){
 if(this.running)return;
 this.running=true;
-this.el.todoCard.classList.add("hidden");
-
-this.timer=setInterval(()=>{
+this.interval=setInterval(()=>{
 if(this.time<=0){this.complete();return;}
 this.time--;
-this.update();
+this.render();
 },1000);
 }
 
 pause(){
-clearInterval(this.timer);
+clearInterval(this.interval);
 this.running=false;
-this.el.todoCard.classList.remove("hidden");
 }
 
 reset(){
 this.pause();
 this.work=true;
-this.time=work.value*60;
+this.time=this.workInput.value*60;
 this.total=this.time;
-this.update();
+this.render();
 }
 
 complete(){
 this.pause();
 alarm.play();
 this.work=!this.work;
-this.time=(this.work?work.value:break.value)*60;
+this.time=(this.work?this.workInput.value:this.breakInput.value)*60;
 this.total=this.time;
-
-if(this.work){
-const today=new Date().toDateString();
-if(this.lastDate!==today){
-this.streak++;
-localStorage.setItem("streak",this.streak);
-localStorage.setItem("date",today);
-}
-}
-this.update();
+this.render();
 }
 
-update(){
-this.el.timer.textContent=
-String(Math.floor(this.time/60)).padStart(2,"0")+":"+
-String(this.time%60).padStart(2,"0");
-this.el.mode.textContent=this.work?"WORK":"BREAK";
-this.el.streak.textContent=this.streak;
-this.updateRing();
-}
-
-updateRing(){
+render(){
+const m=String(Math.floor(this.time/60)).padStart(2,"0");
+const s=String(this.time%60).padStart(2,"0");
+this.timerText.textContent=`${m}:${s}`;
+this.modeText.textContent=this.work?"WORK":"BREAK";
 const offset=565-(this.time/this.total)*565;
-this.el.ring.style.strokeDashoffset=offset;
-this.el.ring.style.stroke=this.work?"#4ecdc4":"#ff5a5a";
+this.progress.style.strokeDashoffset=offset;
+this.progress.style.stroke=this.work?"#4ecdc4":"#ff5a5a";
 }
 
 addTask(){
-const t=this.el.input.value.trim();
+const t=this.todoInput.value.trim();
 if(!t)return;
 this.tasks.push({id:Date.now(),text:t,done:false});
-this.el.input.value="";
+this.todoInput.value="";
 this.saveTodos();
-this.loadTodos();
+this.renderTodos();
 }
 
-loadTodos(){
-this.el.todo.innerHTML="";
-this.tasks.forEach(t=>{
+renderTodos(){
+this.todoList.innerHTML="";
+this.tasks.forEach(task=>{
 const li=document.createElement("li");
 const cb=document.createElement("div");
-cb.className="checkbox"+(t.done?" done":"");
-cb.textContent=t.done?"✓":"";
+cb.className="checkbox"+(task.done?" done":"");
+cb.textContent=task.done?"✓":"";
 cb.onclick=()=>{
-t.done=!t.done;
-if(t.done)ting.play();
-this.saveTodos();this.loadTodos();
+task.done=!task.done;
+ting.play();
+this.saveTodos();
+this.renderTodos();
 };
 const span=document.createElement("span");
-span.textContent=t.text;
-span.className="desc"+(t.done?" done":"");
+span.textContent=task.text;
+span.className="desc"+(task.done?" done":"");
 li.append(cb,span);
-this.el.todo.appendChild(li);
+this.todoList.appendChild(li);
 });
 }
 
 saveTodos(){
 localStorage.setItem("tasks",JSON.stringify(this.tasks));
 }
+
+updateDate(){
+setInterval(()=>{
+date.textContent=new Date().toLocaleString("en-IN",{
+weekday:"long",
+day:"numeric",
+month:"short",
+hour:"2-digit",
+minute:"2-digit",
+hour12:false
+});
+},1000);
+}
 }
 
-new GrindForge();
+new Pomodoro();
 </script>
 </body>
 </html>
