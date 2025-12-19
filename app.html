@@ -139,11 +139,20 @@ background:linear-gradient(135deg,var(--accent),#6ef0c9);
 flex:1;
 padding:12px 14px;
 border-radius:10px;
-border:0;
+border:2px solid rgba(255,255,255,0.2);
 background:rgba(255,255,255,0.1);
 color:var(--text);
 font-size:14px;
 backdrop-filter:blur(10px);
+}
+.todo-input input::placeholder{
+color:var(--muted) !important;
+opacity:1;
+}
+.todo-input input:focus{
+outline:none;
+border-color:var(--accent);
+background:rgba(255,255,255,0.15);
 }
 .todo-input button{
 padding:12px 16px;
@@ -213,6 +222,14 @@ background:linear-gradient(135deg,var(--accent),#6ef0c9);
 -webkit-text-fill-color:transparent;
 margin:20px 0 16px 0;
 }
+#modeLabel{
+font-size:16px;
+font-weight:700;
+color:var(--accent);
+margin-bottom:20px;
+text-transform:uppercase;
+letter-spacing:1px;
+}
 
 .timer-controls{display:flex;gap:10px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;}
 .timer-controls button{
@@ -228,11 +245,6 @@ color:#042726;font-weight:700;font-size:14px;min-width:80px;
 width:70px;padding:10px;border-radius:8px;border:0;
 background:rgba(255,255,255,0.1);color:var(--text);text-align:center;
 font-size:15px;font-weight:600;backdrop-filter:blur(10px);
-}
-
-.progress-row{
-display:flex;justify-content:space-between;gap:16px;margin-top:20px;
-font-size:13px;color:var(--muted);font-weight:600;
 }
 
 #endDayBtn{
@@ -301,13 +313,13 @@ border-left:4px solid var(--accent);
 <p>Pomodoro Dashboard</p>
 </div>
 </div>
-<div id="datetime-box" class="header-datetime">Loading...</div>
+<div id="datetime-box" class="header-datime">Loading...</div>
 </header>
 
 <aside class="todo-container" aria-label="To-Do">
 <h2>📝 To-Do</h2>
 <div class="todo-input">
-<input id="todoInput" type="text" placeholder="Add task..."/>
+<input id="todoInput" type="text" placeholder="Type your task here..."/>
 <button id="addTaskBtn">Add</button>
 </div>
 <div class="todo-list-container">
@@ -316,6 +328,7 @@ border-left:4px solid var(--accent);
 </aside>
 
 <section class="timer-box" aria-label="Timer">
+<div id="modeLabel">Mode: Work</div>
 <div id="timer">25:00</div>
 <div class="timer-controls">
 <button id="startBtn">▶ Start</button>
@@ -325,10 +338,6 @@ border-left:4px solid var(--accent);
 <div class="settings">
 <label>Work <input id="workTime" type="number" min="1" value="25"/></label>
 <label>Break <input id="breakTime" type="number" min="1" value="5"/></label>
-</div>
-<div class="progress-row">
-<div id="modeLabel">Mode: Work</div>
-<div id="sessionLabel">Sessions: 0</div>
 </div>
 </section>
 </div>
@@ -354,10 +363,9 @@ this.startBtn=document.getElementById('startBtn');
 this.pauseBtn=document.getElementById('pauseBtn');
 this.resetBtn=document.getElementById('resetBtn');
 this.timerEl=document.getElementById('timer');
+this.modeLabel=document.getElementById('modeLabel');
 this.workTime=document.getElementById('workTime');
 this.breakTime=document.getElementById('breakTime');
-this.modeLabel=document.getElementById('modeLabel');
-this.sessionLabel=document.getElementById('sessionLabel');
 this.todoInput=document.getElementById('todoInput');
 this.addTaskBtn=document.getElementById('addTaskBtn');
 this.todoList=document.getElementById('todo-list');
@@ -401,9 +409,8 @@ if(s.date===this.getDate()) this.stats=s;
 }
 const tasks=localStorage.getItem(this.TASKS_KEY);
 if(tasks) this.tasks=JSON.parse(tasks);
-}catch(e){console.log('Load error:',e);}
+}catch(e){}
 this.renderTodos();
-this.updateSessionDisplay();
 }
 
 saveData(){
@@ -418,8 +425,6 @@ const m=Math.floor(this.timeLeft/60),s=this.timeLeft%60;
 this.timerEl.textContent=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 this.modeLabel.textContent=`Mode: ${this.isWork?'Work':'Break'}`;
 }
-
-updateSessionDisplay(){this.sessionLabel.textContent=`Sessions: ${this.stats.sessions}`;}
 
 bindEvents(){
 this.startBtn.onclick=()=>this.start();
