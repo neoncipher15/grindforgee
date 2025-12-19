@@ -252,6 +252,9 @@ transform="rotate(-90 100 100)"/>
 
 </div>
 
+<audio id="alarm" src="alarm.mp3" preload="auto"></audio>
+<audio id="ting" src="ting.mp3" preload="auto"></audio>
+
 <script>
 /* ===== DOM ===== */
 const startBtn = document.getElementById("startBtn");
@@ -270,7 +273,6 @@ const dateBox = document.getElementById("date");
 
 const alarm = document.getElementById("alarm");
 const ting = document.getElementById("ting");
-
 
 /* ===== DATE ===== */
 setInterval(()=>{
@@ -299,7 +301,7 @@ startBtn.onclick=()=>{
   interval=setInterval(()=>{
    if(time<=0){
       alarm.currentTime = 0;
-      alarm.play();          // 🔔 SOUND
+      alarm.play();
 
       work = !work;
       time = (work ? workTime.value : breakTime.value) * 60;
@@ -332,36 +334,50 @@ let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
 
 function save(){localStorage.setItem("tasks",JSON.stringify(tasks))}
 
+function createTaskElement(task, index){
+  const li=document.createElement("li");
+
+  const cb=document.createElement("div");
+  cb.className="checkbox"+(task.done?" done":"");
+  cb.textContent = task.done?"✓":"";
+
+  const span=document.createElement("span");
+  span.className="desc"+(task.done?" done":"");
+  span.textContent = task.text;
+
+  const del=document.createElement("span");
+  del.className="delete";
+  del.textContent="✕";
+
+  // ✅ Checkbox toggle
+  cb.onclick = () => {
+    task.done = !task.done;
+    cb.classList.toggle("done", task.done);
+    cb.textContent = task.done ? "✓" : "";
+    span.classList.toggle("done", task.done);
+
+    if(task.done){
+      ting.currentTime = 0;
+      ting.play();
+    }
+    save();
+  };
+
+  // Delete task
+  del.onclick = () => {
+    tasks.splice(index, 1);
+    save();
+    renderTodos();
+  };
+
+  li.append(cb, span, del);
+  return li;
+}
+
 function renderTodos(){
   todoList.innerHTML="";
   tasks.forEach((t,i)=>{
-    const li=document.createElement("li");
-
-    const cb=document.createElement("div");
-    cb.className="checkbox"+(t.done?" done":"");
-    cb.textContent=t.done?"✓":"";
-    cb.onclick=()=>{
-       t.done=!t.done;
-       if(t.done){
-       ting.currentTime = 0;
-       ting.play();       // ✨ ting
-     }
-     save();
-     renderTodos();
-};
-
-
-    const span=document.createElement("span");
-    span.className="desc"+(t.done?" done":"");
-    span.textContent=t.text;
-
-    const del=document.createElement("span");
-    del.className="delete";
-    del.textContent="✕";
-    del.onclick=()=>{tasks.splice(i,1);save();renderTodos()};
-
-    li.append(cb,span,del);
-    todoList.appendChild(li);
+    todoList.appendChild(createTaskElement(t,i));
   });
 }
 
@@ -370,10 +386,11 @@ addTaskBtn.onclick=()=>{
   if(!t) return;
   tasks.push({text:t,done:false});
   todoInput.value="";
-  save();renderTodos();
+  save();
+  renderTodos();
 };
 
-todoInput.addEventListener("keydown",e=>{
+todoInput.addEventListener("keydown", e => {
   if(e.key==="Enter") addTaskBtn.click();
 });
 
@@ -400,9 +417,6 @@ let stars=[...Array(130)].map(()=>({
   requestAnimationFrame(anim);
 })();
 </script>
-
-<audio id="alarm" src="alarm.mp3" preload="auto"></audio>
-<audio id="ting" src="ting.mp3" preload="auto"></audio>
 
 </body>
 </html>
