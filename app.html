@@ -30,6 +30,13 @@ background:rgba(0,0,0,.5);
 z-index:-1;
 }
 
+#stars{
+position:fixed;
+inset:0;
+z-index:-2;
+pointer-events:none;
+}
+
 .container{
 max-width:1200px;
 margin:auto;
@@ -130,6 +137,8 @@ border-radius:10px;
 border:0;
 background:rgba(255,255,255,.1);
 color:white;
+pointer-events:auto;
+z-index:2;
 }
 
 .todo-input button{
@@ -139,6 +148,8 @@ border:0;
 font-weight:700;
 background:linear-gradient(135deg,#4ecdc4,#6ef0c9);
 cursor:pointer;
+pointer-events:auto;
+z-index:2;
 }
 
 li{
@@ -173,20 +184,11 @@ color:#042726;
 text-decoration:line-through;
 opacity:.6;
 }
-
-#stars{
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  pointer-events:none;
-}
-
 </style>
 </head>
 
 <body>
 <canvas id="stars"></canvas>
-
 <div class="overlay"></div>
 
 <div class="container">
@@ -199,13 +201,12 @@ opacity:.6;
 <div id="date"></div>
 </header>
 
-<!-- TIMER -->
 <section class="card timer-box">
 <svg viewBox="0 0 200 200">
 <circle cx="100" cy="100" r="90" stroke="#233" stroke-width="12" fill="none"/>
 <circle id="progress" cx="100" cy="100" r="90"
 stroke="#4ecdc4" stroke-width="12" fill="none"
-stroke-dasharray="565" stroke-dashoffset="0"
+stroke-dasharray="565"
 transform="rotate(-90 100 100)"/>
 
 <text id="modeText" x="100" y="85" text-anchor="middle">WORK</text>
@@ -224,7 +225,6 @@ transform="rotate(-90 100 100)"/>
 </div>
 </section>
 
-<!-- TODO -->
 <section class="card">
 <h3>📝 To-Do</h3>
 <div class="todo-input">
@@ -251,15 +251,16 @@ this.progress=document.getElementById("progress");
 this.timerText=document.getElementById("timerText");
 this.modeText=document.getElementById("modeText");
 
-this.startBtn=startBtn;
-this.pauseBtn=pauseBtn;
-this.resetBtn=resetBtn;
+this.startBtn=document.getElementById("startBtn");
+this.pauseBtn=document.getElementById("pauseBtn");
+this.resetBtn=document.getElementById("resetBtn");
 
-this.workInput=workTime;
-this.breakInput=breakTime;
+this.workInput=document.getElementById("workTime");
+this.breakInput=document.getElementById("breakTime");
 
-this.todoInput=todoInput;
-this.todoList=todoList;
+this.todoInput=document.getElementById("todoInput");
+this.todoList=document.getElementById("todoList");
+this.addBtn=document.getElementById("addTask");
 
 this.tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
 
@@ -273,8 +274,14 @@ bind(){
 this.startBtn.onclick=()=>this.start();
 this.pauseBtn.onclick=()=>this.pause();
 this.resetBtn.onclick=()=>this.reset();
-addTask.onclick=()=>this.addTask();
-this.todoInput.onkeydown=e=>e.key==="Enter"&&this.addTask();
+
+this.addBtn.onclick=()=>this.addTask();
+this.todoInput.addEventListener("keydown",e=>{
+if(e.key==="Enter"){
+e.preventDefault();
+this.addTask();
+}
+});
 }
 
 start(){
@@ -324,6 +331,7 @@ const t=this.todoInput.value.trim();
 if(!t)return;
 this.tasks.push({id:Date.now(),text:t,done:false});
 this.todoInput.value="";
+this.todoInput.focus();
 this.saveTodos();
 this.renderTodos();
 }
@@ -332,6 +340,7 @@ renderTodos(){
 this.todoList.innerHTML="";
 this.tasks.forEach(task=>{
 const li=document.createElement("li");
+
 const cb=document.createElement("div");
 cb.className="checkbox"+(task.done?" done":"");
 cb.textContent=task.done?"✓":"";
@@ -341,9 +350,11 @@ ting.play();
 this.saveTodos();
 this.renderTodos();
 };
+
 const span=document.createElement("span");
 span.textContent=task.text;
 span.className="desc"+(task.done?" done":"");
+
 li.append(cb,span);
 this.todoList.appendChild(li);
 });
@@ -354,71 +365,64 @@ localStorage.setItem("tasks",JSON.stringify(this.tasks));
 }
 
 updateDate(){
-  const update = () => {
-    const now = new Date();
-    date.textContent = now.toLocaleString("en-IN", {
-      weekday: "long",
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false
-    });
-  };
-  update();
-  setInterval(update, 1000);
+const dateEl=document.getElementById("date");
+const update=()=>{
+const now=new Date();
+dateEl.textContent=now.toLocaleString("en-IN",{
+weekday:"long",
+day:"numeric",
+month:"short",
+year:"numeric",
+hour:"2-digit",
+minute:"2-digit",
+second:"2-digit",
+hour12:false
+});
+};
+update();
+setInterval(update,1000);
+}
 }
 
+/* STARS */
+const canvas=document.getElementById("stars");
+const ctx=canvas.getContext("2d");
+let stars=[];
+const STAR_COUNT=120;
 
-const canvas = document.getElementById("stars");
-const ctx = canvas.getContext("2d");
-
-let stars = [];
-const STAR_COUNT = 120;
-
-function resizeStars(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+function resize(){
+canvas.width=innerWidth;
+canvas.height=innerHeight;
 }
-window.addEventListener("resize", resizeStars);
-resizeStars();
+resize();
+addEventListener("resize",resize);
 
-function createStars(){
-  stars = [];
-  for(let i=0;i<STAR_COUNT;i++){
-    stars.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      r: Math.random()*1.2 + 0.3,
-      s: Math.random()*0.15 + 0.05
-    });
-  }
+for(let i=0;i<STAR_COUNT;i++){
+stars.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*1.2+.3,
+s:Math.random()*.2+.05
+});
 }
-createStars();
 
-function animateStars(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = "rgba(255,255,255,0.8)";
-
-  stars.forEach(star=>{
-    star.y += star.s;
-    if(star.y > canvas.height){
-      star.y = 0;
-      star.x = Math.random()*canvas.width;
-    }
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, star.r, 0, Math.PI*2);
-    ctx.fill();
-  });
-
-  requestAnimationFrame(animateStars);
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="rgba(255,255,255,.8)";
+stars.forEach(star=>{
+star.y+=star.s;
+if(star.y>canvas.height){
+star.y=0;
+star.x=Math.random()*canvas.width;
 }
-animateStars();
+ctx.beginPath();
+ctx.arc(star.x,star.y,star.r,0,Math.PI*2);
+ctx.fill();
+});
+requestAnimationFrame(animate);
+}
+animate();
 
-
-  
 new Pomodoro();
 </script>
 </body>
