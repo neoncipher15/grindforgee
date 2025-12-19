@@ -268,6 +268,10 @@ const addTaskBtn = document.getElementById("addTask");
 const todoList = document.getElementById("todoList");
 const dateBox = document.getElementById("date");
 
+const alarm = document.getElementById("alarm");
+const ting = document.getElementById("ting");
+
+
 /* ===== DATE ===== */
 setInterval(()=>{
   dateBox.textContent = new Date().toLocaleString("en-IN",{
@@ -293,11 +297,15 @@ startBtn.onclick=()=>{
   if(running) return;
   running=true;
   interval=setInterval(()=>{
-    if(time<=0){
-      work=!work;
-      time=(work?workTime.value:breakTime.value)*60;
-      total=time;
+   if(time<=0){
+      alarm.currentTime = 0;
+      alarm.play();          // 🔔 SOUND
+
+      work = !work;
+      time = (work ? workTime.value : breakTime.value) * 60;
+      total = time;
     }
+
     time--;
     renderTimer();
   },1000);
@@ -383,6 +391,9 @@ let stars=[...Array(130)].map(()=>({
   requestAnimationFrame(anim);
 })();
 </script>
+
+<audio id="alarm" src="alarm.mp3" preload="auto"></audio>
+<audio id="ting" src="ting.mp3" preload="auto"></audio>
 
 </body>
 </html>
