@@ -48,13 +48,13 @@ z-index:-1;
 pointer-events:none;
 }
 
-/* ===== UPDATED LAYOUT GRID ===== */
+/* ===== PERFECT LAYOUT GRID ===== */
 .dashboard-grid{
 display:grid;
 grid-template-columns: 1fr 1.2fr;
 grid-template-rows: auto 1fr;
 grid-template-areas: 
-"header timer" 
+"header header" 
 "todo timer";
 gap:var(--gap);
 padding:var(--gap);
@@ -64,13 +64,13 @@ margin:0 auto var(--gap);
 height: 100svh;
 }
 
-/* HEADER - NOW INCLUDES DATE */
+/* HEADER - Full Width with 3 Sections */
 .header{
 grid-area:header;
 display:flex;
 justify-content:space-between;
 align-items:center;
-gap:12px;
+gap:24px;
 background:var(--card);
 backdrop-filter:blur(20px);
 border-radius:var(--radius);
@@ -125,12 +125,17 @@ margin:0;
 font-weight:400;
 }
 
-/* DATE IN HEADER */
+/* DATE SECTION */
 .header-datetime{
 font-size:clamp(15px,2.5vw,16px);
 letter-spacing:0.3px;
 text-align:center;
 min-width:140px;
+padding:12px 16px;
+background:rgba(255,255,255,0.08);
+border-radius:12px;
+border:1px solid rgba(78,205,196,0.2);
+backdrop-filter:blur(10px);
 }
 
 .creator-credit{
@@ -153,10 +158,8 @@ box-shadow:0 6px 20px rgba(57,255,20,0.3);
 }
 
 /* CARDS */
-.box,
 .timer-box,
-.todo-container,
-.quotes-container{
+.todo-container{
 background:var(--card);
 backdrop-filter:blur(20px);
 border-radius:var(--radius);
@@ -167,10 +170,8 @@ display:flex;
 flex-direction:column;
 }
 
-.box:hover,
 .timer-box:hover,
-.todo-container:hover,
-.quotes-container:hover{
+.todo-container:hover{
 transform:translateY(-4px);
 box-shadow:0 28px 60px rgba(78,205,196,0.25);
 }
@@ -437,8 +438,8 @@ width:100%;
 flex-wrap:wrap;
 }
 
-/* QUOTES & STATS - BOTTOM OVERLAY */
-.quotes-container{
+/* BOTTOM FIXED BAR - Stats + Quotes + End Day */
+.bottom-bar{
 position:fixed;
 bottom:var(--gap);
 left:50%;
@@ -449,14 +450,18 @@ display:flex;
 gap:var(--gap);
 padding:var(--gap);
 z-index:10;
+background:var(--card);
+backdrop-filter:blur(20px);
+border-radius:var(--radius);
+border:1px solid rgba(78,205,196,0.15);
+box-shadow:0 16px 40px var(--shadow);
 }
 
 .stats-row{
 display:flex;
 gap:12px;
-justify-content:center;
-flex-wrap:wrap;
 align-items:center;
+flex-shrink:0;
 }
 .stat-pill{
 background:rgba(255,255,255,0.1);
@@ -467,19 +472,21 @@ border:1px solid rgba(78,205,196,0.25);
 backdrop-filter:blur(10px);
 }
 
-.quotes-box{
+.quotes-section{
 flex:1;
-padding:24px;
+display:flex;
+flex-direction:column;
+gap:12px;
 }
 
 .quotes h3{
-margin:0 0 12px 0;
+margin:0 0 8px 0;
 font-size:clamp(15px,2.5vw,16px);
 }
 .quote-text{
 font-size:clamp(14px,2.2vw,15px);
 min-height:48px;
-margin-bottom:12px;
+margin:0;
 padding:12px;
 background:rgba(255,255,255,0.05);
 border-radius:10px;
@@ -492,16 +499,15 @@ flex-wrap:wrap;
 }
 .small-btn{
 border:0;
-padding:12px 18px;
+padding:10px 16px;
 border-radius:12px;
 cursor:pointer;
 background:linear-gradient(135deg,var(--accent),#6ef0c9);
 color:#042726;
 font-weight:800;
-font-size:clamp(13px,2vw,14px);
+font-size:clamp(12px,1.8vw,13px);
 transition:all 0.2s ease;
-flex:1 1 120px;
-min-width:100px;
+flex:1;
 box-shadow:0 4px 16px rgba(78,205,196,0.3);
 }
 .small-btn:hover{
@@ -510,7 +516,6 @@ box-shadow:0 12px 32px rgba(78,205,196,0.5);
 }
 
 #endDayBtn{
-margin-top:16px;
 padding:16px;
 border-radius:12px;
 border:0;
@@ -525,6 +530,8 @@ align-items:center;
 justify-content:center;
 gap:10px;
 transition:all 0.3s ease;
+flex-shrink:0;
+min-width:140px;
 }
 #endDayBtn:hover{
 transform:translateY(-3px) scale(1.02);
@@ -640,7 +647,6 @@ grid-template-areas:
 height: auto;
 }
 .timer-box{height:auto;}
-.quotes-container{bottom:12px;left:12px;right:12px;width:auto;transform:none;flex-direction:column;}
 }
 
 @media (max-width:768px){
@@ -658,7 +664,7 @@ padding:24px 20px;
 width:48px;
 height:48px;
 }
-.header-datetime{display:none;}
+.header-datetime{display:block;width:100%;order:3;}
 #timer{
 font-size:clamp(40px,10vw,56px);
 }
@@ -685,6 +691,7 @@ flex-direction:column;
 .quote-actions{
 flex-direction:column;
 }
+.bottom-bar{bottom:12px;left:12px;right:12px;width:auto;transform:none;flex-direction:column;}
 }
 
 @media (max-width:480px){
@@ -701,19 +708,22 @@ padding:20px 16px;
 <body>
 <div class="overlay"></div>
 <div class="dashboard-grid">
-<!-- HEADER: Logo + Date + Creator -->
+<!-- HEADER: PERFECT 3-COLUMN LAYOUT -->
 <header class="header">
-<div style="display:flex;align-items:center;gap:16px;flex:1;">
+<!-- Logo + Text (Left) -->
+<div style="display:flex;align-items:center;gap:16px;">
 <img src="/GrindForge.png" alt="GrindForge Logo" class="logo">
 <div class="brand-section">
 <h1 class="brand-title">GrindForge</h1>
 <p class="brand-subtitle">Pomodoro Productivity Dashboard</p>
 </div>
 </div>
-<div style="display:flex;align-items:center;gap:12px;flex-direction:column;">
+
+<!-- DATE (Center) -->
 <div id="datetime-box" class="header-datetime" aria-live="polite">Loading date...</div>
+
+<!-- Creator (Right) -->
 <div class="creator-credit">Creator – Shaurya Chauhan</div>
-</div>
 </header>
 
 <!-- TODO LIST (left column) -->
@@ -751,24 +761,29 @@ padding:20px 16px;
 </section>
 </div>
 
-<!-- QUOTES + STATS + END DAY (Fixed bottom bar) -->
-<div class="quotes-container">
+<!-- BOTTOM BAR: Stats + Quotes + End Day -->
+<div class="bottom-bar">
+<!-- Stats -->
 <div class="stats-row">
 <div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
 <div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
 </div>
-<div class="quotes-box quotes">
+
+<!-- Quotes -->
+<div class="quotes-section quotes">
 <h3>Quote</h3>
 <div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
 <div class="quote-actions">
 <button class="small-btn" id="newQuoteBtn">New Quote</button>
 <button class="small-btn" id="saveQuoteBtn">Save Quote</button>
 </div>
+</div>
+
+<!-- End Day Button -->
 <button id="endDayBtn">
 <span style="font-size:20px;">🌙</span>
 <span>End Day</span>
 </button>
-</div>
 </div>
 
 <audio id="alarm" preload="metadata" src="alarm.mp3"></audio>
@@ -785,6 +800,7 @@ padding:20px 16px;
 </div>
 </div>
 
+<!-- SAME JAVASCRIPT - NO CHANGES -->
 <script>
 class GrindForge {
 constructor() {
@@ -854,7 +870,6 @@ this.updateModeLabel();
 this.updateButtons();
 this.loadTodos();
 
-// Event listeners
 this.startBtn.addEventListener('click', () => this.startTimer());
 this.pauseBtn.addEventListener('click', () => this.pauseTimer());
 this.resetBtn.addEventListener('click', () => this.resetTimer());
@@ -873,7 +888,6 @@ if (e.key === 'Escape') this.closeEndDay();
 });
 }
 
-// ... [REST OF JAVASCRIPT REMAINS IDENTICAL - no changes needed]
 setupAlarm() {
 this.alarm.volume = 0.7;
 this.alarm.load();
@@ -1166,7 +1180,6 @@ const summary =
 this.endDaySummary.textContent = summary;
 this.endDayOverlay.classList.add('active');
 
-// Reset stats for new day
 this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: this.getTodayDate() };
 this.saveStats();
 }
