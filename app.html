@@ -354,18 +354,23 @@ localStorage.setItem("tasks",JSON.stringify(this.tasks));
 }
 
 updateDate(){
-setInterval(()=>{
-date.textContent=new Date().toLocaleString("en-IN",{
-weekday:"long",
-day:"numeric",
-month:"short",
-hour:"2-digit",
-minute:"2-digit",
-hour12:false
-});
-},1000);
+  const update = () => {
+    const now = new Date();
+    date.textContent = now.toLocaleString("en-IN", {
+      weekday: "long",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false
+    });
+  };
+  update();
+  setInterval(update, 1000);
 }
-}
+
 
 const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d");
