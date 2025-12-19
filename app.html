@@ -438,105 +438,6 @@ width:100%;
 flex-wrap:wrap;
 }
 
-/* BOTTOM FIXED BAR - Stats + Quotes + End Day */
-.bottom-bar{
-position:fixed;
-bottom:var(--gap);
-left:50%;
-transform:translateX(-50%);
-width:calc(100% - calc(var(--gap) * 2));
-max-width:1400px;
-display:flex;
-gap:var(--gap);
-padding:var(--gap);
-z-index:10;
-background:var(--card);
-backdrop-filter:blur(20px);
-border-radius:var(--radius);
-border:1px solid rgba(78,205,196,0.15);
-box-shadow:0 16px 40px var(--shadow);
-}
-
-.stats-row{
-display:flex;
-gap:12px;
-align-items:center;
-flex-shrink:0;
-}
-.stat-pill{
-background:rgba(255,255,255,0.1);
-padding:10px 16px;
-border-radius:12px;
-font-size:clamp(13px,2vw,14px);
-border:1px solid rgba(78,205,196,0.25);
-backdrop-filter:blur(10px);
-}
-
-.quotes-section{
-flex:1;
-display:flex;
-flex-direction:column;
-gap:12px;
-}
-
-.quotes h3{
-margin:0 0 8px 0;
-font-size:clamp(15px,2.5vw,16px);
-}
-.quote-text{
-font-size:clamp(14px,2.2vw,15px);
-min-height:48px;
-margin:0;
-padding:12px;
-background:rgba(255,255,255,0.05);
-border-radius:10px;
-border-left:3px solid var(--accent);
-}
-.quote-actions{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-}
-.small-btn{
-border:0;
-padding:10px 16px;
-border-radius:12px;
-cursor:pointer;
-background:linear-gradient(135deg,var(--accent),#6ef0c9);
-color:#042726;
-font-weight:800;
-font-size:clamp(12px,1.8vw,13px);
-transition:all 0.2s ease;
-flex:1;
-box-shadow:0 4px 16px rgba(78,205,196,0.3);
-}
-.small-btn:hover{
-transform:translateY(-2px);
-box-shadow:0 12px 32px rgba(78,205,196,0.5);
-}
-
-#endDayBtn{
-padding:16px;
-border-radius:12px;
-border:0;
-cursor:pointer;
-background:linear-gradient(135deg,#4ecdc4,#6ef0c9);
-color:#042726;
-font-weight:800;
-font-size:clamp(15px,2.5vw,16px);
-box-shadow:0 12px 32px rgba(78,205,196,0.5);
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-transition:all 0.3s ease;
-flex-shrink:0;
-min-width:140px;
-}
-#endDayBtn:hover{
-transform:translateY(-3px) scale(1.02);
-box-shadow:0 20px 48px rgba(78,205,196,0.6);
-}
 
 /* INPUT FIXES */
 input[type=number]::-webkit-outer-spin-button,
@@ -688,11 +589,7 @@ text-align:center;
 .todo-input{
 flex-direction:column;
 }
-.quote-actions{
-flex-direction:column;
-}
-.bottom-bar{bottom:12px;left:12px;right:12px;width:auto;transform:none;flex-direction:column;}
-}
+
 
 @media (max-width:480px){
 .dashboard-grid{
@@ -761,30 +658,7 @@ padding:20px 16px;
 </section>
 </div>
 
-<!-- BOTTOM BAR: Stats + Quotes + End Day -->
-<div class="bottom-bar">
-<!-- Stats -->
-<div class="stats-row">
-<div class="stat-pill" id="hoursCompleted">Hours: 0.00</div>
-<div class="stat-pill" id="sessionsCompleted">Sessions: 0</div>
-</div>
 
-<!-- Quotes -->
-<div class="quotes-section quotes">
-<h3>Quote</h3>
-<div class="quote-text" id="quoteText">"Stay focused - distractions are the enemy of progress."</div>
-<div class="quote-actions">
-<button class="small-btn" id="newQuoteBtn">New Quote</button>
-<button class="small-btn" id="saveQuoteBtn">Save Quote</button>
-</div>
-</div>
-
-<!-- End Day Button -->
-<button id="endDayBtn">
-<span style="font-size:20px;">🌙</span>
-<span>End Day</span>
-</button>
-</div>
 
 <audio id="alarm" preload="metadata" src="alarm.mp3"></audio>
 
