@@ -16,8 +16,8 @@
 --danger:#ff5a5a;
 --success:#6ef0c9;
 --shadow: rgba(2,6,10,0.7);
---radius:14px;
---gap:16px;
+--radius:12px;
+--gap:12px;
 }
 
 *{box-sizing:border-box}
@@ -27,8 +27,8 @@ padding:0;
 }
 
 body{
-min-height:100svh;
-font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+min-height:100vh;
+font-family: "Poppins", system-ui, sans-serif;
 color:var(--text);
 background-image: url('img.jpg');
 background-size: cover;
@@ -48,7 +48,6 @@ z-index:-1;
 pointer-events:none;
 }
 
-/* ===== CLEAN LAYOUT GRID ===== */
 .dashboard-grid{
 display:grid;
 grid-template-columns: 1fr 1.2fr;
@@ -61,689 +60,271 @@ padding:var(--gap);
 box-sizing:border-box;
 max-width:1400px;
 margin:0 auto;
-height: 100svh;
+height: 100vh;
 }
 
-/* HEADER - Full Width - DATE CENTERED */
 .header{
 grid-area:header;
 display:flex;
-justify-content:center;
+justify-content:space-between;
 align-items:center;
-gap:40px;
+gap:20px;
 background:var(--card);
 backdrop-filter:blur(20px);
 border-radius:var(--radius);
-padding:24px 32px;
-box-shadow:0 25px 50px var(--shadow);
-border:1px solid rgba(78,205,196,0.25);
-position:relative;
-overflow:hidden;
-will-change:transform;
+padding:20px 24px;
+box-shadow:0 20px 40px var(--shadow);
+border:1px solid rgba(78,205,196,0.2);
 }
-
-.header::before{
-content:'';
-position:absolute;
-inset:0;
-background:linear-gradient(135deg,rgba(78,205,196,0.2),transparent);
-opacity:0;
-transition:opacity 0.4s ease;
-}
-
-.header:hover::before{opacity:1;}
-.header:hover{transform:translateY(-4px);}
 
 .logo{
-width:48px;
-height:48px;
-border-radius:12px;
-box-shadow:0 12px 32px rgba(78,205,196,0.6);
-transition: all 0.3s ease;
+width:40px;
+height:40px;
+border-radius:8px;
+box-shadow:0 8px 20px rgba(78,205,196,0.5);
 }
 
-.logo:hover{transform: scale(1.05);}
-
-.brand-section{
-display:flex;
-flex-direction:column;
-gap:4px;
-text-align:center;
-}
-
-.brand-title{
-font-size:clamp(24px,4vw,28px);
-font-weight:900;
-background:linear-gradient(135deg,var(--accent),#6ef0c9);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-background-clip:text;
-margin:0;
-letter-spacing: -0.5px;
-}
-
-.brand-subtitle{
-font-size:clamp(12px,2vw,14px);
-color:var(--muted);
-margin:0;
-font-weight:500;
-}
-
-/* DATE SECTION - NOW CENTER POSITION */
-.header-datetime{
-font-size:clamp(18px,3vw,22px);
-letter-spacing:0.8px;
-text-align:center;
-min-width:200px;
-padding:20px 32px;
-background:linear-gradient(135deg,rgba(255,255,255,0.15),rgba(255,255,255,0.05));
-border-radius:20px;
-border:2px solid rgba(78,205,196,0.4);
-backdrop-filter:blur(20px);
-box-shadow:0 12px 32px rgba(0,0,0,0.4);
-font-weight:700;
-position:relative;
-}
-
-.header-datetime::before{
-content:'📅';
-position:absolute;
-top:8px;
-right:12px;
+.brand-section h1{
 font-size:20px;
-opacity:0.8;
-}
-
-/* CARDS - PERFECT MARGINS */
-.timer-box,
-.todo-container{
-background:var(--card);
-backdrop-filter:blur(25px);
-border-radius:var(--radius);
-box-shadow:0 20px 60px var(--shadow);
-transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
-border:1px solid rgba(78,205,196,0.2);
-display:flex;
-flex-direction:column;
-position:relative;
-overflow:hidden;
-}
-
-.timer-box::before,
-.todo-container::before{
-content:'';
-position:absolute;
-inset:0;
-background:linear-gradient(135deg,rgba(78,205,196,0.08),transparent);
-opacity:0;
-transition:opacity 0.4s ease;
-}
-
-.timer-box:hover::before,
-.todo-container:hover::before{opacity:1;}
-
-.timer-box:hover,
-.todo-container:hover{
-transform:translateY(-8px);
-box-shadow:0 40px 80px rgba(78,205,196,0.3);
-border-color:rgba(78,205,196,0.4);
-}
-
-/* TODO */
-.todo-container{
-grid-area:todo;
-padding:32px;
-}
-
-.todo-container h2{
-margin:0 0 24px 0;
-font-size:clamp(22px,3.5vw,24px);
-text-align:center;
 font-weight:800;
 background:linear-gradient(135deg,var(--accent),#6ef0c9);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
-background-clip:text;
-letter-spacing: -0.3px;
+margin:0 0 2px 0;
+}
+.brand-section p{
+font-size:11px;
+color:var(--muted);
+margin:0;
+font-weight:400;
 }
 
-.todo-input{
-display:flex;
-gap:16px;
-margin-bottom:28px;
+.header-datetime{
+font-size:14px;
+letter-spacing:0.2px;
+text-align:center;
+padding:12px 16px;
+background:rgba(255,255,255,0.1);
+border-radius:10px;
+border:1px solid rgba(78,205,196,0.2);
+backdrop-filter:blur(10px);
+font-weight:600;
+min-width:140px;
 }
+
+.timer-box, .todo-container{
+background:var(--card);
+backdrop-filter:blur(20px);
+border-radius:var(--radius);
+box-shadow:0 16px 40px var(--shadow);
+border:1px solid rgba(78,205,196,0.15);
+display:flex;
+flex-direction:column;
+}
+
+.timer-box{grid-area:timer;}
+.todo-container{grid-area:todo; padding:20px;}
+
+.todo-container h2{
+margin:0 0 16px 0;
+font-size:18px;
+text-align:center;
+background:linear-gradient(135deg,var(--accent),#6ef0c9);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.todo-input{display:flex; gap:10px; margin-bottom:16px;}
 .todo-input input{
 flex:1;
-padding:16px 20px;
-border-radius:14px;
+padding:12px 14px;
+border-radius:10px;
 border:0;
-background:rgba(255,255,255,0.12);
+background:rgba(255,255,255,0.1);
 color:var(--text);
-font-size:16px;
-font-weight:600;
-backdrop-filter:blur(15px);
-transition:all 0.3s ease;
-box-shadow:0 4px 16px rgba(0,0,0,0.2);
+font-size:14px;
+backdrop-filter:blur(10px);
 }
-.todo-input input:focus{
-outline:none;
-background:rgba(255,255,255,0.2);
-box-shadow:0 8px 32px rgba(78,205,196,0.3);
-transform:translateY(-2px);
-}
-.todo-input input::placeholder{
-color:var(--muted);
-opacity:0.8;
-}
-
 .todo-input button{
-padding:16px 24px;
-border-radius:14px;
+padding:12px 16px;
+border-radius:10px;
 border:0;
 background:linear-gradient(135deg,var(--accent),#6ef0c9);
 color:#042726;
-font-weight:900;
-font-size:16px;
+font-weight:700;
+font-size:14px;
 cursor:pointer;
-transition:all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
-box-shadow:0 8px 24px rgba(78,205,196,0.4);
 white-space:nowrap;
 }
-.todo-input button:hover{
-transform:translateY(-4px) scale(1.02);
-box-shadow:0 20px 48px rgba(78,205,196,0.6);
-}
 
-.todo-list-container{
-flex:1;
-min-height:0;
-overflow:hidden;
-}
-ul#todo-list{
+.todo-list-container{flex:1; min-height:0; overflow:hidden;}
+#todo-list{
 list-style:none;
 padding:0;
 margin:0;
 overflow-y:auto;
-overflow-x:hidden;
-max-height:100%;
 height:100%;
 }
 
-ul#todo-list::-webkit-scrollbar{width:8px;}
-ul#todo-list::-webkit-scrollbar-track{
-background:rgba(255,255,255,0.1);
-border-radius:8px;
-}
-ul#todo-list::-webkit-scrollbar-thumb{
-background:linear-gradient(135deg,var(--accent),#6ef0c9);
-border-radius:8px;
-}
-ul#todo-list::-webkit-scrollbar-thumb:hover{
-background:var(--accent);
-}
+#todo-list::-webkit-scrollbar{width:6px;}
+#todo-list::-webkit-scrollbar-track{background:rgba(255,255,255,0.08);}
+#todo-list::-webkit-scrollbar-thumb{background:var(--accent);}
 
 li.quest{
 display:flex;
 justify-content:space-between;
 align-items:center;
-gap:16px;
-padding:20px 24px;
-margin-bottom:16px;
-border-radius:16px;
-background:linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0.04));
-border:1px solid rgba(255,255,255,0.15);
-transition:all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
-backdrop-filter:blur(10px);
-}
-li.quest:hover{
-transform:translateX(8px);
-box-shadow:0 12px 40px rgba(78,205,196,0.3);
-border-color:rgba(78,205,196,0.3);
-}
-
-.quest .left{
-display:flex;
-gap:16px;
-align-items:center;
-flex:1;
-min-width:0;
-}
-.checkbox{
-width:36px;
-height:36px;
-border-radius:12px;
-border:2px solid rgba(255,255,255,0.3);
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
+gap:10px;
+padding:14px 16px;
+margin-bottom:10px;
+border-radius:10px;
 background:rgba(255,255,255,0.08);
-transition:all 0.3s ease;
-flex-shrink:0;
-font-weight:900;
-font-size:18px;
+border:1px solid rgba(255,255,255,0.1);
 }
-.checkbox:hover{
-transform:scale(1.08);
-box-shadow:0 0 20px rgba(78,205,196,0.5);
-}
-.checkbox.done{
-background:linear-gradient(135deg,var(--success),#39FF14);
-border-color:var(--success);
-color:#042726;
-animation: checkPulse 0.6s ease-out;
-}
-@keyframes checkPulse{
-0%{transform:scale(0.8);}
-50%{transform:scale(1.2);}
-100%{transform:scale(1);}
-}
-
-.quest .desc{
-font-weight:700;
-font-size:16px;
-flex:1;
-overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
-}
-.quest .meta{
-font-size:14px;
-color:var(--muted);
-font-weight:500;
-flex-shrink:0;
-white-space:nowrap;
-}
-.quest button.del{
-padding:10px 14px;
-border-radius:12px;
-border:0;
-background:var(--danger);
-color:#fff;
+.quest .left{display:flex; gap:10px; align-items:center; flex:1;}
+.checkbox{
+width:28px;height:28px;
+border-radius:8px;
+border:2px solid rgba(255,255,255,0.2);
+display:flex;align-items:center;justify-content:center;
 cursor:pointer;
-font-weight:700;
-font-size:14px;
-transition:all 0.3s ease;
-flex-shrink:0;
-box-shadow:0 4px 16px rgba(255,90,90,0.3);
+background:rgba(255,255,255,0.05);
+font-weight:700;font-size:14px;
 }
-.quest button.del:hover{
-transform:translateY(-2px);
-box-shadow:0 12px 32px rgba(255,90,90,0.5);
-background:#ff6b6b;
+.checkbox.done{background:var(--success);border-color:var(--success);color:#042726;}
+.quest .desc{font-weight:600;font-size:14px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.quest .meta{font-size:12px;color:var(--muted);}
+.quest button.del{
+padding:6px 10px;border-radius:8px;border:0;background:var(--danger);color:#fff;
+font-weight:600;font-size:12px;cursor:pointer;
 }
+.quest.done .desc{text-decoration:line-through;opacity:0.7;}
 
-.quest.done .desc{
-text-decoration:line-through;
-opacity:0.8;
-color:#bfeee5;
-}
-.quest.done .meta{opacity:0.9;}
-
-/* TIMER - FULL HEIGHT */
 .timer-box{
-grid-area:timer;
 text-align:center;
-padding:40px 32px;
-justify-content:center;
-align-items:center;
-border:2px solid rgba(78,205,196,0.35);
-height: 100%;
-position:relative;
+padding:24px;
+height:100%;
 }
-
-.timer-box h1{display:none;}
-
 #timer{
-font-size:clamp(56px,8vw,72px);
+font-size:clamp(40px,8vw,56px);
 font-weight:900;
 background:linear-gradient(135deg,var(--accent),#6ef0c9);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
-background-clip:text;
-margin:32px 0 24px 0;
-letter-spacing: -2px;
-text-shadow:0 8px 32px rgba(78,205,196,0.5);
-animation: glow 2s ease-in-out infinite alternate;
-}
-@keyframes glow{
-from{text-shadow:0 8px 32px rgba(78,205,196,0.5);}
-to{text-shadow:0 8px 48px rgba(78,205,196,0.8);}
+margin:20px 0 16px 0;
 }
 
-.timer-controls{
-display:flex;
-gap:16px;
-justify-content:center;
-margin-bottom:24px;
-flex-wrap:wrap;
-}
+.timer-controls{display:flex;gap:10px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;}
 .timer-controls button{
-padding:16px 28px;
-border-radius:16px;
-border:0;
-cursor:pointer;
+padding:12px 18px;border-radius:10px;border:0;cursor:pointer;
 background:linear-gradient(135deg,var(--accent),#6ef0c9);
-color:#042726;
-font-weight:900;
-font-size:clamp(16px,2.5vw,18px);
-min-width:100px;
-transition:all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
-box-shadow:0 8px 32px rgba(78,205,196,0.4);
-text-transform: uppercase;
-letter-spacing: 0.5px;
+color:#042726;font-weight:700;font-size:14px;min-width:80px;
 }
-.timer-controls button[disabled]{
-opacity:0.6;
-cursor:not-allowed;
-transform:none;
-box-shadow:0 4px 12px rgba(78,205,196,0.2);
-}
-.timer-controls button:not([disabled]):hover{
-transform:translateY(-4px) scale(1.05);
-box-shadow:0 20px 48px rgba(78,205,196,0.6);
-}
+.timer-controls button[disabled]{opacity:0.5;cursor:not-allowed;}
 
-.settings{
-display:flex;
-gap:20px;
-justify-content:center;
-align-items:center;
-margin-top:20px;
-flex-wrap:wrap;
-}
-.settings label{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:8px;
-font-size:clamp(14px,2.2vw,16px);
-font-weight:600;
-}
+.settings{display:flex;gap:16px;justify-content:center;align-items:center;margin-top:12px;flex-wrap:wrap;}
+.settings label{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:13px;}
 .settings input{
-width:90px;
-padding:16px;
-border-radius:12px;
-border:0;
-background:rgba(255,255,255,0.15);
-color:var(--text);
-text-align:center;
-font-size:18px;
-font-weight:800;
-backdrop-filter:blur(15px);
-transition:all 0.3s ease;
-box-shadow:0 4px 16px rgba(0,0,0,0.2);
-}
-.settings input:focus{
-outline:none;
-background:rgba(255,255,255,0.25);
-box-shadow:0 8px 32px rgba(78,205,196,0.4);
+width:70px;padding:10px;border-radius:8px;border:0;
+background:rgba(255,255,255,0.1);color:var(--text);text-align:center;
+font-size:15px;font-weight:600;backdrop-filter:blur(10px);
 }
 
 .progress-row{
-display:flex;
-justify-content:space-between;
-gap:24px;
-margin-top:32px;
-align-items:center;
-font-size:clamp(15px,2.5vw,17px);
-color:var(--muted);
-width:100%;
-font-weight:600;
-padding-top:24px;
-border-top:1px solid rgba(255,255,255,0.1);
+display:flex;justify-content:space-between;gap:16px;margin-top:20px;
+font-size:13px;color:var(--muted);font-weight:600;
 }
 
-/* END DAY BUTTON - FIXED POSITION */
 #endDayBtn{
-position:fixed;
-bottom:24px;
-right:24px;
-padding:20px 28px;
-border-radius:20px;
-border:0;
-cursor:pointer;
+position:fixed;bottom:20px;right:20px;
+padding:14px 20px;border-radius:16px;border:0;cursor:pointer;
 background:linear-gradient(135deg,#ff6b6b,var(--danger));
-color:#fff;
-font-weight:900;
-font-size:16px;
-box-shadow:0 16px 48px rgba(255,90,90,0.4);
-display:flex;
-align-items:center;
-justify-content:center;
-gap:12px;
-transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+color:#fff;font-weight:700;font-size:14px;
+box-shadow:0 12px 32px rgba(255,90,90,0.4);
 z-index:100;
-white-space:nowrap;
-}
-#endDayBtn:hover{
-transform:translateY(-6px) scale(1.05);
-box-shadow:0 24px 64px rgba(255,90,90,0.6);
-background:linear-gradient(135deg,#ff8787,#ff6b6b);
 }
 
-/* INPUT FIXES */
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button{
--webkit-appearance:none;
-margin:0;
-}
-input[type=number]{-moz-appearance:textfield;}
-
-/* END-DAY MODAL - ENHANCED */
 #endDayOverlay{
-position:fixed;
-inset:0;
-background:rgba(3,6,18,0.98);
-backdrop-filter:blur(30px);
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:1000;
-opacity:0;
-pointer-events:none;
-transition:all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+position:fixed;inset:0;background:rgba(3,6,18,0.95);backdrop-filter:blur(20px);
+display:flex;align-items:center;justify-content:center;z-index:1000;
+opacity:0;pointer-events:none;transition:opacity 0.4s;
 padding:20px;
 }
-#endDayOverlay.active{
-opacity:1;
-pointer-events:auto;
-}
+#endDayOverlay.active{opacity:1;pointer-events:auto;}
 
 .end-day-content{
-text-align:center;
-width:100%;
-max-width:480px;
-padding:48px 40px;
-border-radius:24px;
-background:linear-gradient(135deg,rgba(8,10,20,0.99),rgba(4,6,10,0.95));
-box-shadow:0 40px 100px rgba(0,0,0,0.98);
-border:2px solid rgba(78,205,196,0.6);
-backdrop-filter:blur(30px);
-animation:modalSlide 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
-position:relative;
-overflow:hidden;
+text-align:center;max-width:400px;padding:32px 24px;
+background:rgba(8,10,20,0.98);border-radius:20px;
+box-shadow:0 30px 80px rgba(0,0,0,0.9);border:2px solid rgba(78,205,196,0.5);
 }
-
-.end-day-content::before{
-content:'';
-position:absolute;
-inset:0;
-background:linear-gradient(135deg,rgba(78,205,196,0.1),transparent);
-opacity:0.5;
-}
-
-@keyframes modalSlide{
-from{opacity:0;transform:scale(0.7) translateY(30px);}
-to{opacity:1;transform:scale(1) translateY(0);}
-}
-
 .end-day-circle{
-width:120px;
-height:120px;
-border-radius:50%;
-margin:0 auto 32px;
-background:radial-gradient(circle at 30% 20%,rgba(255,255,255,0.3),var(--accent));
+width:80px;height:80px;border-radius:50%;margin:0 auto 20px;
+background:radial-gradient(circle,rgba(255,255,255,0.3),var(--accent));
 position:relative;
-overflow:hidden;
-animation:endCircle 2s ease-out forwards;
-box-shadow:0 20px 60px rgba(78,205,196,0.4);
 }
 .end-day-check{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%) scale(0.2);
-opacity:0;
-font-size:52px;
-color:#042726;
-font-weight:900;
-animation:endCheck 1.8s 0.6s ease-out forwards;
+position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+font-size:36px;color:#042726;font-weight:900;opacity:0;
+animation:checkAnim 1.5s 0.5s forwards;
 }
-
-@keyframes endCircle{
-0%{transform:scale(0.2);opacity:0;}
-70%{transform:scale(1.1);opacity:1;}
-100%{transform:scale(1);opacity:1;}
-}
-@keyframes endCheck{
-0%{opacity:0;transform:translate(-50%,-50%) scale(0.2);}
-50%{opacity:1;transform:translate(-50%,-50%) scale(1.2);}
-100%{opacity:1;transform:translate(-50%,-50%) scale(1);}
-}
-
-.end-day-title{
-font-size:32px;
-margin-bottom:12px;
-font-weight:900;
-background:linear-gradient(135deg,var(--accent),#6ef0c9);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-background-clip:text;
-}
-.end-day-sub{
-font-size:16px;
-color:var(--muted);
-margin-bottom:24px;
-font-weight:500;
-}
+@keyframes checkAnim{to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+.end-day-title{font-size:24px;margin:0 0 8px 0;font-weight:900;background:linear-gradient(135deg,var(--accent),#6ef0c9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.end-day-sub{font-size:14px;color:var(--muted);margin-bottom:16px;}
 #endDaySummary{
-font-family:"Poppins",monospace;
-font-size:18px;
-min-height:80px;
-white-space:pre-line;
-margin-bottom:24px;
-background:rgba(255,255,255,0.08);
-padding:24px;
-border-radius:16px;
-border-left:5px solid var(--accent);
-backdrop-filter:blur(15px);
-box-shadow: inset 0 4px 16px rgba(0,0,0,0.3);
+font-family:monospace;font-size:15px;min-height:60px;
+white-space:pre-line;margin-bottom:16px;
+background:rgba(255,255,255,0.05);padding:16px;border-radius:12px;
+border-left:4px solid var(--accent);
 }
-.end-day-hint{
-font-size:14px;
-color:var(--muted);
-opacity:0.9;
-font-weight:500;
-}
+.end-day-hint{font-size:12px;color:var(--muted);}
 
-/* ===== RESPONSIVE BREAKPOINTS ===== */
 @media (max-width:1024px){
-.dashboard-grid{
-grid-template-columns:1fr;
-grid-template-rows:auto 1fr 1fr;
-grid-template-areas:
-"header"
-"timer"
-"todo";
-gap:20px;
-padding:20px;
-height: auto;
-min-height:100svh;
-}
+.dashboard-grid{grid-template-columns:1fr;grid-template-areas:"header" "timer" "todo";}
 .timer-box{height:auto;}
 }
-
 @media (max-width:768px){
-.dashboard-grid{
-padding:16px;
-gap:16px;
-}
-.header{
-flex-direction:column;
-text-align:center;
-gap:32px;
-padding:28px 24px;
-}
-.logo{width:56px;height:56px;}
-.header-datetime{
-width:100%;
-min-width:auto;
-margin-top:16px;
-}
-#timer{font-size:clamp(48px,12vw,64px);}
-.timer-controls{flex-direction:column;align-items:center;}
-.timer-controls button{width:100%;max-width:280px;}
-.settings{flex-direction:column;gap:16px;}
-.progress-row{flex-direction:column;gap:16px;text-align:center;}
-.todo-input{flex-direction:column;}
-.todo-container{padding:24px;}
-.timer-box{padding:32px 24px;}
-}
-
-@media (max-width:480px){
 .dashboard-grid{padding:12px;gap:12px;}
-.header{padding:24px 20px;}
-.todo-container{padding:20px;}
-.timer-box{padding:24px 20px;}
+.header{flex-direction:column;text-align:center;gap:16px;}
+.todo-input,.timer-controls,.settings{flex-direction:column;}
+.timer-controls button{width:100%;max-width:200px;}
 }
 </style>
 </head>
 <body>
 <div class="overlay"></div>
 <div class="dashboard-grid">
-<!-- HEADER: LOGO LEFT + DATE CENTER -->
 <header class="header">
-<!-- Logo + Text (Left) -->
-<div style="display:flex;align-items:center;gap:20px;">
-<img src="/GrindForge.png" alt="GrindForge Logo" class="logo">
+<div style="display:flex;align-items:center;gap:12px;">
+<img src="/GrindForge.png" alt="Logo" class="logo">
 <div class="brand-section">
-<h1 class="brand-title">GrindForge</h1>
-<p class="brand-subtitle">Pomodoro Productivity Dashboard</p>
+<h1>GrindForge</h1>
+<p>Pomodoro Dashboard</p>
 </div>
 </div>
-
-<!-- DATE (CENTER - LARGER & PROMINENT) -->
-<div id="datetime-box" class="header-datetime" aria-live="polite">Loading date...</div>
+<div id="datetime-box" class="header-datetime">Loading...</div>
 </header>
 
-<!-- TODO LIST (left column) -->
 <aside class="todo-container" aria-label="To-Do">
-<h2>To-Do List ✨</h2>
+<h2>📝 To-Do</h2>
 <div class="todo-input">
-<input id="todoInput" type="text" placeholder="Add your next quest..."/>
-<button id="addTaskBtn">+ Add Task</button>
+<input id="todoInput" type="text" placeholder="Add task..."/>
+<button id="addTaskBtn">Add</button>
 </div>
 <div class="todo-list-container">
-<ul id="todo-list" aria-live="polite"></ul>
+<ul id="todo-list"></ul>
 </div>
 </aside>
 
-<!-- TIMER (right column - full height) -->
-<section class="timer-box" aria-label="Pomodoro Timer">
-<div id="timer" aria-live="polite">25:00</div>
+<section class="timer-box" aria-label="Timer">
+<div id="timer">25:00</div>
 <div class="timer-controls">
-<button id="startBtn">▶️ Start</button>
-<button id="pauseBtn" disabled>⏸️ Pause</button>
+<button id="startBtn">▶ Start</button>
+<button id="pauseBtn" disabled>⏸ Pause</button>
 <button id="resetBtn">🔄 Reset</button>
 </div>
 <div class="settings">
-<label>Work
-<input id="workTime" type="number" min="1" value="25" maxlength="3"/>
-</label>
-<label>Break
-<input id="breakTime" type="number" min="1" value="5" maxlength="2"/>
-</label>
+<label>Work <input id="workTime" type="number" min="1" value="25"/></label>
+<label>Break <input id="breakTime" type="number" min="1" value="5"/></label>
 </div>
 <div class="progress-row">
 <div id="modeLabel">Mode: Work</div>
@@ -752,376 +333,233 @@ margin-top:16px;
 </section>
 </div>
 
-<!-- END DAY BUTTON - FIXED POSITION -->
 <button id="endDayBtn">🌙 End Day</button>
-
-<audio id="alarm" preload="metadata" src="alarm.mp3"></audio>
+<audio id="alarm" src="alarm.mp3" preload="auto"></audio>
 
 <div id="endDayOverlay">
 <div class="end-day-content">
-<div class="end-day-circle">
-<div class="end-day-check">✓</div>
-</div>
+<div class="end-day-circle"><div class="end-day-check">✓</div></div>
 <div class="end-day-title">Day Complete!</div>
-<div class="end-day-sub">Here's your productivity summary:</div>
+<div class="end-day-sub">Your summary:</div>
 <div id="endDaySummary"></div>
-<div class="end-day-hint">Press Esc or click to close</div>
+<div class="end-day-hint">Click or Esc to close</div>
 </div>
 </div>
 
 <script>
-class GrindForge {
-constructor() {
-    // ✅ ALL ELEMENTS PROPERLY SELECTED
-    this.alarm = document.getElementById('alarm');
-    this.startBtn = document.getElementById('startBtn');
-    this.pauseBtn = document.getElementById('pauseBtn');
-    this.resetBtn = document.getElementById('resetBtn');
-    this.timerDisplay = document.getElementById('timer');
-    this.workTimeInput = document.getElementById('workTime');
-    this.breakTimeInput = document.getElementById('breakTime');
-    this.modeLabel = document.getElementById('modeLabel');
-    this.sessionLabel = document.getElementById('sessionLabel');
-    this.todoInput = document.getElementById('todoInput');
-    this.addTaskBtn = document.getElementById('addTaskBtn');
-    this.todoList = document.getElementById('todo-list');
-    this.datetimeBox = document.getElementById('datetime-box');
-    this.endDayBtn = document.getElementById('endDayBtn');
-    this.endDayOverlay = document.getElementById('endDayOverlay');
-    this.endDaySummary = document.getElementById('endDaySummary');
+class GrindForge{
+constructor(){
+this.alarm=document.getElementById('alarm');
+this.startBtn=document.getElementById('startBtn');
+this.pauseBtn=document.getElementById('pauseBtn');
+this.resetBtn=document.getElementById('resetBtn');
+this.timerEl=document.getElementById('timer');
+this.workTime=document.getElementById('workTime');
+this.breakTime=document.getElementById('breakTime');
+this.modeLabel=document.getElementById('modeLabel');
+this.sessionLabel=document.getElementById('sessionLabel');
+this.todoInput=document.getElementById('todoInput');
+this.addTaskBtn=document.getElementById('addTaskBtn');
+this.todoList=document.getElementById('todo-list');
+this.datetimeBox=document.getElementById('datetime-box');
+this.endDayBtn=document.getElementById('endDayBtn');
+this.endDayOverlay=document.getElementById('endDayOverlay');
+this.endDaySummary=document.getElementById('endDaySummary');
 
-    // Storage keys
-    this.TASKS_KEY = 'gf_tasks_v4';
-    this.STATS_KEY = 'gf_stats_v4';
+this.TASKS_KEY='gf_tasks';
+this.STATS_KEY='gf_stats';
+this.isRunning=false;
+this.timerId=null;
+this.isWork=true;
+this.timeLeft=25*60;
+this.stats={sessions:0,seconds:0,date:''};
+this.tasks=[];
 
-    // Timer state
-    this.isRunning = false;
-    this.timerInterval = null;
-    this.isWorkMode = true;
-    this.timeLeft = 25 * 60;
-    this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: '' };
-
-    this.init();
+this.init();
 }
 
-init() {
-    console.log('✅ GrindForge Initialized'); // Debug log
-    
-    this.setupAlarm();
-    this.updateDateTime();
-    setInterval(() => this.updateDateTime(), 1000);
-    this.loadStats();
-    this.updateTimerDisplay();
-    this.updateModeLabel();
-    this.updateButtons();
-    this.loadTodos();
-
-    // ✅ ALL EVENT LISTENERS ATTACHED
-    this.startBtn.addEventListener('click', () => this.startTimer());
-    this.pauseBtn.addEventListener('click', () => this.pauseTimer());
-    this.resetBtn.addEventListener('click', () => this.resetTimer());
-    this.workTimeInput.addEventListener('change', () => this.updateWorkTime());
-    this.breakTimeInput.addEventListener('change', () => this.updateBreakTime());
-    this.addTaskBtn.addEventListener('click', () => this.addTask());
-    this.todoInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') this.addTask();
-    });
-    this.endDayBtn.addEventListener('click', () => this.endDay());
-    this.endDayOverlay.addEventListener('click', () => this.closeEndDay());
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') this.closeEndDay();
-    });
-
-    console.log('✅ All event listeners attached'); // Debug log
+init(){
+this.updateTime();
+setInterval(()=>this.updateTime(),1000);
+this.loadData();
+this.updateDisplay();
+this.bindEvents();
 }
 
-setupAlarm() {
-    this.alarm.volume = 0.8;
-    this.alarm.load();
+updateTime(){
+const now=new Date();
+const opts={weekday:'long',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false};
+this.datetimeBox.textContent=now.toLocaleDateString('en-IN',opts);
 }
 
-updateDateTime() {
-    const now = new Date();
-    const formatter = new Intl.DateTimeFormat('en-IN', {
-        weekday: 'long', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit', 
-        minute: '2-digit', 
-        hour12: false
-    });
-    this.datetimeBox.textContent = formatter.format(now);
+loadData(){
+try{
+const stats=localStorage.getItem(this.STATS_KEY);
+if(stats){
+const s=JSON.parse(stats);
+if(s.date===this.getDate()) this.stats=s;
+}
+const tasks=localStorage.getItem(this.TASKS_KEY);
+if(tasks) this.tasks=JSON.parse(tasks);
+}catch(e){console.log('Load error:',e);}
+this.renderTodos();
+this.updateSessionDisplay();
 }
 
-getTodayDate() {
-    const now = new Date();
-    return now.getFullYear() + '-' +
-        String(now.getMonth() + 1).padStart(2, '0') + '-' +
-        String(now.getDate()).padStart(2, '0');
+saveData(){
+localStorage.setItem(this.STATS_KEY,JSON.stringify(this.stats));
+localStorage.setItem(this.TASKS_KEY,JSON.stringify(this.tasks));
 }
 
-loadStats() {
-    try {
-        const saved = localStorage.getItem(this.STATS_KEY);
-        if (saved) {
-            const stats = JSON.parse(saved);
-            if (stats.lastDate === this.getTodayDate()) {
-                this.stats = stats;
-            } else {
-                this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: this.getTodayDate() };
-            }
-        } else {
-            this.stats.lastDate = this.getTodayDate();
-        }
-    } catch (e) {
-        this.stats.lastDate = this.getTodayDate();
-    }
-    this.updateStatsDisplay();
+getDate(){const d=new Date();return d.toISOString().split('T')[0];}
+
+updateDisplay(){
+const m=Math.floor(this.timeLeft/60),s=this.timeLeft%60;
+this.timerEl.textContent=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+this.modeLabel.textContent=`Mode: ${this.isWork?'Work':'Break'}`;
 }
 
-saveStats() {
-    localStorage.setItem(this.STATS_KEY, JSON.stringify(this.stats));
-    this.updateStatsDisplay();
+updateSessionDisplay(){this.sessionLabel.textContent=`Sessions: ${this.stats.sessions}`;}
+
+bindEvents(){
+this.startBtn.onclick=()=>this.start();
+this.pauseBtn.onclick=()=>this.pause();
+this.resetBtn.onclick=()=>this.reset();
+this.workTime.onchange=()=>this.isWork&&!this.isRunning&&(this.timeLeft=parseInt(this.workTime.value)*60,this.updateDisplay());
+this.breakTime.onchange=()=>!this.isWork&&!this.isRunning&&(this.timeLeft=parseInt(this.breakTime.value)*60,this.updateDisplay());
+this.addTaskBtn.onclick=()=>this.addTask();
+this.todoInput.onkeypress=e=>e.key==='Enter'&&this.addTask();
+this.endDayBtn.onclick=()=>this.endDay();
+this.endDayOverlay.onclick=this.closeEndDay.bind(this);
+document.onkeydown=e=>e.key==='Escape'&&this.closeEndDay();
 }
 
-updateStatsDisplay() {
-    this.sessionLabel.textContent = `Sessions: ${this.stats.sessionsCompleted}`;
+start(){
+if(this.isRunning) return;
+this.isRunning=true;
+this.startBtn.disabled=true;
+this.pauseBtn.disabled=false;
+this.timerId=setInterval(()=>{
+this.timeLeft--;
+this.updateDisplay();
+if(this.timeLeft<=0) this.complete();
+},1000);
 }
 
-updateTimerDisplay() {
-    const minutes = Math.floor(this.timeLeft / 60);
-    const seconds = this.timeLeft % 60;
-    this.timerDisplay.textContent = 
-        String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+pause(){
+clearInterval(this.timerId);
+this.timerId=null;
+this.isRunning=false;
+this.startBtn.disabled=false;
+this.pauseBtn.disabled=true;
 }
 
-updateModeLabel() {
-    this.modeLabel.textContent = `Mode: ${this.isWorkMode ? 'Work' : 'Break'}`;
+reset(){
+this.pause();
+this.isWork=true;
+this.timeLeft=parseInt(this.workTime.value)*60;
+this.updateDisplay();
 }
 
-updateButtons() {
-    this.startBtn.disabled = this.isRunning;
-    this.pauseBtn.disabled = !this.isRunning;
+complete(){
+this.pause();
+if(this.isWork){
+this.stats.seconds+=parseInt(this.workTime.value)*60;
+this.stats.sessions++;
+this.stats.date=this.getDate();
+this.saveData();
+this.playAlarm();
+}
+this.isWork=!this.isWork;
+this.timeLeft=this.isWork?parseInt(this.workTime.value)*60:parseInt(this.breakTime.value)*60;
+this.updateDisplay();
 }
 
-startTimer() {
-    console.log('▶️ Start clicked'); // Debug
-    if (this.isRunning) return;
-    this.isRunning = true;
-    this.updateButtons();
-    this.updateTimerDisplay();
-
-    this.timerInterval = setInterval(() => {
-        if (this.timeLeft > 0) {
-            this.timeLeft--;
-            this.updateTimerDisplay();
-        } else {
-            this.timerComplete();
-        }
-    }, 1000);
+playAlarm(){
+this.alarm.currentTime=0;
+this.alarm.play().catch(()=>{});  
 }
 
-pauseTimer() {
-    console.log('⏸️ Pause clicked'); // Debug
-    if (this.timerInterval) {
-        clearInterval(this.timerInterval);
-        this.timerInterval = null;
-    }
-    this.isRunning = false;
-    this.updateButtons();
+addTask(){
+const text=this.todoInput.value.trim();
+if(!text||text.length>80) return;
+this.tasks.push({id:Date.now()+Math.random(),text,done:false});
+this.saveData();
+this.todoInput.value='';
+this.renderTodos();
 }
 
-resetTimer() {
-    console.log('🔄 Reset clicked'); // Debug
-    this.pauseTimer();
-    this.isWorkMode = true;
-    this.timeLeft = parseInt(this.workTimeInput.value) * 60;
-    this.updateModeLabel();
-    this.updateTimerDisplay();
-}
+renderTodos(){
+this.todoList.innerHTML='';
+const undones=this.tasks.filter(t=>!t.done);
+const dones=this.tasks.filter(t=>t.done);
+[...undones,...dones].forEach(task=>{
+const li=document.createElement('li');
+li.className=`quest ${task.done?'done':''}`;
 
-updateWorkTime() {
-    if (!this.isRunning && this.isWorkMode) {
-        this.timeLeft = parseInt(this.workTimeInput.value) * 60;
-        this.updateTimerDisplay();
-    }
-}
+const left=document.createElement('div');
+left.className='left';
 
-updateBreakTime() {
-    if (!this.isRunning && !this.isWorkMode) {
-        this.timeLeft = parseInt(this.breakTimeInput.value) * 60;
-        this.updateTimerDisplay();
-    }
-}
+const cb=document.createElement('div');
+cb.className=`checkbox ${task.done?'done':''}`;
+cb.textContent=task.done?'✓':'';
+cb.onclick=()=>this.toggleTask(task.id);
 
-timerComplete() {
-    console.log('⏰ Timer complete!'); // Debug
-    this.pauseTimer();
+const desc=document.createElement('span');
+desc.className='desc';
+desc.textContent=task.text;
 
-    if (this.isWorkMode) {
-        this.stats.completedSeconds += (parseInt(this.workTimeInput.value) * 60);
-        this.stats.sessionsCompleted++;
-    }
+const meta=document.createElement('span');
+meta.className='meta';
+meta.textContent=task.done?'Done':'Active';
 
-    this.stats.lastDate = this.getTodayDate();
-    this.saveStats();
+left.appendChild(cb);
+left.appendChild(desc);
+left.appendChild(meta);
 
-    this.playAlarm();
+const del=document.createElement('button');
+del.className='del';
+del.textContent='✕';
+del.onclick=e=>{e.stopPropagation();this.deleteTask(task.id);};
 
-    this.isWorkMode = !this.isWorkMode;
-    this.timeLeft = this.isWorkMode ?
-        parseInt(this.workTimeInput.value) * 60 :
-        parseInt(this.breakTimeInput.value) * 60;
-
-    this.updateModeLabel();
-    this.updateTimerDisplay();
-}
-
-playAlarm() {
-    this.alarm.currentTime = 0;
-    this.alarm.play().catch(() => {
-        console.log('Alarm playback failed - check if alarm.mp3 exists');
-    });
-}
-
-loadTodos() {
-    try {
-        const saved = localStorage.getItem(this.TASKS_KEY);
-        if (saved) {
-            this.renderTodos(JSON.parse(saved));
-        }
-    } catch (e) {
-        this.renderTodos([]);
-    }
-}
-
-addTask() {
-    console.log('➕ Add task clicked'); // Debug
-    const text = this.todoInput.value.trim();
-    if (!text || text.length > 100) return;
-
-    const tasks = this.getTodos();
-    tasks.push({
-        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
-        text,
-        done: false,
-        createdAt: Date.now()
-    });
-    this.saveTodos(tasks);
-    this.todoInput.value = '';
-    this.renderTodos(tasks);
-}
-
-getTodos() {
-    try {
-        return JSON.parse(localStorage.getItem(this.TASKS_KEY) || '[]');
-    } catch (e) {
-        return [];
-    }
-}
-
-saveTodos(tasks) {
-    localStorage.setItem(this.TASKS_KEY, JSON.stringify(tasks));
-}
-
-renderTodos(tasks) {
-    this.todoList.innerHTML = '';
-    const incomplete = tasks.filter(task => !task.done);
-    const complete = tasks.filter(task => task.done);
-
-    [...incomplete, ...complete].forEach(task => {
-        const li = document.createElement('li');
-        li.className = `quest ${task.done ? 'done' : ''}`;
-
-        const left = document.createElement('div');
-        left.className = 'left';
-
-        const checkbox = document.createElement('div');
-        checkbox.className = `checkbox ${task.done ? 'done' : ''}`;
-        checkbox.innerHTML = task.done ? '✓' : '';
-        checkbox.addEventListener('click', () => this.toggleTask(task.id));
-
-        const desc = document.createElement('span');
-        desc.className = 'desc';
-        desc.textContent = task.text;
-
-        const meta = document.createElement('span');
-        meta.className = 'meta';
-        meta.textContent = task.done ? 'Completed' : 'Active';
-
-        left.appendChild(checkbox);
-        left.appendChild(desc);
-        left.appendChild(meta);
-
-        const delBtn = document.createElement('button');
-        delBtn.className = 'del';
-        delBtn.textContent = '✕';
-        delBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.deleteTask(task.id);
-        });
-
-        li.appendChild(left);
-        li.appendChild(delBtn);
-        this.todoList.appendChild(li);
-    });
-}
-
-toggleTask(id) {
-    const tasks = this.getTodos();
-    const task = tasks.find(t => t.id === id);
-    if (task) {
-        task.done = !task.done;
-        if (task.done) {
-            task.completedAt = Date.now();
-        } else {
-            delete task.completedAt;
-        }
-        this.saveTodos(tasks);
-        this.renderTodos(tasks);
-    }
-}
-
-deleteTask(id) {
-    const tasks = this.getTodos().filter(t => t.id !== id);
-    this.saveTodos(tasks);
-    this.renderTodos(tasks);
-}
-
-endDay() {
-    console.log('🌙 End Day clicked'); // Debug
-    this.loadStats();
-    const hours = (this.stats.completedSeconds / 3600).toFixed(2);
-    const sessions = this.stats.sessionsCompleted;
-    const todos = this.getTodos();
-    const completedTodos = todos.filter(t => t.done).length;
-    const totalTodos = todos.length;
-
-    const summary =
-        `🎉 DAY COMPLETE! 🎉\n\n` +
-        `⏰ ${sessions} session${sessions !== 1 ? 's' : ''} completed\n` +
-        `📊 ${hours} hour${hours !== '1.00' ? 's' : ''} of deep work\n` +
-        `✅ ${completedTodos}/${totalTodos} tasks completed\n\n` +
-        `Keep grinding! 💪`;
-
-    this.endDaySummary.textContent = summary;
-    this.endDayOverlay.classList.add('active');
-
-    // Reset stats for new day
-    this.stats = { completedSeconds: 0, sessionsCompleted: 0, lastDate: this.getTodayDate() };
-    this.saveStats();
-}
-
-closeEndDay() {
-    this.endDayOverlay.classList.remove('active');
-}
-}
-
-// ✅ START APP WHEN PAGE LOADS
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 DOM Loaded - Starting GrindForge');
-    new GrindForge();
+li.appendChild(left);
+li.appendChild(del);
+this.todoList.appendChild(li);
 });
+}
+
+toggleTask(id){
+const task=this.tasks.find(t=>t.id===id);
+if(task){
+task.done=!task.done;
+this.saveData();
+this.renderTodos();
+}
+}
+
+deleteTask(id){
+this.tasks=this.tasks.filter(t=>t.id!==id);
+this.saveData();
+this.renderTodos();
+}
+
+endDay(){
+const hours=(this.stats.seconds/3600).toFixed(1);
+const todos=this.tasks.filter(t=>t.done).length;
+const total=this.tasks.length;
+const summary=`🎉 DAY COMPLETE!\n\n⏰ ${this.stats.sessions} sessions\n📊 ${hours}h work\n✅ ${todos}/${total} tasks\n\nGreat job! 💪`;
+this.endDaySummary.textContent=summary;
+this.endDayOverlay.classList.add('active');
+this.stats={sessions:0,seconds:0,date:this.getDate()};
+this.saveData();
+}
+
+closeEndDay(){
+this.endDayOverlay.classList.remove('active');
+}
+}
+
+new GrindForge();
 </script>
 </body>
 </html>
