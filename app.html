@@ -90,6 +90,55 @@ header{
   backdrop-filter:blur(18px);
 }
 
+/* ===== TIMER ===== */
+.timer-box{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+}
+
+svg{width:240px;height:240px}
+
+#timerText{
+  font-size:32px;
+  font-weight:900;
+  fill:var(--accent-soft);
+}
+
+#modeText{
+  font-size:14px;
+  fill:var(--muted);
+  letter-spacing:2px;
+}
+
+.controls button{
+  padding:10px 18px;
+  margin:4px;
+  border:0;
+  border-radius:12px;
+  font-weight:700;
+  cursor:pointer;
+  color:white;
+  background:linear-gradient(135deg,var(--accent),var(--accent-soft));
+}
+
+.settings{
+  display:flex;
+  gap:10px;
+}
+
+.settings input{
+  width:70px;
+  padding:8px;
+  border-radius:8px;
+  border:0;
+  background:rgba(255,255,255,.1);
+  color:white;
+  text-align:center;
+}
+
+/* ===== TODO ===== */
 .todo-input{
   display:flex;
   gap:10px;
@@ -167,6 +216,31 @@ li{
   <div id="date"></div>
 </header>
 
+<!-- TIMER -->
+<section class="card timer-box">
+<svg viewBox="0 0 200 200">
+<circle cx="100" cy="100" r="90" stroke="#1f2933" stroke-width="12" fill="none"/>
+<circle id="progress" cx="100" cy="100" r="90"
+stroke="var(--accent)" stroke-width="12" fill="none"
+stroke-dasharray="565"
+transform="rotate(-90 100 100)"/>
+<text id="modeText" x="100" y="85" text-anchor="middle">WORK</text>
+<text id="timerText" x="100" y="115" text-anchor="middle">25:00</text>
+</svg>
+
+<div class="controls">
+<button id="startBtn">Start</button>
+<button id="pauseBtn">Pause</button>
+<button id="resetBtn">Reset</button>
+</div>
+
+<div class="settings">
+<label>Work <input id="workTime" value="25"></label>
+<label>Break <input id="breakTime" value="5"></label>
+</div>
+</section>
+
+<!-- TODO -->
 <section class="card">
 <h3>📝 To-Do</h3>
 <div class="todo-input">
@@ -180,6 +254,15 @@ li{
 
 <script>
 /* ===== DOM ===== */
+const startBtn = document.getElementById("startBtn");
+const pauseBtn = document.getElementById("pauseBtn");
+const resetBtn = document.getElementById("resetBtn");
+const timerText = document.getElementById("timerText");
+const modeText = document.getElementById("modeText");
+const progress = document.getElementById("progress");
+const workTime = document.getElementById("workTime");
+const breakTime = document.getElementById("breakTime");
+
 const todoInput = document.getElementById("todoInput");
 const addTaskBtn = document.getElementById("addTask");
 const todoList = document.getElementById("todoList");
@@ -194,12 +277,52 @@ setInterval(()=>{
   });
 },1000);
 
-/* ===== TODO ===== */
-let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+/* ===== POMODORO ===== */
+let work=true, running=false;
+let time=25*60, total=time, interval;
 
-function save(){
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+function renderTimer(){
+  const m=String(Math.floor(time/60)).padStart(2,"0");
+  const s=String(time%60).padStart(2,"0");
+  timerText.textContent=`${m}:${s}`;
+  modeText.textContent=work?"WORK":"BREAK";
+  progress.style.strokeDashoffset = 565 - (time/total)*565;
 }
+
+startBtn.onclick=()=>{
+  if(running) return;
+  running=true;
+  interval=setInterval(()=>{
+    if(time<=0){
+      work=!work;
+      time=(work?workTime.value:breakTime.value)*60;
+      total=time;
+    }
+    time--;
+    renderTimer();
+  },1000);
+};
+
+pauseBtn.onclick=()=>{
+  clearInterval(interval);
+  running=false;
+};
+
+resetBtn.onclick=()=>{
+  clearInterval(interval);
+  running=false;
+  work=true;
+  time=workTime.value*60;
+  total=time;
+  renderTimer();
+};
+
+renderTimer();
+
+/* ===== TODO ===== */
+let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
+
+function save(){localStorage.setItem("tasks",JSON.stringify(tasks))}
 
 function renderTodos(){
   todoList.innerHTML="";
@@ -209,10 +332,7 @@ function renderTodos(){
     const cb=document.createElement("div");
     cb.className="checkbox"+(t.done?" done":"");
     cb.textContent=t.done?"✓":"";
-    cb.onclick=()=>{
-      t.done=!t.done;
-      save(); renderTodos();
-    };
+    cb.onclick=()=>{t.done=!t.done;save();renderTodos()};
 
     const span=document.createElement("span");
     span.className="desc"+(t.done?" done":"");
@@ -221,10 +341,7 @@ function renderTodos(){
     const del=document.createElement("span");
     del.className="delete";
     del.textContent="✕";
-    del.onclick=()=>{
-      tasks.splice(i,1);
-      save(); renderTodos();
-    };
+    del.onclick=()=>{tasks.splice(i,1);save();renderTodos()};
 
     li.append(cb,span,del);
     todoList.appendChild(li);
@@ -232,11 +349,11 @@ function renderTodos(){
 }
 
 addTaskBtn.onclick=()=>{
-  const t = todoInput.value.trim();
+  const t=todoInput.value.trim();
   if(!t) return;
   tasks.push({text:t,done:false});
   todoInput.value="";
-  save(); renderTodos();
+  save();renderTodos();
 };
 
 todoInput.addEventListener("keydown",e=>{
@@ -248,7 +365,7 @@ renderTodos();
 /* ===== STARS ===== */
 const c=document.getElementById("stars"),ctx=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
-resize(); addEventListener("resize",resize);
+resize();addEventListener("resize",resize);
 let stars=[...Array(130)].map(()=>({
   x:Math.random()*c.width,
   y:Math.random()*c.height,
