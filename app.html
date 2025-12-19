@@ -1,883 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>GrindForge — Pomodoro</title>
-  <link rel="icon" type="image/png" href="/GrindForge.png" />
-  <style>
-    /* ==========================================================================
-       CSS CUSTOM PROPERTIES (COLORS & THEME)
-       ========================================================================== */
-    :root {
-      --accent: #4ecdc4;
-      --bg: #030612;
-      --card: rgba(4, 6, 10, 0.9);
-      --glass: rgba(0, 0, 0, 0.55);
-      --muted: #9adbd4;
-      --text: #dffcff;
-      --danger: #ff5a5a;
-      --success: #6ef0c9;
-      --shadow: rgba(2, 6, 10, 0.7);
-      --radius: 12px;
-      --gap: 12px;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GrindForge — Pomodoro</title>
+<link rel="icon" href="/GrindForge.png" />
+<style>
+:root{
+--accent:#4ecdc4;
+--bg:#030612;
+--card:rgba(4,6,10,.9);
+--text:#dffcff;
+--muted:#9adbd4;
+--danger:#ff5a5a;
+--success:#6ef0c9;
+--radius:14px;
+}
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Poppins,system-ui;
+color:var(--text);
+background:url(img.jpg) center/cover fixed;
+}
+.overlay{
+position:fixed;inset:0;
+background:rgba(0,0,0,.45);
+z-index:-1;
+}
+.dashboard{
+display:grid;
+grid-template-columns:1fr 1fr;
+grid-template-rows:auto 1fr;
+gap:14px;
+padding:14px;
+max-width:1300px;
+margin:auto;
+min-height:100vh;
+}
+header{
+grid-column:1/3;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 22px;
+background:var(--card);
+border-radius:var(--radius);
+}
+.brand{
+display:flex;
+gap:12px;
+align-items:center;
+}
+.brand img{width:42px}
+.brand h1{
+margin:0;
+font-size:20px;
+background:linear-gradient(135deg,var(--accent),var(--success));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+.header-info{
+text-align:right;
+font-size:13px;
+color:var(--muted);
+}
+.card{
+background:var(--card);
+border-radius:var(--radius);
+padding:20px;
+}
+.hidden{display:none}
 
-    /* ==========================================================================
-       GLOBAL RESET & BASE STYLES
-       ========================================================================== */
-    * {
-      box-sizing: border-box;
-    }
+/* TIMER */
+.timer{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:12px;
+}
+.progress-ring{
+width:200px;
+height:200px;
+}
+#timer{
+font-size:48px;
+font-weight:900;
+background:linear-gradient(135deg,var(--accent),var(--success));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+.controls button{
+margin:4px;
+padding:10px 16px;
+border-radius:10px;
+border:0;
+font-weight:700;
+cursor:pointer;
+background:linear-gradient(135deg,var(--accent),var(--success));
+}
+.settings{
+display:flex;
+gap:10px;
+}
+.settings input{
+width:70px;
+padding:8px;
+border-radius:8px;
+border:0;
+background:rgba(255,255,255,.1);
+color:white;
+text-align:center;
+}
 
-    html, body {
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      font-family: "Poppins", system-ui, sans-serif;
-      color: var(--text);
-      background-image: url('img.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      -webkit-tap-highlight-color: transparent;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    /* ==========================================================================
-       OVERLAY & LAYOUT GRID
-       ========================================================================== */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      grid-template-rows: auto 1fr;
-      grid-template-areas: 
-        "header header" 
-        "todo timer";
-      gap: var(--gap);
-      padding: var(--gap);
-      box-sizing: border-box;
-      max-width: 1400px;
-      margin: 0 auto;
-      height: 100vh;
-    }
-
-    /* ==========================================================================
-       HEADER STYLES
-       ========================================================================== */
-    .header {
-      grid-area: header;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      background: var(--card);
-      backdrop-filter: blur(20px);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      box-shadow: 0 20px 40px var(--shadow);
-      border: 1px solid rgba(78, 205, 196, 0.2);
-    }
-
-    .logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      box-shadow: 0 8px 20px rgba(78, 205, 196, 0.5);
-    }
-
-    .brand-section h1 {
-      font-size: 20px;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), #6ef0c9);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin: 0 0 2px 0;
-    }
-
-    .brand-section p {
-      font-size: 11px;
-      color: var(--muted);
-      margin: 0;
-      font-weight: 400;
-    }
-
-    .header-datetime {
-      font-size: 14px;
-      letter-spacing: 0.2px;
-      text-align: center;
-      padding: 12px 16px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      border: 1px solid rgba(78, 205, 196, 0.2);
-      backdrop-filter: blur(10px);
-      font-weight: 600;
-      min-width: 140px;
-    }
-
-    /* ==========================================================================
-       COMMON CARD STYLES
-       ========================================================================== */
-    .timer-box, 
-    .todo-container {
-      background: var(--card);
-      backdrop-filter: blur(20px);
-      border-radius: var(--radius);
-      box-shadow: 0 16px 40px var(--shadow);
-      border: 1px solid rgba(78, 205, 196, 0.15);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .timer-box {
-      grid-area: timer;
-    }
-
-    .todo-container {
-      grid-area: todo;
-      padding: 20px;
-    }
-
-    /* ==========================================================================
-       TODO STYLES
-       ========================================================================== */
-    .todo-container h2 {
-      margin: 0 0 16px 0;
-      font-size: 18px;
-      text-align: center;
-      background: linear-gradient(135deg, var(--accent), #6ef0c9);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .todo-input {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .todo-input input {
-      flex: 1;
-      padding: 12px 14px;
-      border-radius: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text);
-      font-size: 14px;
-      backdrop-filter: blur(10px);
-    }
-
-    .todo-input input::placeholder {
-      color: var(--muted) !important;
-      opacity: 1;
-    }
-
-    .todo-input input:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .todo-input button {
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 0;
-      background: linear-gradient(135deg, var(--accent), #6ef0c9);
-      color: #042726;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .todo-list-container {
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    #todo-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      overflow-y: auto;
-      height: 100%;
-    }
-
-    /* Custom Scrollbar */
-    #todo-list::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    #todo-list::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    #todo-list::-webkit-scrollbar-thumb {
-      background: var(--accent);
-    }
-
-    li.quest {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .quest .left {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex: 1;
-    }
-
-    .checkbox {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.05);
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .checkbox.done {
-      background: var(--success);
-      border-color: var(--success);
-      color: #042726;
-    }
-
-    .quest .desc {
-      font-weight: 600;
-      font-size: 14px;
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .quest .meta {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .quest button.del {
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 0;
-      background: var(--danger);
-      color: #fff;
-      font-weight: 600;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .quest.done .desc {
-      text-decoration: line-through;
-      opacity: 0.7;
-    }
-
-    /* ==========================================================================
-       TIMER STYLES
-       ========================================================================== */
-    .timer-box {
-      text-align: center;
-      padding: 24px;
-      height: 100%;
-    }
-
-    #timer {
-      font-size: clamp(40px, 8vw, 56px);
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--accent), #6ef0c9);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin: 20px 0 16px 0;
-    }
-
-    #modeLabel {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .timer-controls {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-
-    .timer-controls button {
-      padding: 12px 18px;
-      border-radius: 10px;
-      border: 0;
-      cursor: pointer;
-      background: linear-gradient(135deg, var(--accent), #6ef0c9);
-      color: #042726;
-      font-weight: 700;
-      font-size: 14px;
-      min-width: 80px;
-    }
-
-    .timer-controls button[disabled] {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .settings {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      align-items: center;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
-
-    .settings label {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      font-size: 13px;
-    }
-
-    .settings input {
-      width: 70px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 0;
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text);
-      text-align: center;
-      font-size: 15px;
-      font-weight: 600;
-      backdrop-filter: blur(10px);
-    }
-
-    /* ==========================================================================
-       END DAY BUTTON & OVERLAY (ALL FIXES APPLIED)
-       ========================================================================== */
-    #endDayBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 14px 20px;
-      border-radius: 16px;
-      border: 0;
-      cursor: pointer;
-      background: linear-gradient(135deg, #ff6b6b, var(--danger));
-      color: #fff;
-      font-weight: 700;
-      font-size: 14px;
-      box-shadow: 0 12px 32px rgba(255, 90, 90, 0.4);
-      z-index: 999;
-    }
-
-    #endDayOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(3, 6, 18, 0.95);
-      backdrop-filter: blur(20px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-      padding: 20px;
-    }
-
-    #endDayOverlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .end-day-content {
-      text-align: center;
-      max-width: 400px;
-      padding: 32px 24px;
-      background: rgba(8, 10, 20, 0.98);
-      border-radius: 20px;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
-      border: 2px solid rgba(78, 205, 196, 0.5);
-    }
-
-    .end-day-circle {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin: 0 auto 20px;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.3), var(--accent));
-      position: relative;
-    }
-
-    .end-day-check {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 36px;
-      color: #042726;
-      font-weight: 900;
-      opacity: 0;
-      animation: checkAnim 1.5s 0.5s forwards;
-    }
-
-    @keyframes checkAnim {
-      to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
-    }
-
-    .end-day-title {
-      font-size: 24px;
-      margin: 0 0 8px 0;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--accent), #6ef0c9);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .end-day-sub {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    #endDaySummary {
-      font-family: monospace;
-      font-size: 15px;
-      min-height: 60px;
-      white-space: pre-line;
-      margin-bottom: 16px;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 16px;
-      border-radius: 12px;
-      border-left: 4px solid var(--accent);
-    }
-
-    .end-day-hint {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    /* ==========================================================================
-       RESPONSIVE DESIGN
-       ========================================================================== */
-    @media (max-width: 1024px) {
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas: "header" "timer" "todo";
-      }
-      .timer-box {
-        height: auto;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .dashboard-grid {
-        padding: 12px;
-        gap: 12px;
-      }
-      .header {
-        flex-direction: column;
-        text-align: center;
-        gap: 16px;
-      }
-      .todo-input,
-      .timer-controls,
-      .settings {
-        flex-direction: column;
-      }
-      .timer-controls button {
-        width: 100%;
-        max-width: 200px;
-      }
-    }
-  </style>
+/* TODO */
+.todo-input{
+display:flex;
+gap:10px;
+margin-bottom:12px;
+}
+.todo-input input{
+flex:1;
+padding:12px;
+border-radius:10px;
+border:0;
+background:rgba(255,255,255,.1);
+color:white;
+}
+.todo-input button{
+padding:12px 16px;
+border-radius:10px;
+border:0;
+font-weight:700;
+background:linear-gradient(135deg,var(--accent),var(--success));
+}
+li{
+list-style:none;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+margin-bottom:8px;
+border-radius:10px;
+background:rgba(255,255,255,.08);
+}
+.checkbox{
+width:26px;height:26px;
+border-radius:8px;
+border:2px solid #aaa;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+}
+.checkbox.done{
+background:var(--success);
+border-color:var(--success);
+color:#042726;
+}
+.desc.done{text-decoration:line-through;opacity:.6}
+</style>
 </head>
 
 <body>
-  <!-- Background Overlay -->
-  <div class="overlay"></div>
+<div class="overlay"></div>
 
-  <!-- Main Dashboard Grid -->
-  <div class="dashboard-grid">
-    <!-- Header -->
-    <header class="header">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <img src="/GrindForge.png" alt="Logo" class="logo">
-        <div class="brand-section">
-          <h1>GrindForge</h1>
-          <p>Pomodoro Dashboard</p>
-        </div>
-      </div>
-      <div id="datetime-box" class="header-datetime">Loading...</div>
-    </header>
+<div class="dashboard">
 
-    <!-- To-Do List -->
-    <aside class="todo-container" aria-label="To-Do">
-      <h2>📝 To-Do</h2>
-      <div class="todo-input">
-        <input id="todoInput" type="text" placeholder="Type your task here..."/>
-        <button id="addTaskBtn">Add</button>
-      </div>
-      <div class="todo-list-container">
-        <ul id="todo-list"></ul>
-      </div>
-    </aside>
+<header>
+<div class="brand">
+<img src="/GrindForge.png">
+<h1>GrindForge</h1>
+</div>
+<div class="header-info">
+<div id="date"></div>
+<div>🔥 Streak: <span id="streak">0</span></div>
+</div>
+</header>
 
-    <!-- Pomodoro Timer -->
-    <section class="timer-box" aria-label="Timer">
-      <div id="modeLabel">Mode: Work</div>
-      <div id="timer">25:00</div>
-      <div class="timer-controls">
-        <button id="startBtn">▶ Start</button>
-        <button id="pauseBtn" disabled>⏸ Pause</button>
-        <button id="resetBtn">🔄 Reset</button>
-      </div>
-      <div class="settings">
-        <label>Work <input id="workTime" type="number" min="1" value="25"/></label>
-        <label>Break <input id="breakTime" type="number" min="1" value="5"/></label>
-      </div>
-    </section>
-  </div>
+<section class="card timer">
+<svg class="progress-ring">
+<circle cx="100" cy="100" r="90" stroke="#233" stroke-width="12" fill="none"/>
+<circle id="ring" cx="100" cy="100" r="90" stroke="#4ecdc4" stroke-width="12" fill="none"
+stroke-dasharray="565" stroke-dashoffset="0"/>
+</svg>
+<div id="mode">WORK</div>
+<div id="timer">25:00</div>
+<div class="controls">
+<button id="start">Start</button>
+<button id="pause">Pause</button>
+<button id="reset">Reset</button>
+</div>
+<div class="settings">
+<label>Work <input id="work" value="25"></label>
+<label>Break <input id="break" value="5"></label>
+</div>
+</section>
 
-  <!-- End Day Button -->
-  <button id="endDayBtn">🌙 End Day</button>
-  
-  <!-- Alarm Sound -->
-  <audio id="alarm" src="alarm.mp3" preload="auto"></audio>
+<section id="todoCard" class="card">
+<h3>📝 To-Do</h3>
+<div class="todo-input">
+<input id="todoInput" placeholder="Type your task...">
+<button id="add">Add</button>
+</div>
+<ul id="list"></ul>
+</section>
 
-  <!-- End Day Overlay -->
-  <div id="endDayOverlay">
-    <div class="end-day-content">
-      <div class="end-day-circle">
-        <div class="end-day-check">✓</div>
-      </div>
-      <div class="end-day-title">Day Complete!</div>
-      <div class="end-day-sub">Your summary:</div>
-      <div id="endDaySummary"></div>
-      <div class="end-day-hint">Click or Esc to close</div>
-    </div>
-  </div>
+</div>
 
-  <script>
-    class GrindForge {
-      constructor() {
-        // DOM Elements
-        this.alarm = document.getElementById('alarm');
-        this.startBtn = document.getElementById('startBtn');
-        this.pauseBtn = document.getElementById('pauseBtn');
-        this.resetBtn = document.getElementById('resetBtn');
-        this.timerEl = document.getElementById('timer');
-        this.modeLabel = document.getElementById('modeLabel');
-        this.workTime = document.getElementById('workTime');
-        this.breakTime = document.getElementById('breakTime');
-        this.todoInput = document.getElementById('todoInput');
-        this.addTaskBtn = document.getElementById('addTaskBtn');
-        this.todoList = document.getElementById('todo-list');
-        this.datetimeBox = document.getElementById('datetime-box');
-        this.endDayBtn = document.getElementById('endDayBtn');
-        this.endDayOverlay = document.getElementById('endDayOverlay');
-        this.endDaySummary = document.getElementById('endDaySummary');
+<audio id="alarm" src="alarm.mp3"></audio>
+<audio id="ting" src="ting.mp3"></audio>
 
-        // Storage Keys
-        this.TASKS_KEY = 'gf_tasks';
-        this.STATS_KEY = 'gf_stats';
+<script>
+class GrindForge{
+constructor(){
+this.time=25*60;
+this.total=this.time;
+this.work=true;
+this.running=false;
+this.timer=null;
 
-        // State
-        this.isRunning = false;
-        this.timerId = null;
-        this.isWork = true;
-        this.timeLeft = 25 * 60;
-        this.stats = { sessions: 0, seconds: 0, date: '' };
-        this.tasks = [];
+this.tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
+this.streak=+localStorage.getItem("streak")||0;
+this.lastDate=localStorage.getItem("date");
 
-        this.init();
-      }
+this.el={
+timer:timer,mode:mode,ring:ring,
+todo:list,input:todoInput,streak:streak,
+todoCard:todoCard
+};
 
-      init() {
-        this.updateTime();
-        setInterval(() => this.updateTime(), 1000);
-        this.loadData();
-        this.updateDisplay();
-        this.bindEvents();
-      }
+this.updateDate();
+this.loadTodos();
+this.updateRing();
+this.bind();
+}
 
-      /* ==========================================================================
-         TIME & DATE FUNCTIONS
-         ========================================================================== */
-      updateTime() {
-        const now = new Date();
-        const opts = {
-          weekday: 'long',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false
-        };
-        this.datetimeBox.textContent = now.toLocaleDateString('en-IN', opts);
-      }
+updateDate(){
+const d=new Date().toLocaleString("en-IN",{weekday:"long",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",hour12:false});
+date.textContent=d;
+}
 
-      getDate() {
-        const d = new Date();
-        return d.toISOString().split('T')[0];
-      }
+bind(){
+start.onclick=()=>this.start();
+pause.onclick=()=>this.pause();
+reset.onclick=()=>this.reset();
+add.onclick=()=>this.addTask();
+todoInput.onkeydown=e=>e.key==="Enter"&&this.addTask();
+}
 
-      /* ==========================================================================
-         DATA PERSISTENCE
-         ========================================================================== */
-      loadData() {
-        try {
-          const stats = localStorage.getItem(this.STATS_KEY);
-          if (stats) {
-            const s = JSON.parse(stats);
-            if (s.date === this.getDate()) this.stats = s;
-          }
-          
-          const tasks = localStorage.getItem(this.TASKS_KEY);
-          if (tasks) this.tasks = JSON.parse(tasks);
-        } catch (e) {}
-        
-        this.renderTodos();
-      }
+start(){
+if(this.running)return;
+this.running=true;
+this.el.todoCard.classList.add("hidden");
 
-      saveData() {
-        localStorage.setItem(this.STATS_KEY, JSON.stringify(this.stats));
-        localStorage.setItem(this.TASKS_KEY, JSON.stringify(this.tasks));
-      }
+this.timer=setInterval(()=>{
+if(this.time<=0){this.complete();return;}
+this.time--;
+this.update();
+},1000);
+}
 
-      /* ==========================================================================
-         TIMER FUNCTIONS
-         ========================================================================== */
-      updateDisplay() {
-        const m = Math.floor(this.timeLeft / 60);
-        const s = this.timeLeft % 60;
-        this.timerEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        this.modeLabel.textContent = `Mode: ${this.isWork ? 'Work' : 'Break'}`;
-      }
+pause(){
+clearInterval(this.timer);
+this.running=false;
+this.el.todoCard.classList.remove("hidden");
+}
 
-      start() {
-        if (this.isRunning) return;
-        
-        this.isRunning = true;
-        this.startBtn.disabled = true;
-        this.pauseBtn.disabled = false;
-        
-        this.timerId = setInterval(() => {
-          this.timeLeft--;
-          this.updateDisplay();
-          
-          if (this.timeLeft <= 0) this.complete();
-        }, 1000);
-      }
+reset(){
+this.pause();
+this.work=true;
+this.time=work.value*60;
+this.total=this.time;
+this.update();
+}
 
-      pause() {
-        clearInterval(this.timerId);
-        this.timerId = null;
-        this.isRunning = false;
-        this.startBtn.disabled = false;
-        this.pauseBtn.disabled = true;
-      }
+complete(){
+this.pause();
+alarm.play();
+this.work=!this.work;
+this.time=(this.work?work.value:break.value)*60;
+this.total=this.time;
 
-      reset() {
-        this.pause();
-        this.isWork = true;
-        this.timeLeft = parseInt(this.workTime.value) * 60;
-        this.updateDisplay();
-      }
+if(this.work){
+const today=new Date().toDateString();
+if(this.lastDate!==today){
+this.streak++;
+localStorage.setItem("streak",this.streak);
+localStorage.setItem("date",today);
+}
+}
+this.update();
+}
 
-      complete() {
-        this.pause();
-        
-        if (this.isWork) {
-          this.stats.seconds += parseInt(this.workTime.value) * 60;
-          this.stats.sessions++;
-          this.stats.date = this.getDate();
-          this.saveData();
-          this.playAlarm();
-        }
-        
-        this.isWork = !this.isWork;
-        this.timeLeft = this.isWork ? 
-          parseInt(this.workTime.value) * 60 : 
-          parseInt(this.breakTime.value) * 60;
-        this.updateDisplay();
-      }
+update(){
+this.el.timer.textContent=
+String(Math.floor(this.time/60)).padStart(2,"0")+":"+
+String(this.time%60).padStart(2,"0");
+this.el.mode.textContent=this.work?"WORK":"BREAK";
+this.el.streak.textContent=this.streak;
+this.updateRing();
+}
 
-      playAlarm() {
-        this.alarm.currentTime = 0;
-        this.alarm.play().catch(() => {});
-      }
+updateRing(){
+const offset=565-(this.time/this.total)*565;
+this.el.ring.style.strokeDashoffset=offset;
+this.el.ring.style.stroke=this.work?"#4ecdc4":"#ff5a5a";
+}
 
-      /* ==========================================================================
-         TODO FUNCTIONS
-         ========================================================================== */
-      addTask() {
-        const text = this.todoInput.value.trim();
-        if (!text || text.length > 80) return;
-        
-        this.tasks.push({
-          id: Date.now() + Math.random(),
-          text,
-          done: false
-        });
-        
-        this.saveData();
-        this.todoInput.value = '';
-        this.renderTodos();
-      }
+addTask(){
+const t=this.el.input.value.trim();
+if(!t)return;
+this.tasks.push({id:Date.now(),text:t,done:false});
+this.el.input.value="";
+this.saveTodos();
+this.loadTodos();
+}
 
-      renderTodos() {
-        this.todoList.innerHTML = '';
-        const undones = this.tasks.filter(t => !t.done);
-        const dones = this.tasks.filter(t => t.done);
-        
-        [...undones, ...dones].forEach(task => {
-          const li = document.createElement('li');
-          li.className = `quest ${task.done ? 'done' : ''}`;
+loadTodos(){
+this.el.todo.innerHTML="";
+this.tasks.forEach(t=>{
+const li=document.createElement("li");
+const cb=document.createElement("div");
+cb.className="checkbox"+(t.done?" done":"");
+cb.textContent=t.done?"✓":"";
+cb.onclick=()=>{
+t.done=!t.done;
+if(t.done)ting.play();
+this.saveTodos();this.loadTodos();
+};
+const span=document.createElement("span");
+span.textContent=t.text;
+span.className="desc"+(t.done?" done":"");
+li.append(cb,span);
+this.el.todo.appendChild(li);
+});
+}
 
-          // Left section (checkbox + description + meta)
-          const left = document.createElement('div');
-          left.className = 'left';
+saveTodos(){
+localStorage.setItem("tasks",JSON.stringify(this.tasks));
+}
+}
 
-          const cb = document.createElement('div');
-          cb.className = `checkbox ${task.done ? 'done' : ''}`;
-          cb.textContent = task.done ? '✓' : '';
-          cb.onclick = () => this.toggleTask(task.id);
-
-          const desc = document.createElement('span');
-          desc.className = 'desc';
-          desc.textContent = task.text;
-
-          const meta = document.createElement('span');
-          meta.className = 'meta';
-          meta.textContent = task.done ? 'Done' : 'Active';
-
-          left.appendChild(cb);
-          left.appendChild(desc);
-          left.appendChild(meta);
-
-          // Delete button
-          const del = document.createElement('button');
-          del.className = 'del';
-          del.textContent = '✕';
-          del.onclick = e => {
-            e.stopPropagation();
-            this.deleteTask(task.id);
-          };
-
-          li.appendChild(left);
-          li.appendChild(del);
-          this.todoList.appendChild(li);
-        });
-      }
-
-      toggleTask(id) {
-        const task = this.tasks.find(t => t.id === id);
-        if (task) {
-          task.done = !task.done;
-          this.saveData();
-          this.renderTodos();
-        }
-      }
-
-      deleteTask(id) {
-        this.tasks = this.tasks.filter(t => t.id !== id);
-        this.saveData();
-        this.renderTodos();
-      }
-
-      /* ==========================================================================
-         END DAY FUNCTIONS
-         ========================================================================== */
-      endDay() {
-        const hours = (this.stats.seconds / 3600).toFixed(1);
-        const todos = this.tasks.filter(t => t.done).length;
-        const total = this.tasks.length;
-        
-        const summary = `🎉 DAY COMPLETE!\n\n⏰ ${this.stats.sessions} sessions\n📊 ${hours}h work\n✅ ${todos}/${total} tasks\n\nGreat job! 💪`;
-        
-        this.endDaySummary.textContent = summary;
-        this.endDayOverlay.classList.add('active');
-        
-        // Reset stats for new day
-        this.stats = { sessions: 0, seconds: 0, date: this.getDate() };
-        this.saveData();
-      }
-
-      closeEndDay() {
-        this.endDayOverlay.classList.remove('active');
-      }
-
-      /* ==========================================================================
-         EVENT BINDINGS
-         ========================================================================== */
-      bindEvents() {
-        // Timer controls
-        this.startBtn.onclick = () => this.start();
-        this.pauseBtn.onclick = () => this.pause();
-        this.resetBtn.onclick = () => this.reset();
-
-        // Time settings
-        this.workTime.onchange = () => {
-          if (this.isWork && !this.isRunning) {
-            this.timeLeft = parseInt(this.workTime.value) * 60;
-            this.updateDisplay();
-          }
-        };
-        
-        this.breakTime.onchange = () => {
-          if (!this.isWork && !this.isRunning) {
-            this.timeLeft = parseInt(this.breakTime.value) * 60;
-            this.updateDisplay();
-          }
-        };
-
-        // Todo controls
-        this.addTaskBtn.onclick = () => this.addTask();
-        this.todoInput.onkeypress = e => e.key === 'Enter' && this.addTask();
-
-        // End day controls
-        this.endDayBtn.onclick = () => this.endDay();
-        this.endDayOverlay.onclick = this.closeEndDay.bind(this);
-        document.onkeydown = e => e.key === 'Escape' && this.closeEndDay();
-      }
-    }
-
-    // Initialize App
-    new GrindForge();
-  </script>
+new GrindForge();
+</script>
 </body>
 </html>
