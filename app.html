@@ -1,908 +1,447 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GrindForge - Ultimate Focus Dashboard</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0a0e17;
-            --bg-secondary: #0f1625;
-            --bg-gradient: linear-gradient(135deg, #0a0e17 0%, #0f1625 25%, #1a1f3a 50%, #0c1428 100%);
-            --accent-gold: #f4c430;
-            --accent-orange: #ff6b35;
-            --accent-cyan: #4ecdc4;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --shadow-glow: 0 25px 50px -12px rgba(244, 196, 48, 0.25);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            color: var(--text-primary);
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Animated Particles */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .particle {
-            position: absolute;
-            background: radial-gradient(circle, var(--accent-gold) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: float 20s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-
-        /* Header */
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 24px 48px;
-            backdrop-filter: blur(40px);
-            background: rgba(10, 14, 23, 0.8);
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .header-content {
-            max-width: 1440px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo {
-            width: 56px;
-            height: 56px;
-            filter: drop-shadow(0 0 24px rgba(244, 196, 48, 0.6));
-            transition: all 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .brand-title {
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange), var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.02em;
-        }
-
-        .header-stats {
-            display: flex;
-            gap: 24px;
-        }
-
-        .stat-pill {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            padding: 12px 20px;
-            border-radius: 50px;
-            border: 1px solid var(--glass-border);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .stat-pill:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        /* Main Dashboard */
-        .dashboard {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 48px 48px 24px;
-            display: grid;
-            grid-template-columns: 1fr 420px;
-            gap: 48px;
-            min-height: calc(100vh - 140px);
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Hero Timer - PERFECTLY CENTERED */
-        .hero-timer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 600px;
-        }
-
-        .timer-mega-container {
-            position: relative;
-            margin-bottom: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .timer-mega {
-            width: 420px;
-            height: 420px;
-            border-radius: 50%;
-            background: conic-gradient(
-                from 0deg,
-                var(--accent-gold) 0deg,
-                var(--accent-orange) var(--progress, 0deg),
-                var(--accent-cyan) var(--progress, 0deg),
-                transparent 0deg
-            );
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 
-                0 0 80px rgba(244, 196, 48, 0.4),
-                inset 0 0 80px rgba(0, 0, 0, 0.6),
-                0 0 0 2px rgba(255, 255, 255, 0.1);
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .timer-inner-circle {
-            position: absolute;
-            width: 340px;
-            height: 340px;
-            border-radius: 50%;
-            background: 
-                radial-gradient(circle at 30% 30%, rgba(244, 196, 48, 0.15) 0%, transparent 50%),
-                linear-gradient(145deg, rgba(15, 22, 37, 0.95), rgba(10, 14, 23, 0.98));
-            backdrop-filter: blur(50px);
-            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-        }
-
-        .timer-display {
-            position: relative;
-            z-index: 3;
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(4.5rem, 12vw, 6.5rem);
-            font-weight: 900;
-            text-align: center;
-            background: linear-gradient(135deg, var(--text-primary), #e2e8f0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 40px rgba(248, 250, 252, 0.8);
-            padding: 0;
-            margin: 0;
-        }
-
-        .phase-badge {
-            position: absolute;
-            top: -12px;
-            right: -12px;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
-            color: #0a0e17;
-            padding: 12px 24px;
-            border-radius: 32px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            box-shadow: 0 12px 40px rgba(244, 196, 48, 0.5);
-            animation: phasePulse 2s infinite ease-in-out;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        @keyframes phasePulse {
-            0%, 100% { transform: scale(1) rotate(-2deg); }
-            50% { transform: scale(1.08) rotate(2deg); }
-        }
-
-        /* Controls */
-        .timer-controls {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .btn {
-            padding: 18px 36px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            font-family: inherit;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.6s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
-            color: #0a0e17;
-            box-shadow: var(--shadow-glow);
-            min-width: 160px;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 30px 60px rgba(244, 196, 48, 0.5);
-        }
-
-        .btn-secondary {
-            background: var(--glass-bg);
-            color: var(--text-primary);
-            border: 2px solid var(--glass-border);
-            backdrop-filter: blur(20px);
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(244, 196, 48, 0.5);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        /* Sidebar Panels */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-        }
-
-        .panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(40px);
-            border-radius: 28px;
-            padding: 36px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 
-                0 32px 64px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .panel:hover {
-            transform: translateY(-8px);
-            box-shadow: 
-                0 40px 80px rgba(0, 0, 0, 0.5),
-                0 0 40px rgba(244, 196, 48, 0.15);
-        }
-
-        .panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-gold), var(--accent-orange), var(--accent-cyan));
-            border-radius: 28px 28px 0 0;
-        }
-
-        .panel-title {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 28px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            letter-spacing: -0.01em;
-        }
-
-        /* Settings */
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .input-group label {
-            font-weight: 600;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            letter-spacing: 0.02em;
-        }
-
-        input[type="number"] {
-            padding: 16px;
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-primary);
-            font-size: 1.1rem;
-            font-weight: 500;
-            backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
-        }
-
-        input[type="number"]:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.2);
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        /* Tasks */
-        .task-input-container {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .task-input-container input {
-            flex: 1;
-            padding: 16px 20px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            font-size: 1rem;
-        }
-
-        .tasks-list {
-            max-height: 320px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .task-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-        }
-
-        .task-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(8px);
-            border-color: rgba(244, 196, 48, 0.3);
-        }
-
-        .task-item.completed {
-            opacity: 0.6;
-            text-decoration: line-through;
-        }
-
-        .task-checkbox {
-            width: 24px;
-            height: 24px;
-            accent-color: var(--accent-gold);
-            cursor: pointer;
-        }
-
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 28px 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-6px);
-            background: rgba(244, 196, 48, 0.1);
-            border-color: rgba(244, 196, 48, 0.3);
-        }
-
-        .stat-value {
-            font-size: 2.8rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            font-family: 'Orbitron', monospace;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
-        }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 120px;
-            right: -480px;
-            background: linear-gradient(135deg, rgba(244, 196, 48, 0.98), rgba(255, 107, 53, 0.95));
-            color: #0a0e17;
-            padding: 28px 40px;
-            border-radius: 24px;
-            box-shadow: 0 32px 80px rgba(244, 196, 48, 0.4);
-            font-weight: 700;
-            font-size: 1.15rem;
-            z-index: 1000;
-            transition: right 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            backdrop-filter: blur(20px);
-        }
-
-        .notification.show {
-            right: 48px;
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-                padding: 32px 24px;
-                gap: 32px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header { padding: 20px 24px; }
-            .timer-mega { width: 320px; height: 320px; }
-            .timer-inner-circle { width: 260px; height: 260px; }
-            .timer-display { font-size: 4rem; }
-            .timer-controls { flex-direction: column; gap: 20px; }
-            .btn { width: 280px; justify-content: center; }
-            .settings-grid { grid-template-columns: 1fr; }
-            .panel { padding: 24px; }
-        }
-    </style>
-</head>
-<body>
-    <!-- Animated Particles -->
-    <div class="particles" id="particles"></div>
-
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo-section">
-                <img src="GrindForge.png" alt="GrindForge" class="logo" 
-                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHZpZXdCb3g9IjAgMCA1NiA1NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMjgiIGZpbGw9ImxpbmVhci1ncmFkaWVudChmcm9tVG9Cb3R0b20sICNGNEY0MzAsICNGRjZCMzUpIi8+Cjx0ZXh0IHg9IjI4IiB5PSIzNCIgZm9udC1mYW1pbHk9Ik9yYml0cm9uIiBmb250LXNpemU9IjIwIiBmaWxsPSIjMEExRTE3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HRjwvdGV4dD4KPC9zdmc+'">
-                <div class="brand-title">GrindForge</div>
-            </div>
-            <div class="header-stats">
-                <div class="stat-pill">
-                    <span id="headerPomodoros">0</span> Today
-                </div>
-                <div class="stat-pill">
-                    Streak: <span id="headerStreak">0</span>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Dashboard -->
-    <main class="dashboard">
-        <!-- Hero Timer Section -->
-        <section class="hero-timer">
-            <div class="timer-mega-container">
-                <div class="timer-mega" id="timerMega">
-                    <div class="timer-inner-circle">
-                        <div class="timer-display" id="timerDisplay">25:00</div>
-                    </div>
-                    <div class="phase-badge" id="phaseBadge">WORK</div>
-                </div>
-            </div>
-            <div class="timer-controls">
-                <button class="btn btn-primary" id="startBtn">▶ Start Session</button>
-                <button class="btn btn-secondary" id="pauseBtn">⏸ Pause</button>
-                <button class="btn btn-secondary" id="resetBtn">🔄 Reset</button>
-            </div>
-        </section>
-
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <!-- Quick Settings -->
-            <div class="panel">
-                <h3 class="panel-title">⚙️ Quick Settings</h3>
-                <div class="settings-grid">
-                    <div class="input-group">
-                        <label>Work Duration (min)</label>
-                        <input type="number" id="workTime" value="25" min="1" max="90">
-                    </div>
-                    <div class="input-group">
-                        <label>Short Break (min)</label>
-                        <input type="number" id="shortBreak" value="5" min="1" max="30">
-                    </div>
-                    <div class="input-group">
-                        <label>Long Break (min)</label>
-                        <input type="number" id="longBreak" value="15" min="5" max="60">
-                    </div>
-                    <div class="input-group">
-                        <label>Pomodoros per Long Break</label>
-                        <input type="number" id="longBreakInterval" value="4" min="2" max="10">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tasks -->
-            <div class="panel">
-                <h3 class="panel-title">📋 Task Forge</h3>
-                <div class="task-input-container">
-                    <input type="text" id="taskInput" placeholder="What are you forging today?">
-                    <button class="btn btn-primary" id="addTaskBtn">Add Task</button>
-                </div>
-                <div class="tasks-list" id="tasksList">
-                    <div style="text-align: center; opacity: 0.5; padding: 20px;">Add your first task!</div>
-                </div>
-            </div>
-
-            <!-- Stats -->
-            <div class="panel">
-                <h3 class="panel-title">📊 Grind Stats</h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalPomodoros">0</div>
-                        <div class="stat-label">Pomodoros</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalTime">0h</div>
-                        <div class="stat-label">Focus Time</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="currentStreak">0</div>
-                        <div class="stat-label">Streak</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="bestStreak">0</div>
-                        <div class="stat-label">Best Streak</div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-    </main>
-
-    <!-- Notification -->
-    <div class="notification" id="notification"></div>
-
-    <script>
-class GrindForge {
-    constructor() {
-        this.timerInterval = null;
-        this.isRunning = false;
-        this.currentPhase = 'work';
-        this.pomodorosCompleted = 0;
-
-        this.stats = JSON.parse(localStorage.getItem('grindforge_stats')) || {};
-        this.tasks = JSON.parse(localStorage.getItem('grindforge_tasks')) || [];
-
-        this.audioContext = null;
-        this.init();
-    }
-
-    init() {
-        this.cacheElements();
-        this.bindEvents();
-        this.loadSettings();
-        this.resetTimer();
-        this.renderTasks();
-        this.updateStats();
-        this.createParticles();
-    }
-
-    cacheElements() {
-        this.el = {
-            timerDisplay: document.getElementById('timerDisplay'),
-            timerMega: document.getElementById('timerMega'),
-            phaseBadge: document.getElementById('phaseBadge'),
-            startBtn: document.getElementById('startBtn'),
-            pauseBtn: document.getElementById('pauseBtn'),
-            resetBtn: document.getElementById('resetBtn'),
-            workTime: document.getElementById('workTime'),
-            shortBreak: document.getElementById('shortBreak'),
-            longBreak: document.getElementById('longBreak'),
-            longBreakInterval: document.getElementById('longBreakInterval'),
-            taskInput: document.getElementById('taskInput'),
-            addTaskBtn: document.getElementById('addTaskBtn'),
-            tasksList: document.getElementById('tasksList'),
-            totalPomodoros: document.getElementById('totalPomodoros'),
-            totalTime: document.getElementById('totalTime'),
-            currentStreak: document.getElementById('currentStreak'),
-            bestStreak: document.getElementById('bestStreak'),
-            headerPomodoros: document.getElementById('headerPomodoros'),
-            headerStreak: document.getElementById('headerStreak'),
-            notification: document.getElementById('notification')
-        };
-    }
-
-    bindEvents() {
-        this.el.startBtn.onclick = () => this.startTimer();
-        this.el.pauseBtn.onclick = () => this.pauseTimer();
-        this.el.resetBtn.onclick = () => this.resetTimer();
-
-        this.el.addTaskBtn.onclick = () => this.addTask();
-        this.el.taskInput.onkeydown = e => e.key === 'Enter' && this.addTask();
-
-        [this.el.workTime, this.el.shortBreak, this.el.longBreak, this.el.longBreakInterval]
-            .forEach(i => i.onchange = () => this.saveSettings());
-    }
-
-    /* ================= TIMER ================= */
-
-    startTimer() {
-        if (this.isRunning) return;
-
-        this.isRunning = true;
-        this.el.startBtn.textContent = '⏹ Running';
-        this.el.pauseBtn.textContent = '⏸ Pause';
-
-        this.timerInterval = setInterval(() => {
-            this.timeLeft--;
-            this.updateDisplay();
-
-            if (this.timeLeft <= 0) {
-                this.finishPhase();
-            }
-        }, 1000);
-    }
-
-    pauseTimer() {
-        if (!this.isRunning) return;
-
-        clearInterval(this.timerInterval);
-        this.isRunning = false;
-        this.el.startBtn.textContent = '▶ Resume';
-        this.el.pauseBtn.textContent = '⏸ Paused';
-    }
-
-    resetTimer() {
-        clearInterval(this.timerInterval);
-        this.isRunning = false;
-        this.currentPhase = 'work';
-        this.timeLeft = this.el.workTime.value * 60;
-
-        this.el.phaseBadge.textContent = 'WORK';
-        this.el.startBtn.textContent = '▶ Start Session';
-        this.el.pauseBtn.textContent = '⏸ Pause';
-
-        this.updateDisplay();
-    }
-
-    finishPhase() {
-        clearInterval(this.timerInterval);
-        this.isRunning = false;
-
-        if (this.currentPhase === 'work') {
-            this.pomodorosCompleted++;
-            this.playSound();
-            this.notify('🔥 Work complete!');
-        } else {
-            this.notify('💪 Break finished!');
-        }
-
-        const interval = +this.el.longBreakInterval.value;
-
-        if (this.currentPhase === 'work' && this.pomodorosCompleted % interval === 0) {
-            this.currentPhase = 'longBreak';
-            this.timeLeft = this.el.longBreak.value * 60;
-            this.el.phaseBadge.textContent = 'LONG BREAK';
-        } else if (this.currentPhase === 'work') {
-            this.currentPhase = 'shortBreak';
-            this.timeLeft = this.el.shortBreak.value * 60;
-            this.el.phaseBadge.textContent = 'SHORT BREAK';
-        } else {
-            this.currentPhase = 'work';
-            this.timeLeft = this.el.workTime.value * 60;
-            this.el.phaseBadge.textContent = 'WORK';
-        }
-
-        this.updateStats();
-        this.el.startBtn.textContent = '▶ Next Phase';
-        this.updateDisplay();
-    }
-
-    updateDisplay() {
-        const m = Math.floor(this.timeLeft / 60);
-        const s = this.timeLeft % 60;
-        this.el.timerDisplay.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-
-        const total = this.getPhaseMinutes() * 60;
-        const progress = ((total - this.timeLeft) / total) * 360;
-        this.el.timerMega.style.setProperty('--progress', `${progress}deg`);
-    }
-
-    getPhaseMinutes() {
-        return this.currentPhase === 'work'
-            ? +this.el.workTime.value
-            : this.currentPhase === 'shortBreak'
-            ? +this.el.shortBreak.value
-            : +this.el.longBreak.value;
-    }
-
-    /* ================= TASKS ================= */
-
-    addTask() {
-        const text = this.el.taskInput.value.trim();
-        if (!text) return;
-
-        this.tasks.unshift({ id: Date.now(), text, completed: false });
-        this.el.taskInput.value = '';
-        this.saveTasks();
-        this.renderTasks();
-    }
-
-    toggleTask(id) {
-        const t = this.tasks.find(x => x.id === id);
-        t.completed = !t.completed;
-        this.saveTasks();
-        this.renderTasks();
-    }
-
-    deleteTask(id) {
-        this.tasks = this.tasks.filter(t => t.id !== id);
-        this.saveTasks();
-        this.renderTasks();
-    }
-
-    renderTasks() {
-        if (!this.tasks.length) {
-            this.el.tasksList.innerHTML = '<div style="opacity:.5;text-align:center">Add your first task!</div>';
-            return;
-        }
-
-        this.el.tasksList.innerHTML = this.tasks.map(t => `
-            <div class="task-item ${t.completed ? 'completed':''}" onclick="grindforge.toggleTask(${t.id})">
-                <input type="checkbox" ${t.completed?'checked':''}>
-                <span>${t.text}</span>
-                <button onclick="event.stopPropagation();grindforge.deleteTask(${t.id})">×</button>
-            </div>
-        `).join('');
-    }
-
-    saveTasks() {
-        localStorage.setItem('grindforge_tasks', JSON.stringify(this.tasks));
-    }
-
-    /* ================= STATS ================= */
-
-    updateStats() {
-        const today = new Date().toDateString();
-        this.stats[today] = this.stats[today] || { pomodoros: 0 };
-        this.stats[today].pomodoros = this.pomodorosCompleted;
-
-        const all = Object.values(this.stats).map(s => s.pomodoros);
-        this.el.totalPomodoros.textContent = this.pomodorosCompleted;
-        this.el.currentStreak.textContent = this.pomodorosCompleted;
-        this.el.bestStreak.textContent = Math.max(...all, 0);
-        this.el.headerPomodoros.textContent = this.pomodorosCompleted;
-        this.el.headerStreak.textContent = this.pomodorosCompleted;
-
-        localStorage.setItem('grindforge_stats', JSON.stringify(this.stats));
-    }
-
-    /* ================= UTILS ================= */
-
-    notify(msg) {
-        this.el.notification.textContent = msg;
-        this.el.notification.classList.add('show');
-        setTimeout(() => this.el.notification.classList.remove('show'), 4000);
-    }
-
-    playSound() {
-        if (!this.audioContext) this.audioContext = new AudioContext();
-        const o = this.audioContext.createOscillator();
-        const g = this.audioContext.createGain();
-        o.connect(g); g.connect(this.audioContext.destination);
-        o.frequency.value = 900;
-        g.gain.value = 0.3;
-        o.start();
-        o.stop(this.audioContext.currentTime + 0.3);
-    }
-
-    loadSettings() {
-        const s = JSON.parse(localStorage.getItem('grindforge_settings')) || {};
-        Object.keys(s).forEach(k => this.el[k].value = s[k]);
-    }
-
-    saveSettings() {
-        localStorage.setItem('grindforge_settings', JSON.stringify({
-            workTime: this.el.workTime.value,
-            shortBreak: this.el.shortBreak.value,
-            longBreak: this.el.longBreak.value,
-            longBreakInterval: this.el.longBreakInterval.value
-        }));
-    }
-
-    createParticles() {
-        const p = document.getElementById('particles');
-        for (let i = 0; i < 40; i++) {
-            const d = document.createElement('div');
-            d.className = 'particle';
-            d.style.left = Math.random()*100+'%';
-            d.style.width = d.style.height = Math.random()*4+1+'px';
-            p.appendChild(d);
-        }
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrindForge - Ultimate Focus Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --bg-primary: #0a0e17;
+    --bg-secondary: #0f1625;
+    --bg-gradient: linear-gradient(135deg, #0a0e17 0%, #0f1625 25%, #1a1f3a 50%, #0c1428 100%);
+    --accent-gold: #f4c430;
+    --accent-orange: #ff6b35;
+    --accent-cyan: #4ecdc4;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --shadow-glow: 0 25px 50px -12px rgba(244, 196, 48, 0.25);
 }
 
-let grindforge;
-document.addEventListener('DOMContentLoaded', () => {
-    grindforge = new GrindForge();
-});
-</script>
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    color: var(--text-primary);
+    overflow-x: hidden;
+    position: relative;
+}
 
+/* Animated Particles */
+.particles { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; }
+.particle {
+    position:absolute;
+    background: radial-gradient(circle, var(--accent-gold) 0%, transparent 70%);
+    border-radius:50%;
+    animation: float 20s infinite linear;
+}
+@keyframes float { 0%{transform:translateY(100vh) rotate(0deg);opacity:0;} 10%{opacity:1;} 90%{opacity:1;} 100%{transform:translateY(-100px) rotate(360deg);opacity:0;} }
+
+/* Header */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 24px 48px;
+    backdrop-filter: blur(40px);
+    background: rgba(10,14,23,0.8);
+    border-bottom: 1px solid var(--glass-border);
+}
+.header-content {
+    max-width:1440px;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+.logo-section { display:flex; align-items:center; gap:16px; }
+.logo { width:56px; height:56px; filter: drop-shadow(0 0 24px rgba(244,196,48,0.6)); transition: all 0.3s ease; }
+.logo:hover { transform: scale(1.1) rotate(5deg); }
+.brand-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight:900;
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange), var(--accent-cyan));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+.header-stats { display:flex; gap:24px; }
+.stat-pill {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    padding: 12px 20px;
+    border-radius:50px;
+    border:1px solid var(--glass-border);
+    font-weight:600;
+    font-size:0.95rem;
+    transition: all 0.3s ease;
+}
+.stat-pill:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow); }
+
+/* Dashboard */
+.dashboard {
+    max-width:1440px;
+    margin:0 auto;
+    padding:48px 48px 24px;
+    display:grid;
+    grid-template-columns: 1fr 420px;
+    gap:48px;
+    min-height: calc(100vh - 140px);
+    position: relative;
+    z-index:10;
+}
+
+/* Hero Timer */
+.hero-timer { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:600px; }
+.timer-mega-container { display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:48px; }
+.timer-mega {
+    width:420px; height:420px; border-radius:50%;
+    background: conic-gradient(from 0deg, var(--accent-gold) 0deg, var(--accent-orange) var(--progress,0deg), var(--accent-cyan) var(--progress,0deg), transparent 0deg);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 0 80px rgba(244,196,48,0.4), inset 0 0 80px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.1);
+    position: relative; transition: all 0.6s cubic-bezier(0.23,1,0.32,1);
+}
+.timer-inner-circle {
+    width:340px; height:340px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, rgba(244,196,48,0.15) 0%, transparent 50%), linear-gradient(145deg, rgba(15,22,37,0.95), rgba(10,14,23,0.98));
+    display:flex; align-items:center; justify-content:center; position:absolute; z-index:2;
+    backdrop-filter: blur(50px);
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.8);
+}
+.timer-display {
+    font-family:'Orbitron', monospace;
+    font-size: clamp(4.5rem, 12vw,6.5rem);
+    font-weight:900;
+    text-align:center;
+    background: linear-gradient(135deg, var(--text-primary), #e2e8f0);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 40px rgba(248,250,252,0.8);
+    z-index:3;
+}
+.phase-badge {
+    position:absolute; top:-12px; right:-12px;
+    background: linear-gradient(135deg,var(--accent-gold),var(--accent-orange));
+    color:#0a0e17;
+    padding:12px 24px;
+    border-radius:32px;
+    font-weight:800;
+    font-size:1.1rem;
+    box-shadow:0 12px 40px rgba(244,196,48,0.5);
+    animation: phasePulse 2s infinite ease-in-out;
+    letter-spacing:0.05em; text-transform:uppercase;
+}
+@keyframes phasePulse {0%,100%{transform:scale(1) rotate(-2deg);}50%{transform:scale(1.08) rotate(2deg);}}
+
+/* Controls */
+.timer-controls { display:flex; gap:24px; flex-wrap:wrap; justify-content:center; }
+.btn {
+    padding: 18px 36px; border:none; border-radius:50px; font-size:1.1rem; font-weight:700; font-family:inherit; cursor:pointer;
+    position:relative; overflow:hidden; transition: all 0.4s cubic-bezier(0.23,1,0.32,1); text-transform:uppercase; letter-spacing:0.5px;
+}
+.btn::before {
+    content:'';
+    position:absolute;
+    top:0; left:-100%; width:100%; height:100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.6s;
+}
+.btn:hover::before { left:100%; }
+.btn-primary { background: linear-gradient(135deg,var(--accent-gold),var(--accent-orange)); color:#0a0e17; box-shadow:var(--shadow-glow); min-width:160px; }
+.btn-primary:hover:not(:disabled) { transform: translateY(-4px) scale(1.05); box-shadow:0 30px 60px rgba(244,196,48,0.5); }
+.btn-secondary { background:var(--glass-bg); color:var(--text-primary); border:2px solid var(--glass-border); backdrop-filter:blur(20px); }
+.btn-secondary:hover:not(:disabled){ background: rgba(255,255,255,0.15); border-color: rgba(244,196,48,0.5); transform: translateY(-3px); box-shadow:var(--shadow-glow); }
+.btn:disabled { opacity:0.5; cursor:not-allowed; transform:none !important; }
+
+/* Sidebar Panels */
+.sidebar { display:flex; flex-direction:column; gap:32px; }
+.panel {
+    background: var(--glass-bg); backdrop-filter:blur(40px); border-radius:28px; padding:36px; border:1px solid var(--glass-border);
+    box-shadow: 0 32px 64px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1); position:relative; overflow:hidden; transition: all 0.4s ease;
+}
+.panel:hover { transform:translateY(-8px); box-shadow:0 40px 80px rgba(0,0,0,0.5),0 0 40px rgba(244,196,48,0.15); }
+.panel::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg,var(--accent-gold),var(--accent-orange),var(--accent-cyan)); border-radius:28px 28px 0 0; }
+.panel-title { font-size:1.4rem; font-weight:800; color:var(--text-primary); margin-bottom:28px; display:flex; align-items:center; gap:12px; letter-spacing:-0.01em; }
+
+/* Settings */
+.settings-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
+.input-group { display:flex; flex-direction:column; gap:8px; }
+.input-group label { font-weight:600; color:var(--text-secondary); font-size:0.95rem; letter-spacing:0.02em; }
+input[type="number"] { padding:16px; border:1px solid var(--glass-border); border-radius:20px; background: rgba(255,255,255,0.08); color:var(--text-primary); font-size:1.1rem; font-weight:500; backdrop-filter:blur(20px); transition: all 0.3s ease; }
+input[type="number"]:focus { outline:none; border-color:var(--accent-gold); box-shadow:0 0 0 3px rgba(244,196,48,0.2); background: rgba(255,255,255,0.12); }
+
+/* Tasks */
+.task-input-container { display:flex; gap:12px; margin-bottom:24px; }
+.task-input-container input { flex:1; padding:16px 20px; border-radius:20px; border:1px solid var(--glass-border); background: rgba(255,255,255,0.08); backdrop-filter:blur(20px); font-size:1rem; }
+.tasks-list { max-height:320px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
+.task-item { display:flex; align-items:center; gap:16px; padding:20px; background: rgba(255,255,255,0.03); border-radius:20px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s ease; cursor:pointer; }
+.task-item:hover { background: rgba(255,255,255,0.08); transform: translateX(8px); border-color: rgba(244,196,48,0.3); }
+.task-item.completed { opacity:0.6; text-decoration:line-through; }
+.task-checkbox { width:24px; height:24px; accent-color:var(--accent-gold); cursor:pointer; }
+
+/* Stats */
+.stats-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+.stat-card { text-align:center; padding:28px 16px; background: rgba(255,255,255,0.03); border-radius:24px; border:1px solid rgba(255,255,255,0.06); transition:all 0.3s ease; cursor:pointer; }
+.stat-card:hover { transform:translateY(-6px); background: rgba(244,196,48,0.1); border-color: rgba(244,196,48,0.3); }
+.stat-value { font-size:2.8rem; font-weight:900; background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:8px; font-family:'Orbitron', monospace; }
+.stat-label { font-size:0.9rem; color:var(--text-secondary); font-weight:500; letter-spacing:0.03em; text-transform:uppercase; }
+
+/* Notification */
+.notification {
+    position: fixed;
+    top: 120px;
+    right: -480px;
+    background: linear-gradient(135deg, rgba(244,196,48,0.98), rgba(255,107,53,0.95));
+    color:#0a0e17; padding:28px 40px; border-radius:24px; box-shadow:0 32px 80px rgba(244,196,48,0.4);
+    font-weight:700; font-size:1.15rem; z-index:1000; transition:right 0.5s cubic-bezier(0.23,1,0.32,1); backdrop-filter:blur(20px);
+}
+.notification.show { right:48px; }
+
+/* Responsive */
+@media(max-width:1200px){.dashboard{grid-template-columns:1fr; padding:32px 24px; gap:32px;}}
+@media(max-width:768px){.header{padding:20px 24px;}.timer-mega{width:320px;height:320px;}.timer-inner-circle{width:260px;height:260px;}.timer-display{font-size:4rem;}.timer-controls{flex-direction:column;gap:20px;}.btn{width:280px;justify-content:center;}.settings-grid{grid-template-columns:1fr;}.panel{padding:24px;}}
+</style>
+</head>
+<body>
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Header -->
+<header class="header">
+<div class="header-content">
+<div class="logo-section">
+<img src="GrindForge.png" alt="GrindForge" class="logo">
+<div class="brand-title">GrindForge</div>
+</div>
+<div class="header-stats">
+<div class="stat-pill"><span id="headerPomodoros">0</span> Today</div>
+<div class="stat-pill">Streak: <span id="headerStreak">0</span></div>
+</div>
+</div>
+</header>
+
+<!-- Dashboard -->
+<main class="dashboard">
+<!-- Timer -->
+<section class="hero-timer">
+<div class="timer-mega-container">
+<div class="timer-mega" id="timerMega">
+<div class="timer-inner-circle">
+<div class="timer-display" id="timerDisplay">25:00</div>
+</div>
+<div class="phase-badge" id="phaseBadge">WORK</div>
+</div>
+</div>
+<div class="timer-controls">
+<button class="btn btn-primary" id="startBtn">▶ Start Session</button>
+<button class="btn btn-secondary" id="pauseBtn">⏸ Pause</button>
+<button class="btn btn-secondary" id="resetBtn">🔄 Reset</button>
+</div>
+</section>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+<!-- Settings -->
+<div class="panel">
+<h3 class="panel-title">⚙️ Quick Settings</h3>
+<div class="settings-grid">
+<div class="input-group">
+<label>Work Duration (min)</label>
+<input type="number" id="workTime" value="25" min="1" max="90">
+</div>
+<div class="input-group">
+<label>Short Break (min)</label>
+<input type="number" id="shortBreak" value="5" min="1" max="30">
+</div>
+<div class="input-group">
+<label>Long Break (min)</label>
+<input type="number" id="longBreak" value="15" min="5" max="60">
+</div>
+<div class="input-group">
+<label>Pomodoros per Long Break</label>
+<input type="number" id="longBreakInterval" value="4" min="2" max="10">
+</div>
+</div>
+</div>
+
+<!-- Tasks -->
+<div class="panel">
+<h3 class="panel-title">📋 Task Forge</h3>
+<div class="task-input-container">
+<input type="text" id="taskInput" placeholder="What are you forging today?">
+<button class="btn btn-primary" id="addTaskBtn">Add Task</button>
+</div>
+<div class="tasks-list" id="tasksList"></div>
+</div>
+
+<!-- Stats -->
+<div class="panel">
+<h3 class="panel-title">📊 Grind Stats</h3>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-value" id="totalPomodoros">0</div><div class="stat-label">Pomodoros</div></div>
+<div class="stat-card"><div class="stat-value" id="totalTime">0h</div><div class="stat-label">Focus Time</div></div>
+<div class="stat-card"><div class="stat-value" id="currentStreak">0</div><div class="stat-label">Streak</div></div>
+<div class="stat-card"><div class="stat-value" id="completedTasks">0</div><div class="stat-label">Tasks Done</div></div>
+</div>
+</div>
+</aside>
+</main>
+
+<!-- Notification -->
+<div class="notification" id="notification"></div>
+
+<script>
+// -------------------- Timer Logic --------------------
+let workDuration = parseInt(document.getElementById('workTime').value) * 60;
+let shortBreak = parseInt(document.getElementById('shortBreak').value) * 60;
+let longBreak = parseInt(document.getElementById('longBreak').value) * 60;
+let longBreakInterval = parseInt(document.getElementById('longBreakInterval').value);
+
+let timer = workDuration;
+let timerInterval = null;
+let pomodorosCompleted = 0;
+let phase = 'WORK';
+
+const timerDisplay = document.getElementById('timerDisplay');
+const phaseBadge = document.getElementById('phaseBadge');
+const startBtn = document.getElementById('startBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+function updateDisplay() {
+    const mins = Math.floor(timer/60).toString().padStart(2,'0');
+    const secs = (timer%60).toString().padStart(2,'0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+    const progress = ((phase==='WORK'? (workDuration-timer)/workDuration : (phase==='SHORT'? (shortBreak-timer)/shortBreak : (longBreak-timer)/longBreak))*360);
+    document.getElementById('timerMega').style.setProperty('--progress', progress+'deg');
+}
+
+function startTimer() {
+    if(timerInterval) return;
+    timerInterval = setInterval(()=>{
+        timer--;
+        if(timer<0) nextPhase();
+        updateDisplay();
+    },1000);
+}
+
+function pauseTimer() { clearInterval(timerInterval); timerInterval=null; }
+function resetTimer() { 
+    pauseTimer(); 
+    if(phase==='WORK') timer=workDuration; 
+    else if(phase==='SHORT') timer=shortBreak;
+    else timer=longBreak;
+    updateDisplay();
+}
+
+function nextPhase(){
+    if(phase==='WORK'){
+        pomodorosCompleted++;
+        if(pomodorosCompleted % longBreakInterval === 0) { phase='LONG'; timer=longBreak; showNotification('Time for a LONG break!'); }
+        else { phase='SHORT'; timer=shortBreak; showNotification('Short break!'); }
+    } else { phase='WORK'; timer=workDuration; showNotification('Focus!'); }
+    phaseBadge.textContent = phase;
+    updateDisplay();
+    updateStats();
+    pauseTimer();
+}
+
+startBtn.addEventListener('click', startTimer);
+pauseBtn.addEventListener('click', pauseTimer);
+resetBtn.addEventListener('click', resetTimer);
+
+document.getElementById('workTime').addEventListener('change', e => { workDuration = parseInt(e.target.value)*60; resetTimer(); });
+document.getElementById('shortBreak').addEventListener('change', e => { shortBreak = parseInt(e.target.value)*60; resetTimer(); });
+document.getElementById('longBreak').addEventListener('change', e => { longBreak = parseInt(e.target.value)*60; resetTimer(); });
+document.getElementById('longBreakInterval').addEventListener('change', e => { longBreakInterval = parseInt(e.target.value); });
+
+// -------------------- Task Logic --------------------
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+const taskInput = document.getElementById('taskInput');
+const addTaskBtn = document.getElementById('addTaskBtn');
+const tasksList = document.getElementById('tasksList');
+
+function renderTasks(){
+    tasksList.innerHTML = '';
+    tasks.forEach((task,i)=>{
+        const taskItem = document.createElement('div');
+        taskItem.className='task-item';
+        if(task.completed) taskItem.classList.add('completed');
+
+        const checkbox=document.createElement('input');
+        checkbox.type='checkbox';
+        checkbox.className='task-checkbox';
+        checkbox.checked=task.completed;
+        checkbox.addEventListener('change',()=>toggleTask(i));
+
+        const span=document.createElement('span');
+        span.contentEditable=true;
+        span.innerText=task.text;
+        span.addEventListener('input', e => editTask(i,e));
+
+        const deleteBtn=document.createElement('button');
+        deleteBtn.innerHTML='❌';
+        deleteBtn.className='btn btn-secondary';
+        deleteBtn.style.padding='4px 10px';
+        deleteBtn.addEventListener('click',()=>deleteTask(i));
+
+        taskItem.appendChild(checkbox);
+        taskItem.appendChild(span);
+        taskItem.appendChild(deleteBtn);
+
+        tasksList.appendChild(taskItem);
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    updateStats();
+}
+
+addTaskBtn.addEventListener('click', ()=>{
+    const text=taskInput.value.trim();
+    if(text==='') return;
+    tasks.push({text, completed:false});
+    taskInput.value='';
+    renderTasks();
+});
+
+function toggleTask(i){ tasks[i].completed=!tasks[i].completed; renderTasks(); }
+function editTask(i,e){ tasks[i].text=e.target.innerText; localStorage.setItem('tasks', JSON.stringify(tasks)); }
+function deleteTask(i){ tasks.splice(i,1); renderTasks(); }
+
+// -------------------- Stats --------------------
+function updateStats(){
+    document.getElementById('totalPomodoros').textContent=pomodorosCompleted;
+    document.getElementById('headerPomodoros').textContent=pomodorosCompleted;
+    document.getElementById('totalTime').textContent=Math.floor((pomodorosCompleted*workDuration)/3600)+'h';
+    document.getElementById('completedTasks').textContent=tasks.filter(t=>t.completed).length;
+}
+
+updateDisplay();
+renderTasks();
+
+// -------------------- Notification --------------------
+const notification = document.getElementById('notification');
+function showNotification(msg){
+    notification.textContent=msg;
+    notification.classList.add('show');
+    setTimeout(()=>{notification.classList.remove('show');},3000);
+}
+
+// -------------------- Particles --------------------
+const particlesContainer=document.getElementById('particles');
+for(let i=0;i<60;i++){
+    const particle=document.createElement('div');
+    particle.className='particle';
+    particle.style.width=Math.random()*8+4+'px';
+    particle.style.height=particle.style.width;
+    particle.style.top=Math.random()*100+'%';
+    particle.style.left=Math.random()*100+'%';
+    particle.style.animationDuration=(10+Math.random()*20)+'s';
+    particle.style.opacity=Math.random()*0.7+0.3;
+    particlesContainer.appendChild(particle);
+}
+</script>
 </body>
 </html>
