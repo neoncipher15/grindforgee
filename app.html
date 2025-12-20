@@ -2,171 +2,159 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GrindForge</title>
-<link rel="icon" href="/GrindForge.png">
 
 <style>
 :root{
-  --bg1:#05080f;              /* Page background */
-  --bg2:#0b1220;
-  --card: rgba(20,30,50,0.85); /* Slightly lighter than background */
-  --border: rgba(255,255,255,.08);
-  --text: #e5e7eb;
-  --muted: #9ca3af;
-  --accent: #3b82f6;
-  --accent-soft: #60a5fa;
-  --danger: #ef4444;
-  --radius:24px;
-  --shadow:0 8px 24px rgba(0,0,0,0.4);
+  --bg:#05080f;
+  --card:#0e1626;
+  --card2:#121c30;
+  --border:rgba(255,255,255,.06);
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --accent:#3b82f6;
+  --accent2:#60a5fa;
+  --radius:20px;
 }
 
 *{box-sizing:border-box}
 
 body{
   margin:0;
-  font-family:Inter,system-ui;
-  color:var(--text);
+  font-family:Inter,system-ui,Arial;
   background:
     radial-gradient(1200px at 50% -10%, #0f172a, transparent),
-    linear-gradient(var(--bg1), var(--bg2));
+    var(--bg);
+  color:var(--text);
   min-height:100vh;
-  overflow-x:hidden;
-}
-
-#stars{
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  pointer-events:none;
-}
-
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.35);
-  z-index:-1;
 }
 
 .container{
   max-width:1200px;
   margin:auto;
-  padding:20px;
+  padding:18px;
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
   gap:20px;
-  min-height:100vh;
 }
 
+/* ================= HEADER ================= */
 header{
   grid-column:1/-1;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:14px 20px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  flex-wrap:wrap;
-  padding:20px 24px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  backdrop-filter:blur(18px);
-  box-shadow:var(--shadow);
 }
 
 .brand{
   display:flex;
-  gap:14px;
   align-items:center;
+  gap:12px;
 }
 
-.brand img{
-  width:50px;
-  height:50px;
+.logo{
+  width:38px;
+  height:38px;
   border-radius:50%;
-  object-fit:cover;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:grid;
+  place-items:center;
+  font-weight:900;
+  color:white;
 }
 
+.brand h1{
+  margin:0;
+  font-size:18px;
+  letter-spacing:.4px;
+}
+
+#datetime{
+  font-size:13px;
+  color:var(--muted);
+  font-weight:500;
+}
+
+/* ================= CARDS ================= */
 .card{
-  background:var(--card);
+  background:var(--card2);
   border:1px solid var(--border);
   border-radius:var(--radius);
-  padding:26px;
-  backdrop-filter:blur(18px);
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding:24px;
 }
 
-.card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 16px 32px rgba(0,0,0,0.5);
-}
-
-/* ===== TIMER ===== */
-.timer-box{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:18px;
+/* ================= POMODORO ================= */
+.timer{
   text-align:center;
 }
 
-svg{width:200px;height:200px; max-width:100%;}
+.circle{
+  width:200px;
+  height:200px;
+  margin:auto;
+  position:relative;
+}
 
-#timerText{
+svg{
+  width:200px;
+  height:200px;
+}
+
+#timeText{
   font-size:36px;
-  font-weight:900;
-  fill:var(--accent-soft);
+  font-weight:800;
+  fill:var(--accent2);
 }
 
 #modeText{
-  font-size:14px;
+  font-size:13px;
   fill:var(--muted);
   letter-spacing:2px;
 }
 
 .controls button{
+  margin:6px;
   padding:10px 18px;
-  margin:4px;
   border:0;
   border-radius:12px;
   font-weight:700;
   cursor:pointer;
   color:white;
-  background:linear-gradient(135deg,var(--accent),var(--accent-soft));
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.controls button:hover{
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
 }
 
 .settings{
   display:flex;
-  gap:12px;
-  flex-wrap:wrap;
   justify-content:center;
+  gap:14px;
+  margin-top:10px;
 }
 
 .settings input{
-  width:70px;
+  width:64px;
   padding:8px;
   border-radius:10px;
   border:0;
-  background:rgba(255,255,255,.1);
+  background:rgba(255,255,255,.08);
   color:white;
   text-align:center;
-  font-weight:600;
 }
 
-/* ===== TODO ===== */
+/* ================= TODO ================= */
+.card h2{
+  margin:0 0 14px;
+  font-size:18px;
+}
+
 .todo-input{
   display:flex;
   gap:10px;
-  margin-bottom:16px;
-  flex-wrap:wrap;
+  margin-bottom:14px;
 }
 
 .todo-input input{
@@ -176,7 +164,6 @@ svg{width:200px;height:200px; max-width:100%;}
   border:0;
   background:rgba(255,255,255,.08);
   color:white;
-  font-size:16px;
 }
 
 .todo-input button{
@@ -185,201 +172,178 @@ svg{width:200px;height:200px; max-width:100%;}
   border:0;
   cursor:pointer;
   color:white;
-  background:linear-gradient(135deg,var(--accent),var(--accent-soft));
-  transition: transform 0.2s, box-shadow 0.2s;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
 }
 
-.todo-input button:hover{
-  transform:scale(1.05);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
+ul{padding:0;margin:0}
 
 li{
   list-style:none;
   display:flex;
   align-items:center;
   gap:12px;
-  padding:12px 16px;
+  padding:12px;
   margin-bottom:8px;
-  border-radius:16px;
+  border-radius:14px;
   background:rgba(255,255,255,.05);
-  transition:background 0.2s ease;
 }
 
-li:hover{
-  background:rgba(255,255,255,.1);
-}
-
-.checkbox{
-  width:28px;
-  height:28px;
+.check{
+  width:26px;
+  height:26px;
   border-radius:50%;
   border:2px solid #374151;
+  display:grid;
+  place-items:center;
   cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
 }
 
-.checkbox.done{
+.check.done{
   background:var(--accent);
   border-color:var(--accent);
   color:white;
-  transition:all 0.2s ease;
 }
 
-.desc{flex:1; word-break:break-word;}
-.desc.done{text-decoration:line-through;color:#6b7280;transition:all 0.2s ease;}
+.task{
+  flex:1;
+}
 
-.delete{
+.task.done{
+  text-decoration:line-through;
+  color:#6b7280;
+}
+
+.del{
   cursor:pointer;
-  color:var(--danger);
-  font-weight:bold;
-  transition:color 0.2s ease;
+  color:#ef4444;
 }
 
-.delete:hover{
-  color:#ff6b6b;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width:768px){
-  .container {
-      grid-template-columns: 1fr;
-  }
-  header{
-      flex-direction:column;
-      gap:10px;
-      text-align:center;
-  }
+/* ================= RESPONSIVE ================= */
+@media(max-width:768px){
+  header{flex-direction:column;gap:6px}
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="stars"></canvas>
-<div class="overlay"></div>
-
 <div class="container">
 
 <header>
   <div class="brand">
-    <img src="/GrindForge.png">
-    <h2>GrindForge</h2>
+    <div class="logo">G</div>
+    <h1>GrindForge</h1>
   </div>
-  <div id="date"></div>
+  <div id="datetime"></div>
 </header>
 
-<!-- TIMER -->
-<section class="card timer-box">
-<svg viewBox="0 0 200 200">
-<circle cx="100" cy="100" r="90" stroke="#1f2933" stroke-width="12" fill="none"/>
-<circle id="progress" cx="100" cy="100" r="90"
-stroke="var(--accent)" stroke-width="12" fill="none"
-stroke-dasharray="565"
-transform="rotate(-90 100 100)"/>
-<text id="modeText" x="100" y="85" text-anchor="middle">WORK</text>
-<text id="timerText" x="100" y="115" text-anchor="middle">25:00</text>
-</svg>
+<!-- POMODORO -->
+<section class="card timer">
+  <svg viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="90" stroke="#1f2933" stroke-width="12" fill="none"/>
+    <circle id="progress" cx="100" cy="100" r="90"
+      stroke="url(#grad)" stroke-width="12" fill="none"
+      stroke-dasharray="565"
+      stroke-dashoffset="0"
+      transform="rotate(-90 100 100)"/>
+    <defs>
+      <linearGradient id="grad">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#60a5fa"/>
+      </linearGradient>
+    </defs>
+    <text id="modeText" x="100" y="85" text-anchor="middle">WORK</text>
+    <text id="timeText" x="100" y="120" text-anchor="middle">25:00</text>
+  </svg>
 
-<div class="controls">
-<button id="startBtn">Start</button>
-<button id="pauseBtn">Pause</button>
-<button id="resetBtn">Reset</button>
-</div>
+  <div class="controls">
+    <button id="start">Start</button>
+    <button id="pause">Pause</button>
+    <button id="reset">Reset</button>
+  </div>
 
-<div class="settings">
-<label>Work <input id="workTime" value="25"></label>
-<label>Break <input id="breakTime" value="5"></label>
-</div>
+  <div class="settings">
+    <label>Work <input id="work" value="25"></label>
+    <label>Break <input id="break" value="5"></label>
+  </div>
 </section>
 
 <!-- TODO -->
 <section class="card">
-<h3>📝 To-Do</h3>
-<div class="todo-input">
-  <input id="todoInput" placeholder="Add a task…">
-  <button id="addTask">Add</button>
-</div>
-<ul id="todoList"></ul>
+  <h2>📝 To-Do</h2>
+  <div class="todo-input">
+    <input id="todoInput" placeholder="Add a task…" />
+    <button id="add">Add</button>
+  </div>
+  <ul id="list"></ul>
 </section>
 
 </div>
 
-<audio id="alarm" src="alarm.mp3" preload="auto"></audio>
-<audio id="ting" src="ting.mp3" preload="auto"></audio>
-
 <script>
-/* ===== DOM ===== */
-const startBtn = document.getElementById("startBtn");
-const pauseBtn = document.getElementById("pauseBtn");
-const resetBtn = document.getElementById("resetBtn");
-const timerText = document.getElementById("timerText");
-const modeText = document.getElementById("modeText");
-const progress = document.getElementById("progress");
-const workTime = document.getElementById("workTime");
-const breakTime = document.getElementById("breakTime");
-
-const todoInput = document.getElementById("todoInput");
-const addTaskBtn = document.getElementById("addTask");
-const todoList = document.getElementById("todoList");
-const dateBox = document.getElementById("date");
-
-const alarm = document.getElementById("alarm");
-const ting = document.getElementById("ting");
-
-/* ===== DATE ===== */
-setInterval(()=>{
-  dateBox.textContent = new Date().toLocaleString("en-IN",{
-    weekday:"long",day:"numeric",month:"short",
-    year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",
-    hour12:false
-  });
-},1000);
+/* ===== DATE & TIME (12H, NO SECONDS) ===== */
+function updateTime(){
+  const now=new Date();
+  const options={
+    weekday:"short",
+    day:"numeric",
+    month:"short",
+    hour:"numeric",
+    minute:"2-digit",
+    hour12:true
+  };
+  document.getElementById("datetime").textContent=
+    now.toLocaleString("en-IN",options);
+}
+updateTime();
+setInterval(updateTime,60000);
 
 /* ===== POMODORO ===== */
-let work=true, running=false;
-let time=25*60, total=time, interval;
+let isWork=true;
+let running=false;
+let total=25*60;
+let time=total;
+let interval;
+
+const timeText=document.getElementById("timeText");
+const modeText=document.getElementById("modeText");
+const progress=document.getElementById("progress");
 
 function renderTimer(){
-  const m=String(Math.floor(time/60)).padStart(2,"0");
-  const s=String(time%60).padStart(2,"0");
-  timerText.textContent=`${m}:${s}`;
-  modeText.textContent=work?"WORK":"BREAK";
-  progress.style.strokeDashoffset = 565 - (time/total)*565;
+  const m=Math.floor(time/60);
+  const s=time%60;
+  timeText.textContent=
+    `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  modeText.textContent=isWork?"WORK":"BREAK";
+  progress.style.strokeDashoffset=
+    565-(time/total)*565;
 }
 
-startBtn.onclick=()=>{
+document.getElementById("start").onclick=()=>{
   if(running) return;
   running=true;
   interval=setInterval(()=>{
-   if(time<=0){
-      alarm.currentTime = 0;
-      alarm.play();
-
-      work = !work;
-      time = (work ? workTime.value : breakTime.value) * 60;
-      total = time;
+    if(time<=0){
+      isWork=!isWork;
+      total=(isWork?work.value:break.value)*60;
+      time=total;
     }
-
     time--;
     renderTimer();
   },1000);
 };
 
-pauseBtn.onclick=()=>{
+document.getElementById("pause").onclick=()=>{
   clearInterval(interval);
   running=false;
 };
 
-resetBtn.onclick=()=>{
+document.getElementById("reset").onclick=()=>{
   clearInterval(interval);
   running=false;
-  work=true;
-  time=workTime.value*60;
-  total=time;
+  isWork=true;
+  total=work.value*60;
+  time=total;
   renderTimer();
 };
 
@@ -387,91 +351,43 @@ renderTimer();
 
 /* ===== TODO ===== */
 let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
+const list=document.getElementById("list");
 
-function save(){localStorage.setItem("tasks",JSON.stringify(tasks))}
+function save(){localStorage.setItem("tasks",JSON.stringify(tasks));}
 
-function createTaskElement(task, index){
-  const li=document.createElement("li");
-
-  const cb=document.createElement("div");
-  cb.className="checkbox"+(task.done?" done":"");
-  cb.textContent = task.done?"✓":"";
-
-  const span=document.createElement("span");
-  span.className="desc"+(task.done?" done":"");
-  span.textContent = task.text;
-
-  const del=document.createElement("span");
-  del.className="delete";
-  del.textContent="✕";
-
-  // Checkbox toggle
-  cb.onclick = () => {
-    task.done = !task.done;
-    cb.classList.toggle("done", task.done);
-    cb.textContent = task.done ? "✓" : "";
-    span.classList.toggle("done", task.done);
-
-    if(task.done){
-      ting.currentTime = 0;
-      ting.play();
-    }
-    save();
-  };
-
-  // Delete task
-  del.onclick = () => {
-    tasks.splice(index, 1);
-    save();
-    renderTodos();
-  };
-
-  li.append(cb, span, del);
-  return li;
-}
-
-function renderTodos(){
-  todoList.innerHTML="";
+function draw(){
+  list.innerHTML="";
   tasks.forEach((t,i)=>{
-    todoList.appendChild(createTaskElement(t,i));
+    const li=document.createElement("li");
+
+    const c=document.createElement("div");
+    c.className="check"+(t.done?" done":"");
+    c.textContent=t.done?"✓":"";
+    c.onclick=()=>{t.done=!t.done;save();draw();};
+
+    const s=document.createElement("span");
+    s.className="task"+(t.done?" done":"");
+    s.textContent=t.text;
+
+    const d=document.createElement("span");
+    d.className="del";
+    d.textContent="✕";
+    d.onclick=()=>{tasks.splice(i,1);save();draw();};
+
+    li.append(c,s,d);
+    list.appendChild(li);
   });
 }
+draw();
 
-addTaskBtn.onclick=()=>{
-  const t=todoInput.value.trim();
-  if(!t) return;
-  tasks.push({text:t,done:false});
+document.getElementById("add").onclick=()=>{
+  const v=todoInput.value.trim();
+  if(!v) return;
+  tasks.push({text:v,done:false});
   todoInput.value="";
   save();
-  renderTodos();
+  draw();
 };
-
-todoInput.addEventListener("keydown", e => {
-  if(e.key==="Enter") addTaskBtn.click();
-});
-
-renderTodos();
-
-/* ===== STARS ===== */
-const c=document.getElementById("stars"),ctx=c.getContext("2d");
-function resize(){c.width=innerWidth;c.height=innerHeight}
-resize();addEventListener("resize",resize);
-let stars=[...Array(130)].map(()=>({
-  x:Math.random()*c.width,
-  y:Math.random()*c.height,
-  r:Math.random()*1.2+.3,
-  s:Math.random()*.25+.05
-}));
-(function anim(){
-  ctx.clearRect(0,0,c.width,c.height);
-  ctx.fillStyle="rgba(255,255,255,.7)";
-  stars.forEach(s=>{
-    s.y+=s.s;
-    if(s.y>c.height){s.y=0;s.x=Math.random()*c.width}
-    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
-  });
-  requestAnimationFrame(anim);
-})();
 </script>
 
 </body>
