@@ -8,15 +8,20 @@
 
 <style>
 :root{
-  --bg:#05080f;
-  --card:#0e1626;
-  --card2:#121c30;
-  --border:rgba(255,255,255,.06);
+  /* ===== GITHUB DARK BLUE ===== */
+  --bg:#02040a;
+  --bg-glow:#020817;
+
+  /* ===== VERY DARK CARDS ===== */
+  --card:#070b14;
+  --card2:#090f1e;
+
+  --border:rgba(255,255,255,.05);
   --text:#e5e7eb;
   --muted:#9ca3af;
   --accent:#3b82f6;
   --accent2:#60a5fa;
-  --radius:20px;
+  --radius:22px;
 }
 
 *{box-sizing:border-box}
@@ -25,19 +30,28 @@ body{
   margin:0;
   font-family:Inter,system-ui,Arial;
   background:
-    radial-gradient(1200px at 50% -10%, #0f172a, transparent),
+    radial-gradient(1000px at 50% -20%, var(--bg-glow), transparent),
     var(--bg);
   color:var(--text);
   min-height:100vh;
+  overflow:hidden;
 }
 
+/* ===== STARS ===== */
+#stars{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+}
+
+/* ===== LAYOUT ===== */
 .container{
-  max-width:1200px;
+  max-width:1300px;
   margin:auto;
-  padding:18px;
+  padding:20px;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
-  gap:20px;
+  grid-template-columns:1.2fr 1fr;
+  gap:22px;
 }
 
 /* ================= HEADER ================= */
@@ -45,8 +59,8 @@ header{
   grid-column:1/-1;
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:16px;
-  padding:14px 20px;
+  border-radius:18px;
+  padding:14px 22px;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -59,20 +73,23 @@ header{
 }
 
 .logo{
-  width:38px;
-  height:38px;
+  width:40px;
+  height:40px;
   border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  display:grid;
-  place-items:center;
-  font-weight:900;
-  color:white;
+  overflow:hidden;
+  border:1px solid var(--border);
+}
+
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .brand h1{
   margin:0;
-  font-size:18px;
-  letter-spacing:.4px;
+  font-size:19px;
+  letter-spacing:.6px;
 }
 
 #datetime{
@@ -86,7 +103,7 @@ header{
   background:var(--card2);
   border:1px solid var(--border);
   border-radius:var(--radius);
-  padding:24px;
+  padding:28px;
 }
 
 /* ================= POMODORO ================= */
@@ -94,36 +111,29 @@ header{
   text-align:center;
 }
 
-.circle{
-  width:200px;
-  height:200px;
-  margin:auto;
-  position:relative;
-}
-
 svg{
-  width:200px;
-  height:200px;
+  width:260px;
+  height:260px;
 }
 
 #timeText{
-  font-size:36px;
-  font-weight:800;
+  font-size:40px;
+  font-weight:900;
   fill:var(--accent2);
 }
 
 #modeText{
-  font-size:13px;
+  font-size:14px;
   fill:var(--muted);
-  letter-spacing:2px;
+  letter-spacing:3px;
 }
 
 .controls button{
-  margin:6px;
-  padding:10px 18px;
+  margin:8px;
+  padding:12px 22px;
   border:0;
-  border-radius:12px;
-  font-weight:700;
+  border-radius:14px;
+  font-weight:800;
   cursor:pointer;
   color:white;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
@@ -132,47 +142,48 @@ svg{
 .settings{
   display:flex;
   justify-content:center;
-  gap:14px;
-  margin-top:10px;
+  gap:16px;
+  margin-top:14px;
 }
 
 .settings input{
-  width:64px;
-  padding:8px;
-  border-radius:10px;
+  width:70px;
+  padding:9px;
+  border-radius:12px;
   border:0;
-  background:rgba(255,255,255,.08);
+  background:rgba(255,255,255,.07);
   color:white;
   text-align:center;
 }
 
 /* ================= TODO ================= */
 .card h2{
-  margin:0 0 14px;
-  font-size:18px;
+  margin:0 0 16px;
+  font-size:19px;
 }
 
 .todo-input{
   display:flex;
-  gap:10px;
-  margin-bottom:14px;
+  gap:12px;
+  margin-bottom:16px;
 }
 
 .todo-input input{
   flex:1;
-  padding:12px;
-  border-radius:12px;
+  padding:14px;
+  border-radius:14px;
   border:0;
-  background:rgba(255,255,255,.08);
+  background:rgba(255,255,255,.06);
   color:white;
 }
 
 .todo-input button{
-  padding:12px 16px;
-  border-radius:12px;
+  padding:14px 18px;
+  border-radius:14px;
   border:0;
   cursor:pointer;
   color:white;
+  font-weight:700;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
 }
 
@@ -182,16 +193,16 @@ li{
   list-style:none;
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:12px;
-  margin-bottom:8px;
-  border-radius:14px;
-  background:rgba(255,255,255,.05);
+  gap:14px;
+  padding:14px;
+  margin-bottom:10px;
+  border-radius:16px;
+  background:rgba(255,255,255,.04);
 }
 
 .check{
-  width:26px;
-  height:26px;
+  width:28px;
+  height:28px;
   border-radius:50%;
   border:2px solid #374151;
   display:grid;
@@ -220,19 +231,25 @@ li{
 }
 
 /* ================= RESPONSIVE ================= */
-@media(max-width:768px){
-  header{flex-direction:column;gap:6px}
+@media(max-width:900px){
+  .container{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<canvas id="stars"></canvas>
+
 <div class="container">
 
 <header>
   <div class="brand">
-    <div class="logo"><img src="./GrindForge.png"></div>
+    <div class="logo">
+      <img src="./GrindForge.png">
+    </div>
     <h1>GrindForge</h1>
   </div>
   <div id="datetime"></div>
@@ -241,11 +258,10 @@ li{
 <!-- POMODORO -->
 <section class="card timer">
   <svg viewBox="0 0 200 200">
-    <circle cx="100" cy="100" r="90" stroke="#1f2933" stroke-width="12" fill="none"/>
+    <circle cx="100" cy="100" r="90" stroke="#111827" stroke-width="14" fill="none"/>
     <circle id="progress" cx="100" cy="100" r="90"
-      stroke="url(#grad)" stroke-width="12" fill="none"
+      stroke="url(#grad)" stroke-width="14" fill="none"
       stroke-dasharray="565"
-      stroke-dashoffset="0"
       transform="rotate(-90 100 100)"/>
     <defs>
       <linearGradient id="grad">
@@ -253,8 +269,8 @@ li{
         <stop offset="100%" stop-color="#60a5fa"/>
       </linearGradient>
     </defs>
-    <text id="modeText" x="100" y="85" text-anchor="middle">WORK</text>
-    <text id="timeText" x="100" y="120" text-anchor="middle">25:00</text>
+    <text id="modeText" x="100" y="82" text-anchor="middle">WORK</text>
+    <text id="timeText" x="100" y="125" text-anchor="middle">25:00</text>
   </svg>
 
   <div class="controls">
@@ -273,7 +289,7 @@ li{
 <section class="card">
   <h2>📝 To-Do</h2>
   <div class="todo-input">
-    <input id="todoInput" placeholder="Add a task…" />
+    <input id="todoInput" placeholder="Add a task…">
     <button id="add">Add</button>
   </div>
   <ul id="list"></ul>
@@ -282,45 +298,38 @@ li{
 </div>
 
 <script>
-/* ===== DATE & TIME (12H, NO SECONDS) ===== */
+/* ===== DATE ===== */
 function updateTime(){
   const now=new Date();
-  const options={
-    weekday:"short",
-    day:"numeric",
-    month:"short",
-    hour:"numeric",
-    minute:"2-digit",
-    hour12:true
-  };
-  document.getElementById("datetime").textContent=
-    now.toLocaleString("en-IN",options);
+  document.getElementById("datetime").textContent =
+    now.toLocaleString("en-IN",{
+      weekday:"short",
+      day:"numeric",
+      month:"short",
+      hour:"numeric",
+      minute:"2-digit",
+      hour12:true
+    });
 }
 updateTime();
 setInterval(updateTime,60000);
 
 /* ===== POMODORO ===== */
-let isWork=true;
-let running=false;
-let total=25*60;
-let time=total;
-let interval;
+let isWork=true,running=false;
+let total=25*60,time=total,interval;
 
 const timeText=document.getElementById("timeText");
 const modeText=document.getElementById("modeText");
 const progress=document.getElementById("progress");
 
-function renderTimer(){
-  const m=Math.floor(time/60);
-  const s=time%60;
+function render(){
   timeText.textContent=
-    `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    `${String(Math.floor(time/60)).padStart(2,"0")}:${String(time%60).padStart(2,"0")}`;
   modeText.textContent=isWork?"WORK":"BREAK";
-  progress.style.strokeDashoffset=
-    565-(time/total)*565;
+  progress.style.strokeDashoffset=565-(time/total)*565;
 }
 
-document.getElementById("start").onclick=()=>{
+start.onclick=()=>{
   if(running) return;
   running=true;
   interval=setInterval(()=>{
@@ -329,66 +338,68 @@ document.getElementById("start").onclick=()=>{
       total=(isWork?work.value:break.value)*60;
       time=total;
     }
-    time--;
-    renderTimer();
+    time--; render();
   },1000);
 };
 
-document.getElementById("pause").onclick=()=>{
-  clearInterval(interval);
-  running=false;
-};
-
-document.getElementById("reset").onclick=()=>{
-  clearInterval(interval);
-  running=false;
-  isWork=true;
-  total=work.value*60;
-  time=total;
-  renderTimer();
-};
-
-renderTimer();
+pause.onclick=()=>{clearInterval(interval);running=false;}
+reset.onclick=()=>{clearInterval(interval);running=false;isWork=true;total=work.value*60;time=total;render();}
+render();
 
 /* ===== TODO ===== */
 let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
-const list=document.getElementById("list");
-
 function save(){localStorage.setItem("tasks",JSON.stringify(tasks));}
-
 function draw(){
   list.innerHTML="";
   tasks.forEach((t,i)=>{
     const li=document.createElement("li");
-
     const c=document.createElement("div");
     c.className="check"+(t.done?" done":"");
     c.textContent=t.done?"✓":"";
     c.onclick=()=>{t.done=!t.done;save();draw();};
-
     const s=document.createElement("span");
     s.className="task"+(t.done?" done":"");
     s.textContent=t.text;
-
     const d=document.createElement("span");
     d.className="del";
     d.textContent="✕";
     d.onclick=()=>{tasks.splice(i,1);save();draw();};
-
-    li.append(c,s,d);
-    list.appendChild(li);
+    li.append(c,s,d); list.appendChild(li);
   });
 }
 draw();
-
-document.getElementById("add").onclick=()=>{
+add.onclick=()=>{
   const v=todoInput.value.trim();
   if(!v) return;
   tasks.push({text:v,done:false});
   todoInput.value="";
-  save();
-  draw();
+  save(); draw();
 };
+
+/* ===== STARS ===== */
+const c=document.getElementById("stars"),ctx=c.getContext("2d");
+function resize(){c.width=innerWidth;c.height=innerHeight}
+resize(); addEventListener("resize",resize);
+
+let stars=[...Array(140)].map(()=>({
+  x:Math.random()*c.width,
+  y:Math.random()*c.height,
+  r:Math.random()*1.2+.3,
+  s:Math.random()*.3+.05
+}));
+
+(function animate(){
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.fillStyle="rgba(255,255,255,.65)";
+  stars.forEach(st=>{
+    st.y+=st.s;
+    if(st.y>c.height){st.y=0;st.x=Math.random()*c.width}
+    ctx.beginPath();
+    ctx.arc(st.x,st.y,st.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+})();
 </script>
 
 </body>
