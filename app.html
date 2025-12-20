@@ -1,340 +1,907 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GrindForge</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrindForge - Ultimate Focus Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-/* ================= ROOT ================= */
-:root{
-  --bg:#020617;
-  --card:#0b1224;
-  --text:#e5e7eb;
-  --muted:#94a3b8;
-  --accent:#38bdf8;
-}
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #0f1625;
+            --bg-gradient: linear-gradient(135deg, #0a0e17 0%, #0f1625 25%, #1a1f3a 50%, #0c1428 100%);
+            --accent-gold: #f4c430;
+            --accent-orange: #ff6b35;
+            --accent-cyan: #4ecdc4;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-glow: 0 25px 50px -12px rgba(244, 196, 48, 0.25);
+        }
 
-/* ================= RESET ================= */
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:system-ui, sans-serif;
-}
-body{
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  overflow:hidden;
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
 
-/* ================= STARS ================= */
-#stars{
-  position:fixed;
-  inset:0;
-  z-index:-1;
-}
+        /* Animated Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
 
-/* ================= LAYOUT ================= */
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:20px;
-}
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--accent-gold) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
 
-.card{
-  background:rgba(11,18,36,.85);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  padding:20px;
-  backdrop-filter:blur(10px);
-}
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
 
-/* ================= HEADER ================= */
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-#clock{
-  font-size:1.2rem;
-  color:var(--accent);
-}
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 24px 48px;
+            backdrop-filter: blur(40px);
+            background: rgba(10, 14, 23, 0.8);
+            border-bottom: 1px solid var(--glass-border);
+        }
 
-/* ================= POMODORO ================= */
-.timer{
-  font-size:3rem;
-  text-align:center;
-  margin:20px 0;
-}
-.controls{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-}
-button{
-  background:#020617;
-  color:white;
-  border:1px solid rgba(255,255,255,.1);
-  padding:10px 14px;
-  border-radius:10px;
-  cursor:pointer;
-}
-button:hover{background:#020b1f}
+        .header-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-/* ================= TODO ================= */
-.todo input{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  margin-bottom:10px;
-}
-.todo button{
-  width:100%;
-  margin-bottom:10px;
-}
-ul{
-  list-style:none;
-}
-li{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:8px;
-}
-.check{
-  width:18px;
-  height:18px;
-  border-radius:50%;
-  border:2px solid var(--accent);
-  cursor:pointer;
-}
-.check.done{
-  background:var(--accent);
-}
-.del{
-  margin-left:auto;
-  cursor:pointer;
-  color:#f87171;
-}
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
 
-/* ================= SUMMARY ================= */
-#summary{
-  position:fixed;
-  inset:0;
-  background:rgba(2,6,23,.9);
-  display:none;
-  align-items:center;
-  justify-content:center;
-}
-#summary.active{
-  display:flex;
-}
-.summary-box{
-  background:var(--card);
-  padding:30px;
-  border-radius:16px;
-  text-align:center;
-}
-</style>
+        .logo {
+            width: 56px;
+            height: 56px;
+            filter: drop-shadow(0 0 24px rgba(244, 196, 48, 0.6));
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .brand-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .stat-pill {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* Main Dashboard */
+        .dashboard {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 48px 48px 24px;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 48px;
+            min-height: calc(100vh - 140px);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero Timer - PERFECTLY CENTERED */
+        .hero-timer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 600px;
+        }
+
+        .timer-mega-container {
+            position: relative;
+            margin-bottom: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-mega {
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                var(--accent-gold) 0deg,
+                var(--accent-orange) var(--progress, 0deg),
+                var(--accent-cyan) var(--progress, 0deg),
+                transparent 0deg
+            );
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 0 80px rgba(244, 196, 48, 0.4),
+                inset 0 0 80px rgba(0, 0, 0, 0.6),
+                0 0 0 2px rgba(255, 255, 255, 0.1);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .timer-inner-circle {
+            position: absolute;
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(244, 196, 48, 0.15) 0%, transparent 50%),
+                linear-gradient(145deg, rgba(15, 22, 37, 0.95), rgba(10, 14, 23, 0.98));
+            backdrop-filter: blur(50px);
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .timer-display {
+            position: relative;
+            z-index: 3;
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(4.5rem, 12vw, 6.5rem);
+            font-weight: 900;
+            text-align: center;
+            background: linear-gradient(135deg, var(--text-primary), #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(248, 250, 252, 0.8);
+            padding: 0;
+            margin: 0;
+        }
+
+        .phase-badge {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+            color: #0a0e17;
+            padding: 12px 24px;
+            border-radius: 32px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 12px 40px rgba(244, 196, 48, 0.5);
+            animation: phasePulse 2s infinite ease-in-out;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        @keyframes phasePulse {
+            0%, 100% { transform: scale(1) rotate(-2deg); }
+            50% { transform: scale(1.08) rotate(2deg); }
+        }
+
+        /* Controls */
+        .timer-controls {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 18px 36px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+            color: #0a0e17;
+            box-shadow: var(--shadow-glow);
+            min-width: 160px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 30px 60px rgba(244, 196, 48, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 2px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(244, 196, 48, 0.5);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Sidebar Panels */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            border-radius: 28px;
+            padding: 36px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(244, 196, 48, 0.15);
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-orange), var(--accent-cyan));
+            border-radius: 28px 28px 0 0;
+        }
+
+        .panel-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.01em;
+        }
+
+        /* Settings */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+        }
+
+        input[type="number"] {
+            padding: 16px;
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 500;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.2);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Tasks */
+        .task-input-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .task-input-container input {
+            flex: 1;
+            padding: 16px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            font-size: 1rem;
+        }
+
+        .tasks-list {
+            max-height: 320px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(8px);
+            border-color: rgba(244, 196, 48, 0.3);
+        }
+
+        .task-item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        .task-checkbox {
+            width: 24px;
+            height: 24px;
+            accent-color: var(--accent-gold);
+            cursor: pointer;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 28px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            background: rgba(244, 196, 48, 0.1);
+            border-color: rgba(244, 196, 48, 0.3);
+        }
+
+        .stat-value {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 120px;
+            right: -480px;
+            background: linear-gradient(135deg, rgba(244, 196, 48, 0.98), rgba(255, 107, 53, 0.95));
+            color: #0a0e17;
+            padding: 28px 40px;
+            border-radius: 24px;
+            box-shadow: 0 32px 80px rgba(244, 196, 48, 0.4);
+            font-weight: 700;
+            font-size: 1.15rem;
+            z-index: 1000;
+            transition: right 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            backdrop-filter: blur(20px);
+        }
+
+        .notification.show {
+            right: 48px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                padding: 32px 24px;
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 20px 24px; }
+            .timer-mega { width: 320px; height: 320px; }
+            .timer-inner-circle { width: 260px; height: 260px; }
+            .timer-display { font-size: 4rem; }
+            .timer-controls { flex-direction: column; gap: 20px; }
+            .btn { width: 280px; justify-content: center; }
+            .settings-grid { grid-template-columns: 1fr; }
+            .panel { padding: 24px; }
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Animated Particles -->
+    <div class="particles" id="particles"></div>
 
-<canvas id="stars"></canvas>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="GrindForge.png" alt="GrindForge" class="logo" 
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHZpZXdCb3g9IjAgMCA1NiA1NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMjgiIGZpbGw9ImxpbmVhci1ncmFkaWVudChmcm9tVG9Cb3R0b20sICNGNEY0MzAsICNGRjZCMzUpIi8+Cjx0ZXh0IHg9IjI4IiB5PSIzNCIgZm9udC1mYW1pbHk9Ik9yYml0cm9uIiBmb250LXNpemU9IjIwIiBmaWxsPSIjMEExRTE3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HRjwvdGV4dD4KPC9zdmc+'">
+                <div class="brand-title">GrindForge</div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-pill">
+                    <span id="headerPomodoros">0</span> Today
+                </div>
+                <div class="stat-pill">
+                    Streak: <span id="headerStreak">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<header class="container">
-  <h2>GrindForge</h2>
-  <div id="clock"></div>
-</header>
+    <!-- Dashboard -->
+    <main class="dashboard">
+        <!-- Hero Timer Section -->
+        <section class="hero-timer">
+            <div class="timer-mega-container">
+                <div class="timer-mega" id="timerMega">
+                    <div class="timer-inner-circle">
+                        <div class="timer-display" id="timerDisplay">25:00</div>
+                    </div>
+                    <div class="phase-badge" id="phaseBadge">WORK</div>
+                </div>
+            </div>
+            <div class="timer-controls">
+                <button class="btn btn-primary" id="startBtn">▶ Start Session</button>
+                <button class="btn btn-secondary" id="pauseBtn">⏸ Pause</button>
+                <button class="btn btn-secondary" id="resetBtn">🔄 Reset</button>
+            </div>
+        </section>
 
-<main class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Quick Settings -->
+            <div class="panel">
+                <h3 class="panel-title">⚙️ Quick Settings</h3>
+                <div class="settings-grid">
+                    <div class="input-group">
+                        <label>Work Duration (min)</label>
+                        <input type="number" id="workTime" value="25" min="1" max="90">
+                    </div>
+                    <div class="input-group">
+                        <label>Short Break (min)</label>
+                        <input type="number" id="shortBreak" value="5" min="1" max="30">
+                    </div>
+                    <div class="input-group">
+                        <label>Long Break (min)</label>
+                        <input type="number" id="longBreak" value="15" min="5" max="60">
+                    </div>
+                    <div class="input-group">
+                        <label>Pomodoros per Long Break</label>
+                        <input type="number" id="longBreakInterval" value="4" min="2" max="10">
+                    </div>
+                </div>
+            </div>
 
-  <!-- Pomodoro -->
-  <div class="card">
-    <h3>Pomodoro</h3>
-    <div id="time" class="timer">25:00</div>
-    <div class="controls">
-      <button id="start">Start</button>
-      <button id="pause">Pause</button>
-      <button id="reset">Reset</button>
-    </div>
-  </div>
+            <!-- Tasks -->
+            <div class="panel">
+                <h3 class="panel-title">📋 Task Forge</h3>
+                <div class="task-input-container">
+                    <input type="text" id="taskInput" placeholder="What are you forging today?">
+                    <button class="btn btn-primary" id="addTaskBtn">Add Task</button>
+                </div>
+                <div class="tasks-list" id="tasksList">
+                    <div style="text-align: center; opacity: 0.5; padding: 20px;">Add your first task!</div>
+                </div>
+            </div>
 
-  <!-- Todo -->
-  <div class="card todo">
-    <h3>To-Do</h3>
-    <input id="taskInput" placeholder="Add task">
-    <button id="addTask">Add Task</button>
-    <ul id="tasks"></ul>
-  </div>
+            <!-- Stats -->
+            <div class="panel">
+                <h3 class="panel-title">📊 Grind Stats</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalPomodoros">0</div>
+                        <div class="stat-label">Pomodoros</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTime">0h</div>
+                        <div class="stat-label">Focus Time</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="currentStreak">0</div>
+                        <div class="stat-label">Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="bestStreak">0</div>
+                        <div class="stat-label">Best Streak</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
 
-  <!-- End day -->
-  <div class="card">
-    <h3>Day Summary</h3>
-    <button id="endDay">End Day</button>
-  </div>
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
 
-</main>
+    <script>
+class GrindForge {
+    constructor() {
+        this.timerInterval = null;
+        this.isRunning = false;
+        this.currentPhase = 'work';
+        this.pomodorosCompleted = 0;
 
-<!-- SUMMARY POPUP -->
-<div id="summary">
-  <div class="summary-box">
-    <h2>Good Job 👑</h2>
-    <p id="focusStat"></p>
-    <p id="taskStat"></p>
-  </div>
-</div>
+        this.stats = JSON.parse(localStorage.getItem('grindforge_stats')) || {};
+        this.tasks = JSON.parse(localStorage.getItem('grindforge_tasks')) || [];
 
-<script>
-/* ================= CLOCK ================= */
-const clock=document.getElementById("clock");
-function clockUpdate(){
-  clock.textContent=new Date().toLocaleTimeString("en-IN",
-  {hour:"numeric",minute:"2-digit",hour12:true});
-}
-clockUpdate();
-setInterval(clockUpdate,60000);
-
-/* ================= STARS ================= */
-const canvas=document.getElementById("stars");
-const ctx=canvas.getContext("2d");
-
-function resize(){
-  canvas.width=innerWidth;
-  canvas.height=innerHeight;
-}
-resize();
-addEventListener("resize",resize);
-
-const stars=Array.from({length:180},()=>({
-  x:Math.random()*canvas.width,
-  y:Math.random()*canvas.height,
-  r:Math.random()*1.5,
-  s:Math.random()*0.4+0.1
-}));
-
-function animateStars(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle="white";
-  stars.forEach(star=>{
-    star.y+=star.s;
-    if(star.y>canvas.height){
-      star.y=0;
-      star.x=Math.random()*canvas.width;
+        this.audioContext = null;
+        this.init();
     }
-    ctx.beginPath();
-    ctx.arc(star.x,star.y,star.r,0,Math.PI*2);
-    ctx.fill();
-  });
-  requestAnimationFrame(animateStars);
-}
-animateStars();
 
-/* ================= SOUND ================= */
-function beep(){
-  const audio=new AudioContext();
-  const osc=audio.createOscillator();
-  osc.frequency.value=900;
-  osc.connect(audio.destination);
-  osc.start();
-  setTimeout(()=>{osc.stop();audio.close()},300);
-}
-
-/* ================= POMODORO ================= */
-const startBtn=document.getElementById("start");
-const pauseBtn=document.getElementById("pause");
-const resetBtn=document.getElementById("reset");
-const timeEl=document.getElementById("time");
-
-let total=1500;
-let time=total;
-let running=false;
-let timer=null;
-let focusSeconds=0;
-
-function render(){
-  timeEl.textContent=
-    String(Math.floor(time/60)).padStart(2,"0")+":"+
-    String(time%60).padStart(2,"0");
-}
-render();
-
-startBtn.onclick=()=>{
-  if(running)return;
-  running=true;
-  timer=setInterval(()=>{
-    time--;
-    focusSeconds++;
-    if(time<=0){
-      clearInterval(timer);
-      running=false;
-      beep();
+    init() {
+        this.cacheElements();
+        this.bindEvents();
+        this.loadSettings();
+        this.resetTimer();
+        this.renderTasks();
+        this.updateStats();
+        this.createParticles();
     }
-    render();
-  },1000);
-};
 
-pauseBtn.onclick=()=>{
-  clearInterval(timer);
-  running=false;
-};
+    cacheElements() {
+        this.el = {
+            timerDisplay: document.getElementById('timerDisplay'),
+            timerMega: document.getElementById('timerMega'),
+            phaseBadge: document.getElementById('phaseBadge'),
+            startBtn: document.getElementById('startBtn'),
+            pauseBtn: document.getElementById('pauseBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            workTime: document.getElementById('workTime'),
+            shortBreak: document.getElementById('shortBreak'),
+            longBreak: document.getElementById('longBreak'),
+            longBreakInterval: document.getElementById('longBreakInterval'),
+            taskInput: document.getElementById('taskInput'),
+            addTaskBtn: document.getElementById('addTaskBtn'),
+            tasksList: document.getElementById('tasksList'),
+            totalPomodoros: document.getElementById('totalPomodoros'),
+            totalTime: document.getElementById('totalTime'),
+            currentStreak: document.getElementById('currentStreak'),
+            bestStreak: document.getElementById('bestStreak'),
+            headerPomodoros: document.getElementById('headerPomodoros'),
+            headerStreak: document.getElementById('headerStreak'),
+            notification: document.getElementById('notification')
+        };
+    }
 
-resetBtn.onclick=()=>{
-  clearInterval(timer);
-  running=false;
-  time=total;
-  render();
-};
+    bindEvents() {
+        this.el.startBtn.onclick = () => this.startTimer();
+        this.el.pauseBtn.onclick = () => this.pauseTimer();
+        this.el.resetBtn.onclick = () => this.resetTimer();
 
-/* ================= TODO ================= */
-const taskInput=document.getElementById("taskInput");
-const addTaskBtn=document.getElementById("addTask");
-const tasks=document.getElementById("tasks");
+        this.el.addTaskBtn.onclick = () => this.addTask();
+        this.el.taskInput.onkeydown = e => e.key === 'Enter' && this.addTask();
 
-let completed=0;
+        [this.el.workTime, this.el.shortBreak, this.el.longBreak, this.el.longBreakInterval]
+            .forEach(i => i.onchange = () => this.saveSettings());
+    }
 
-addTaskBtn.onclick=()=>{
-  if(!taskInput.value.trim())return;
+    /* ================= TIMER ================= */
 
-  const li=document.createElement("li");
-  const check=document.createElement("div");
-  check.className="check";
-  check.onclick=()=>{
-    if(!check.classList.contains("done")) completed++;
-    check.classList.toggle("done");
-  };
+    startTimer() {
+        if (this.isRunning) return;
 
-  const text=document.createElement("span");
-  text.textContent=taskInput.value;
+        this.isRunning = true;
+        this.el.startBtn.textContent = '⏹ Running';
+        this.el.pauseBtn.textContent = '⏸ Pause';
 
-  const del=document.createElement("span");
-  del.className="del";
-  del.textContent="✕";
-  del.onclick=()=>li.remove();
+        this.timerInterval = setInterval(() => {
+            this.timeLeft--;
+            this.updateDisplay();
 
-  li.append(check,text,del);
-  tasks.appendChild(li);
-  taskInput.value="";
-};
+            if (this.timeLeft <= 0) {
+                this.finishPhase();
+            }
+        }, 1000);
+    }
 
-/* ================= END DAY ================= */
-const endDay=document.getElementById("endDay");
-const summary=document.getElementById("summary");
-const focusStat=document.getElementById("focusStat");
-const taskStat=document.getElementById("taskStat");
+    pauseTimer() {
+        if (!this.isRunning) return;
 
-endDay.onclick=()=>{
-  focusStat.textContent=`⏱ Focused: ${Math.floor(focusSeconds/60)} min`;
-  taskStat.textContent=`✅ Tasks done: ${completed}`;
-  summary.classList.add("active");
-};
+        clearInterval(this.timerInterval);
+        this.isRunning = false;
+        this.el.startBtn.textContent = '▶ Resume';
+        this.el.pauseBtn.textContent = '⏸ Paused';
+    }
+
+    resetTimer() {
+        clearInterval(this.timerInterval);
+        this.isRunning = false;
+        this.currentPhase = 'work';
+        this.timeLeft = this.el.workTime.value * 60;
+
+        this.el.phaseBadge.textContent = 'WORK';
+        this.el.startBtn.textContent = '▶ Start Session';
+        this.el.pauseBtn.textContent = '⏸ Pause';
+
+        this.updateDisplay();
+    }
+
+    finishPhase() {
+        clearInterval(this.timerInterval);
+        this.isRunning = false;
+
+        if (this.currentPhase === 'work') {
+            this.pomodorosCompleted++;
+            this.playSound();
+            this.notify('🔥 Work complete!');
+        } else {
+            this.notify('💪 Break finished!');
+        }
+
+        const interval = +this.el.longBreakInterval.value;
+
+        if (this.currentPhase === 'work' && this.pomodorosCompleted % interval === 0) {
+            this.currentPhase = 'longBreak';
+            this.timeLeft = this.el.longBreak.value * 60;
+            this.el.phaseBadge.textContent = 'LONG BREAK';
+        } else if (this.currentPhase === 'work') {
+            this.currentPhase = 'shortBreak';
+            this.timeLeft = this.el.shortBreak.value * 60;
+            this.el.phaseBadge.textContent = 'SHORT BREAK';
+        } else {
+            this.currentPhase = 'work';
+            this.timeLeft = this.el.workTime.value * 60;
+            this.el.phaseBadge.textContent = 'WORK';
+        }
+
+        this.updateStats();
+        this.el.startBtn.textContent = '▶ Next Phase';
+        this.updateDisplay();
+    }
+
+    updateDisplay() {
+        const m = Math.floor(this.timeLeft / 60);
+        const s = this.timeLeft % 60;
+        this.el.timerDisplay.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+
+        const total = this.getPhaseMinutes() * 60;
+        const progress = ((total - this.timeLeft) / total) * 360;
+        this.el.timerMega.style.setProperty('--progress', `${progress}deg`);
+    }
+
+    getPhaseMinutes() {
+        return this.currentPhase === 'work'
+            ? +this.el.workTime.value
+            : this.currentPhase === 'shortBreak'
+            ? +this.el.shortBreak.value
+            : +this.el.longBreak.value;
+    }
+
+    /* ================= TASKS ================= */
+
+    addTask() {
+        const text = this.el.taskInput.value.trim();
+        if (!text) return;
+
+        this.tasks.unshift({ id: Date.now(), text, completed: false });
+        this.el.taskInput.value = '';
+        this.saveTasks();
+        this.renderTasks();
+    }
+
+    toggleTask(id) {
+        const t = this.tasks.find(x => x.id === id);
+        t.completed = !t.completed;
+        this.saveTasks();
+        this.renderTasks();
+    }
+
+    deleteTask(id) {
+        this.tasks = this.tasks.filter(t => t.id !== id);
+        this.saveTasks();
+        this.renderTasks();
+    }
+
+    renderTasks() {
+        if (!this.tasks.length) {
+            this.el.tasksList.innerHTML = '<div style="opacity:.5;text-align:center">Add your first task!</div>';
+            return;
+        }
+
+        this.el.tasksList.innerHTML = this.tasks.map(t => `
+            <div class="task-item ${t.completed ? 'completed':''}" onclick="grindforge.toggleTask(${t.id})">
+                <input type="checkbox" ${t.completed?'checked':''}>
+                <span>${t.text}</span>
+                <button onclick="event.stopPropagation();grindforge.deleteTask(${t.id})">×</button>
+            </div>
+        `).join('');
+    }
+
+    saveTasks() {
+        localStorage.setItem('grindforge_tasks', JSON.stringify(this.tasks));
+    }
+
+    /* ================= STATS ================= */
+
+    updateStats() {
+        const today = new Date().toDateString();
+        this.stats[today] = this.stats[today] || { pomodoros: 0 };
+        this.stats[today].pomodoros = this.pomodorosCompleted;
+
+        const all = Object.values(this.stats).map(s => s.pomodoros);
+        this.el.totalPomodoros.textContent = this.pomodorosCompleted;
+        this.el.currentStreak.textContent = this.pomodorosCompleted;
+        this.el.bestStreak.textContent = Math.max(...all, 0);
+        this.el.headerPomodoros.textContent = this.pomodorosCompleted;
+        this.el.headerStreak.textContent = this.pomodorosCompleted;
+
+        localStorage.setItem('grindforge_stats', JSON.stringify(this.stats));
+    }
+
+    /* ================= UTILS ================= */
+
+    notify(msg) {
+        this.el.notification.textContent = msg;
+        this.el.notification.classList.add('show');
+        setTimeout(() => this.el.notification.classList.remove('show'), 4000);
+    }
+
+    playSound() {
+        if (!this.audioContext) this.audioContext = new AudioContext();
+        const o = this.audioContext.createOscillator();
+        const g = this.audioContext.createGain();
+        o.connect(g); g.connect(this.audioContext.destination);
+        o.frequency.value = 900;
+        g.gain.value = 0.3;
+        o.start();
+        o.stop(this.audioContext.currentTime + 0.3);
+    }
+
+    loadSettings() {
+        const s = JSON.parse(localStorage.getItem('grindforge_settings')) || {};
+        Object.keys(s).forEach(k => this.el[k].value = s[k]);
+    }
+
+    saveSettings() {
+        localStorage.setItem('grindforge_settings', JSON.stringify({
+            workTime: this.el.workTime.value,
+            shortBreak: this.el.shortBreak.value,
+            longBreak: this.el.longBreak.value,
+            longBreakInterval: this.el.longBreakInterval.value
+        }));
+    }
+
+    createParticles() {
+        const p = document.getElementById('particles');
+        for (let i = 0; i < 40; i++) {
+            const d = document.createElement('div');
+            d.className = 'particle';
+            d.style.left = Math.random()*100+'%';
+            d.style.width = d.style.height = Math.random()*4+1+'px';
+            p.appendChild(d);
+        }
+    }
+}
+
+let grindforge;
+document.addEventListener('DOMContentLoaded', () => {
+    grindforge = new GrindForge();
+});
 </script>
 
 </body>
