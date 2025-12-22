@@ -26,12 +26,7 @@ body{
   min-height:100vh;
   overflow-x:hidden;
 }
-.particles{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  overflow:hidden;
-}
+.particles{position:fixed;inset:0;z-index:0}
 .particle{
   position:absolute;
   background:white;
@@ -188,10 +183,7 @@ body{
   background:var(--panel-soft);
   border:1px solid var(--border);
 }
-.task-item.completed{
-  opacity:.5;
-  text-decoration:line-through;
-}
+.task-item.completed{opacity:.5;text-decoration:line-through}
 .task-item span{flex:1}
 .stats-grid{
   display:grid;
@@ -225,10 +217,7 @@ body{
   transition:.3s;
   z-index:20;
 }
-.notification.show{
-  opacity:1;
-  transform:translateY(0);
-}
+.notification.show{opacity:1;transform:translateY(0)}
 </style>
 </head>
 
@@ -265,13 +254,35 @@ body{
 </section>
 
 <aside class="sidebar">
+  <!-- QUICK SETTINGS -->
   <div class="panel">
     <h3 class="panel-title">⚙ Quick Settings</h3>
     <div class="settings-grid">
-      <div><label>Work (min)</label><input type="number" id="workTime" value="25"></div>
+      <div><label>Work</label><input type="number" id="workTime" value="25"></div>
       <div><label>Short Break</label><input type="number" id="shortBreak" value="5"></div>
       <div><label>Long Break</label><input type="number" id="longBreak" value="15"></div>
       <div><label>Interval</label><input type="number" id="longBreakInterval" value="4"></div>
+    </div>
+  </div>
+
+  <!-- TASKS -->
+  <div class="panel">
+    <h3 class="panel-title">📋 Task Forge</h3>
+    <div class="task-input-container">
+      <input id="taskInput" placeholder="What are you forging today?">
+      <button class="btn btn-primary" id="addTaskBtn">Add</button>
+    </div>
+    <div class="tasks-list" id="tasksList"></div>
+  </div>
+
+  <!-- STATS -->
+  <div class="panel">
+    <h3 class="panel-title">📊 Grind Stats</h3>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value" id="totalPomodoros">0</div><div class="stat-label">Pomodoros</div></div>
+      <div class="stat-card"><div class="stat-value" id="totalTime">0h</div><div class="stat-label">Focus</div></div>
+      <div class="stat-card"><div class="stat-value" id="currentStreak">0</div><div class="stat-label">Streak</div></div>
+      <div class="stat-card"><div class="stat-value" id="completedTasks">0</div><div class="stat-label">Tasks</div></div>
     </div>
   </div>
 </aside>
@@ -280,6 +291,7 @@ body{
 <div class="notification" id="notification"></div>
 
 <script>
+/* PARTICLES */
 const particles=document.getElementById("particles");
 for(let i=0;i<80;i++){
   const p=document.createElement("div");
@@ -294,6 +306,7 @@ for(let i=0;i<80;i++){
   particles.appendChild(p);
 }
 
+/* TIMER */
 let work=25*60, shortB=5*60, longB=15*60, interval=4;
 let timer=work, phase="WORK", pomos=0, tInt=null;
 
@@ -302,9 +315,9 @@ const badge=document.getElementById("phaseBadge");
 const mega=document.getElementById("timerMega");
 
 function render(){
-  const m=String(Math.floor(timer/60)).padStart(2,"0");
-  const s=String(timer%60).padStart(2,"0");
-  display.textContent=`${m}:${s}`;
+  display.textContent=
+    String(Math.floor(timer/60)).padStart(2,"0")+":"+
+    String(timer%60).padStart(2,"0");
   const total=phase==="WORK"?work:phase==="SHORT"?shortB:longB;
   mega.style.setProperty("--progress",`${(1-timer/total)*360}deg`);
 }
@@ -319,9 +332,9 @@ function start(){
 function pause(){clearInterval(tInt);tInt=null}
 function reset(){
   pause();
-  timer=work;
   phase="WORK";
   badge.textContent="WORK";
+  timer=work;
   mega.style.setProperty("--progress","0deg");
   render();
 }
@@ -337,43 +350,72 @@ function next(){
     notify("Focus!");
   }
   badge.textContent=phase;
+  updateStats();
   pause();
 }
 
-document.getElementById("startBtn").onclick=start;
-document.getElementById("pauseBtn").onclick=pause;
-document.getElementById("resetBtn").onclick=reset;
+startBtn.onclick=start;
+pauseBtn.onclick=pause;
+resetBtn.onclick=reset;
 
-/* QUICK SETTINGS — FIXED */
-const workInput=document.getElementById("workTime");
-const shortInput=document.getElementById("shortBreak");
-const longInput=document.getElementById("longBreak");
-const intervalInput=document.getElementById("longBreakInterval");
-
-function applySettings(){
-  pause();
-  work=Number(workInput.value)*60;
-  shortB=Number(shortInput.value)*60;
-  longB=Number(longInput.value)*60;
-  interval=Number(intervalInput.value);
-  phase="WORK";
-  badge.textContent="WORK";
-  timer=work;
-  mega.style.setProperty("--progress","0deg");
-  render();
-}
-[workInput,shortInput,longInput,intervalInput].forEach(i=>{
-  i.addEventListener("change",applySettings);
+/* QUICK SETTINGS */
+[workTime,shortBreak,longBreak,longBreakInterval].forEach(i=>{
+  i.onchange=()=>{
+    pause();
+    work=+workTime.value*60;
+    shortB=+shortBreak.value*60;
+    longB=+longBreak.value*60;
+    interval=+longBreakInterval.value;
+    reset();
+  };
 });
 
-const note=document.getElementById("notification");
+/* TASKS */
+let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
+function drawTasks(){
+  tasksList.innerHTML="";
+  tasks.forEach((t,i)=>{
+    const d=document.createElement("div");
+    d.className="task-item"+(t.done?" completed":"");
+    const c=document.createElement("input");
+    c.type="checkbox";c.checked=t.done;
+    c.onchange=()=>{t.done=!t.done;save()};
+    const s=document.createElement("span");
+    s.contentEditable=true;s.innerText=t.text;
+    s.oninput=e=>{t.text=e.target.innerText;save()};
+    d.append(c,s);
+    tasksList.append(d);
+  });
+  save();
+}
+function save(){
+  localStorage.setItem("tasks",JSON.stringify(tasks));
+  updateStats();
+}
+addTaskBtn.onclick=()=>{
+  if(!taskInput.value.trim()) return;
+  tasks.push({text:taskInput.value,done:false});
+  taskInput.value="";
+  drawTasks();
+};
+
+/* STATS */
+function updateStats(){
+  totalPomodoros.textContent=pomos;
+  headerPomodoros.textContent=pomos;
+  completedTasks.textContent=tasks.filter(t=>t.done).length;
+  totalTime.textContent=Math.floor(pomos*work/3600)+"h";
+}
+
+/* NOTIFY */
 function notify(t){
-  note.textContent=t;
-  note.classList.add("show");
-  setTimeout(()=>note.classList.remove("show"),2500);
+  notification.textContent=t;
+  notification.classList.add("show");
+  setTimeout(()=>notification.classList.remove("show"),2500);
 }
 
 render();
+drawTasks();
 </script>
 
 </body>
