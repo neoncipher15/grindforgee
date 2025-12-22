@@ -47,6 +47,7 @@ body{
   background:rgba(11,15,23,.85);
   backdrop-filter:blur(16px);
   border-bottom:1px solid var(--border);
+  height: 72px;
 }
 
 .header-content{
@@ -92,12 +93,13 @@ body{
 /* ================= LAYOUT ================= */
 .dashboard{
   max-width:1200px;
-  margin:auto;
-  padding:32px 24px;
+  margin:0 auto;
+  padding:24px;
   display:grid;
   grid-template-columns:1fr 380px;
   gap:32px;
 }
+
 
 @media(max-width:1000px){
   .dashboard{grid-template-columns:1fr;}
