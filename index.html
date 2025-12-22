@@ -8,34 +8,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --accent:#4ecdc4;
-  --accent-dark:#44a08d;
-  --accent-gold:#f4d03f;
-  --accent-purple:#9b59b6;
-  --bg:#02050a;
-  --bg-secondary:#040a12;
-  --card: rgba(4,10,18,0.90);
-  --glass: rgba(4,10,18,0.75);
-  --glass-light: rgba(255,255,255,0.05);
-  --muted:#a8d8dc;
-  --text:#e8f9fb;
-  --text-secondary:#b8e2e7;
-  --text-gold:#f7dc6f;
-  --shadow: 0 25px 50px rgba(2,6,10,0.6);
-  --shadow-glow: 0 0 40px rgba(78,205,196,0.4);
-  --shadow-gold: 0 0 30px rgba(244,208,63,0.3);
+  --accent:#58a6ff;
+  --accent-dark:#1f6feb;
+  --accent-gold:#e6edf3;
+  --accent-purple:#8b949e;
+
+  --bg:#020617;
+  --bg-secondary:#050b1a;
+
+  --card:rgba(13,17,23,0.90);
+  --glass:rgba(13,17,23,0.75);
+  --glass-light:rgba(255,255,255,0.05);
+
+  --muted:#8b949e;
+  --text:#e6edf3;
+  --text-secondary:#9da7b3;
+  --text-gold:#f0f6fc;
+
+  --shadow:0 25px 50px rgba(0,0,0,0.65);
+  --shadow-glow:0 0 40px rgba(88,166,255,0.4);
+  --shadow-gold:0 0 30px rgba(240,246,252,0.25);
+
   --radius:28px;
   --radius-large:40px;
-  --gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 50%, #2e8b7a 100%);
-  --gradient-glass: linear-gradient(135deg, rgba(78,205,196,0.2) 0%, rgba(68,160,141,0.15) 100%);
-  --gradient-gold: linear-gradient(135deg, #f4d03f 0%, #f39c12 100%);
+
+  --gradient:linear-gradient(135deg,#58a6ff,#1f6feb);
+  --gradient-glass:linear-gradient(135deg,rgba(88,166,255,0.2),rgba(31,111,235,0.15));
+  --gradient-gold:linear-gradient(135deg,#e6edf3,#9da7b3);
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  font-family: "Poppins", sans-serif;
+  font-family:"Poppins",sans-serif;
   color:var(--text);
   background:var(--bg);
   overflow-y:auto;
@@ -173,17 +179,13 @@ body{
 }
 
 .hero-bg{
-  position:fixed; 
-  inset:0; 
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(78,205,196,0.5) 0%, transparent 45%),
-    radial-gradient(circle at 80% 20%, rgba(68,160,141,0.4) 0%, transparent 45%),
-    radial-gradient(circle at 35% 30%, rgba(244,208,63,0.25) 0%, transparent 50%),
-    radial-gradient(circle at 65% 70%, rgba(155,89,182,0.2) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(78,205,196,0.15) 0%, transparent 60%),
-    linear-gradient(160deg, rgba(2,5,10,0.98) 0%, var(--bg) 85%);
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(88,166,255,0.35) 0%, transparent 45%),
+    radial-gradient(circle at 80% 20%, rgba(31,111,235,0.35) 0%, transparent 45%),
+    linear-gradient(160deg, var(--bg) 0%, var(--bg-secondary) 85%);
   z-index:-1;
-  animation: bgShift 30s ease-in-out infinite alternate;
 }
 
 @keyframes bgShift {
@@ -630,29 +632,30 @@ h1{
 }
 
 /* Floating particles for extra beauty */
-.floating-particle {
-  position: fixed;
-  background: var(--gradient);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 5;
-  animation: float 20s infinite linear;
+.floating-particle{
+  position:fixed;
+  width:2px;
+  height:2px;
+  background:rgba(240,246,252,0.9);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:5;
+  box-shadow:
+    0 0 6px rgba(240,246,252,0.9),
+    0 0 12px rgba(88,166,255,0.6);
+  animation:starFloat linear infinite;
 }
 
-@keyframes float {
-  0% {
-    transform: translateY(100vh) rotate(0deg);
-    opacity: 0;
+@keyframes starFloat{
+  0%{
+    transform:translateY(110vh) translateX(0);
+    opacity:0;
   }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100px) rotate(360deg);
-    opacity: 0;
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{
+    transform:translateY(-120px) translateX(-30px);
+    opacity:0;
   }
 }
 </style>
@@ -694,8 +697,7 @@ h1{
     <div class="features-grid">
       <div class="feature">
         <span class="feature-icon">⏱️</span>
-        <div>Smart Timer</div>
-        <div class="feature-desc">Customizable Pomodoro with intelligent breaks, session tracking & auto-pause detection</div>
+        <div>Smart Timer</div>       
       </div>
       <div class="feature">
         <span class="feature-icon">✅</span>
@@ -775,21 +777,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Floating particles effect
   function createParticle() {
-    const particle = document.createElement('div');
+    const p = document.createElement('div');
     particle.className = 'floating-particle';
     particle.style.left = Math.random() * 100 + '%';
     particle.style.width = particle.style.height = (Math.random() * 6 + 2) + 'px';
     particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
     particle.style.animationDelay = Math.random() * 5 + 's';
-    document.body.appendChild(particle);
+    document.body.appendChild(p);
     
     setTimeout(() => {
-      particle.remove();
-    }, 35000);
+      p.remove();
+    }, 40000);
   }
 
   // Create particles periodically
-  setInterval(createParticle, 2000);
+  setInterval(createParticle, 1200);
   createParticle();
 
   console.log('🌟 GrindForge Ultra Premium Edition - Symmetrical, Beautiful & Ready to Launch! 🚀');
