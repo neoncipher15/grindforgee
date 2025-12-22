@@ -561,6 +561,38 @@ h1{
   margin:0 auto 50px;
   opacity:0.96;
 }
+  
+.footer-content{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  max-width:1400px;
+  margin:0 auto;
+  gap:20px;
+}
+
+.footer-left{
+  flex:1 1 400px;
+}
+
+.footer-right{
+  flex:0 0 auto;
+}
+
+.qr-placeholder{
+  width:120px;
+  height:120px;
+  background:rgba(255,255,255,0.05);
+  border:2px solid rgba(78,205,196,0.2);
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  color:var(--text-secondary);
+  box-shadow:0 10px 30px rgba(78,205,196,0.15);
+}
 
 .footer{
   background:linear-gradient(180deg, var(--card), rgba(2,5,10,0.95));
@@ -752,12 +784,23 @@ h1{
 </main>
 
 <footer class="footer">
-  <p>&copy; 2025 GrindForge by Shaurya Chauhan. <strong>Built with ❤️ & ⚡ for relentless grinders worldwide.</strong></p>
-  
-  <div class="footer-links">
-    <a href="https://www.youtube.com/@GrindForge-p4f" class="footer-btn youtube" target="_blank">🎥 YouTube</a>
-    <a href="https://buymeacoffee.com/shauryachauhan?new=1" class="footer-btn coffee" target="_blank">☕ Buy Me a Coffee</a>
+  <div class="footer-content">
+    <div class="footer-left">
+      <p>&copy; 2025 GrindForge by Shaurya Chauhan. <strong>Built with ❤️ & ⚡ for relentless grinders worldwide.</strong></p>
+      <div class="footer-links">
+        <a href="https://www.youtube.com/@GrindForge-p4f" class="footer-btn youtube" target="_blank">🎥 YouTube</a>
+        <a href="https://buymeacoffee.com/shauryachauhan" class="footer-btn coffee" target="_blank">☕ Buy Me a Coffee</a>
+      </div>
+    </div>
+
+    <div class="footer-right">
+      <div class="qr-placeholder">
+        <img src="./qr-code.png" alt="QR Code"> 
+      </div>
+    </div>
   </div>
+</footer>
+
 </footer>
 
 
