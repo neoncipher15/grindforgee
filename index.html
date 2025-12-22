@@ -572,6 +572,45 @@ h1{
   position:relative;
 }
 
+.footer-links{
+  margin-top:30px;
+  display:flex;
+  justify-content:center;
+  gap:24px;
+  flex-wrap:wrap;
+}
+
+.footer-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:12px 28px;
+  font-size:18px;
+  font-weight:700;
+  border-radius:40px;
+  text-decoration:none;
+  transition:all 0.4s ease;
+  box-shadow:0 8px 20px rgba(78,205,196,0.2);
+  backdrop-filter: blur(10px);
+  border:2px solid rgba(78,205,196,0.15);
+}
+
+.footer-btn.youtube{
+  background:linear-gradient(135deg,#FF0000,#FF4C4C);
+  color:#fff;
+}
+
+.footer-btn.coffee{
+  background:linear-gradient(135deg,#FFDD00,#FFB700);
+  color:#042726;
+}
+
+.footer-btn:hover{
+  transform:translateY(-6px) scale(1.03);
+  box-shadow:0 12px 28px rgba(78,205,196,0.3);
+}
+
+
 .footer::before{
   content:'';
   position:absolute;
@@ -714,7 +753,13 @@ h1{
 
 <footer class="footer">
   <p>&copy; 2025 GrindForge by Shaurya Chauhan. <strong>Built with ❤️ & ⚡ for relentless grinders worldwide.</strong></p>
+  
+  <div class="footer-links">
+    <a href="https://www.youtube.com/@GrindForge-p4f" class="footer-btn youtube" target="_blank">🎥 YouTube</a>
+    <a href="https://buymeacoffee.com/shauryachauhan?new=1" class="footer-btn coffee" target="_blank">☕ Buy Me a Coffee</a>
+  </div>
 </footer>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
