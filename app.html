@@ -291,6 +291,12 @@ body{
 <div class="notification" id="notification"></div>
 
 <script>
+const alarmSound = new Audio(
+  "https://assets.mixkit.co/sfx/preview/mixkit-bell-notification-933.mp3"
+);
+alarmSound.volume = 0.8;
+
+
 /* PARTICLES */
 const particles=document.getElementById("particles");
 for(let i=0;i<80;i++){
@@ -339,6 +345,9 @@ function reset(){
   render();
 }
 function next(){
+  alarmSound.currentTime = 0;
+  alarmSound.play();
+
   if(phase==="WORK"){
     pomos++;
     phase=pomos%interval===0?"LONG":"SHORT";
@@ -353,6 +362,7 @@ function next(){
   updateStats();
   pause();
 }
+
 
 startBtn.onclick=start;
 pauseBtn.onclick=pause;
