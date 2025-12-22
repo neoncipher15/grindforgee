@@ -581,8 +581,8 @@ h1{
 }
 
 .qr-placeholder{
-  width:120px;
-  height:120px;
+  width:140px;
+  height:140px;
   background:rgba(255,255,255,0.05);
   border:2px solid rgba(78,205,196,0.2);
   border-radius:20px;
@@ -592,6 +592,14 @@ h1{
   font-size:14px;
   color:var(--text-secondary);
   box-shadow:0 10px 30px rgba(78,205,196,0.15);
+  overflow:hidden;
+}
+
+.qr-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .footer{
@@ -641,7 +649,6 @@ h1{
   transform:translateY(-6px) scale(1.03);
   box-shadow:0 12px 28px rgba(78,205,196,0.3);
 }
-
 
 .footer::before{
   content:'';
@@ -761,13 +768,11 @@ h1{
       <div class="feature">
         <span class="feature-icon">✅</span>
         <div>Todo List</div>
-              </div>
+      </div>
       <div class="feature">
         <span class="feature-icon">📊</span>
         <div>Daily Stats</div>
-        
       </div>
-     
     </div>
   </section>
 
@@ -800,9 +805,6 @@ h1{
     </div>
   </div>
 </footer>
-
-</footer>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -854,11 +856,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Floating particles effect
   function createParticle() {
     const p = document.createElement('div');
-    particle.className = 'floating-particle';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.width = particle.style.height = (Math.random() * 6 + 2) + 'px';
-    particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
-    particle.style.animationDelay = Math.random() * 5 + 's';
+    p.className = 'floating-particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.width = p.style.height = (Math.random() * 6 + 2) + 'px';
+    p.style.animationDuration = (Math.random() * 15 + 15) + 's';
+    p.style.animationDelay = Math.random() * 5 + 's';
     document.body.appendChild(p);
     
     setTimeout(() => {
