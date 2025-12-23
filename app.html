@@ -245,6 +245,11 @@ body{
 </head>
 
 <body>
+  
+<audio id="alarmSound" preload="auto">
+  <source src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" type="audio/ogg">
+</audio>
+
 
 <div class="particles" id="particles"></div>
 
@@ -313,6 +318,13 @@ body{
 <div class="notification" id="notification"></div>
 
 <script>
+const alarm = document.getElementById("alarmSound");
+
+function playAlarm() {
+  alarm.currentTime = 0;
+  alarm.play().catch(() => {});
+}
+
 /* ================== DATE RESET ================== */
 let completedToday = Number(localStorage.getItem("completedToday")) || 0;
 const todayKey = new Date().toDateString();
@@ -405,6 +417,8 @@ function loadPhase(p) {
 }
 
 function handlePhaseEnd() {
+  playAlarm(); // 🔔 ALARM HERE
+
   if (phase === "work") {
     pomodoroCount++;
     completedToday++;
