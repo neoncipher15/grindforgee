@@ -37,6 +37,8 @@ body{
   from{transform:translateY(100vh)}
   to{transform:translateY(-120vh)}
 }
+
+/* HEADER */
 .header{
   position:sticky;
   top:0;
@@ -65,6 +67,8 @@ body{
   font-size:.85rem;
   color:var(--muted);
 }
+
+/* DASHBOARD */
 .dashboard{
   position:relative;
   z-index:1;
@@ -78,6 +82,8 @@ body{
 @media(max-width:1000px){
   .dashboard{grid-template-columns:1fr}
 }
+
+/* TIMER */
 .hero-timer{
   display:flex;
   flex-direction:column;
@@ -130,6 +136,8 @@ body{
   border:none;
   color:white;
 }
+
+/* SIDEBAR */
 .sidebar{display:flex;flex-direction:column;gap:24px}
 .panel{
   background:var(--panel);
@@ -142,6 +150,8 @@ body{
   font-weight:700;
   margin-bottom:16px;
 }
+
+/* SETTINGS */
 .settings-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -160,6 +170,8 @@ body{
   background:var(--panel-soft);
   color:var(--text);
 }
+
+/* TASKS */
 .task-input-container{
   display:flex;
   gap:10px;
@@ -185,6 +197,15 @@ body{
 }
 .task-item.completed{opacity:.5;text-decoration:line-through}
 .task-item span{flex:1}
+.delete-btn{
+  background:none;
+  border:none;
+  color:#ef4444;
+  font-size:1.1rem;
+  cursor:pointer;
+}
+
+/* STATS */
 .stats-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -204,6 +225,8 @@ body{
   letter-spacing:.1em;
   text-transform:uppercase;
 }
+
+/* NOTIFICATION */
 .notification{
   position:fixed;
   bottom:24px;
@@ -254,7 +277,7 @@ body{
 </section>
 
 <aside class="sidebar">
-  <!-- QUICK SETTINGS -->
+
   <div class="panel">
     <h3 class="panel-title">⚙ Quick Settings</h3>
     <div class="settings-grid">
@@ -265,7 +288,6 @@ body{
     </div>
   </div>
 
-  <!-- TASKS -->
   <div class="panel">
     <h3 class="panel-title">📋 Task Forge</h3>
     <div class="task-input-container">
@@ -275,7 +297,6 @@ body{
     <div class="tasks-list" id="tasksList"></div>
   </div>
 
-  <!-- STATS -->
   <div class="panel">
     <h3 class="panel-title">📊 Grind Stats</h3>
     <div class="stats-grid">
@@ -285,18 +306,13 @@ body{
       <div class="stat-card"><div class="stat-value" id="completedTasks">0</div><div class="stat-label">Tasks</div></div>
     </div>
   </div>
+
 </aside>
 </main>
 
 <div class="notification" id="notification"></div>
 
 <script>
-const alarmSound = new Audio(
-  "https://pixabay.com/sound-effects/clock-alarm-8761/"
-);
-alarmSound.volume = 0.8;
-
-
 /* PARTICLES */
 const particles=document.getElementById("particles");
 for(let i=0;i<80;i++){
@@ -312,96 +328,41 @@ for(let i=0;i<80;i++){
   particles.appendChild(p);
 }
 
-/* TIMER */
-let work=25*60, shortB=5*60, longB=15*60, interval=4;
-let timer=work, phase="WORK", pomos=0, tInt=null;
-
-const display=document.getElementById("timerDisplay");
-const badge=document.getElementById("phaseBadge");
-const mega=document.getElementById("timerMega");
-
-function render(){
-  display.textContent=
-    String(Math.floor(timer/60)).padStart(2,"0")+":"+
-    String(timer%60).padStart(2,"0");
-  const total=phase==="WORK"?work:phase==="SHORT"?shortB:longB;
-  mega.style.setProperty("--progress",`${(1-timer/total)*360}deg`);
-}
-function start(){
-  if(tInt) return;
-  tInt=setInterval(()=>{
-    timer--;
-    if(timer<0) next();
-    render();
-  },1000);
-}
-function pause(){clearInterval(tInt);tInt=null}
-function reset(){
-  pause();
-  phase="WORK";
-  badge.textContent="WORK";
-  timer=work;
-  mega.style.setProperty("--progress","0deg");
-  render();
-}
-function next(){
-  alarmSound.currentTime = 0;
-  alarmSound.play();
-
-  if(phase==="WORK"){
-    pomos++;
-    phase=pomos%interval===0?"LONG":"SHORT";
-    timer=phase==="LONG"?longB:shortB;
-    notify("Break time");
-  }else{
-    phase="WORK";
-    timer=work;
-    notify("Focus!");
-  }
-  badge.textContent=phase;
-  updateStats();
-  pause();
-}
-
-
-startBtn.onclick=start;
-pauseBtn.onclick=pause;
-resetBtn.onclick=reset;
-
-/* QUICK SETTINGS */
-[workTime,shortBreak,longBreak,longBreakInterval].forEach(i=>{
-  i.onchange=()=>{
-    pause();
-    work=+workTime.value*60;
-    shortB=+shortBreak.value*60;
-    longB=+longBreak.value*60;
-    interval=+longBreakInterval.value;
-    reset();
-  };
-});
-
 /* TASKS */
 let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
+
 function drawTasks(){
   tasksList.innerHTML="";
   tasks.forEach((t,i)=>{
     const d=document.createElement("div");
     d.className="task-item"+(t.done?" completed":"");
+
     const c=document.createElement("input");
-    c.type="checkbox";c.checked=t.done;
+    c.type="checkbox";
+    c.checked=t.done;
     c.onchange=()=>{t.done=!t.done;save()};
+
     const s=document.createElement("span");
-    s.contentEditable=true;s.innerText=t.text;
+    s.contentEditable=true;
+    s.innerText=t.text;
     s.oninput=e=>{t.text=e.target.innerText;save()};
-    d.append(c,s);
+
+    const del=document.createElement("button");
+    del.className="delete-btn";
+    del.innerHTML="✕";
+    del.onclick=()=>{tasks.splice(i,1);save();drawTasks()};
+
+    d.append(c,s,del);
     tasksList.append(d);
   });
   save();
 }
+
 function save(){
   localStorage.setItem("tasks",JSON.stringify(tasks));
-  updateStats();
+  completedTasks.textContent=tasks.filter(t=>t.done).length;
 }
+
 addTaskBtn.onclick=()=>{
   if(!taskInput.value.trim()) return;
   tasks.push({text:taskInput.value,done:false});
@@ -409,22 +370,6 @@ addTaskBtn.onclick=()=>{
   drawTasks();
 };
 
-/* STATS */
-function updateStats(){
-  totalPomodoros.textContent=pomos;
-  headerPomodoros.textContent=pomos;
-  completedTasks.textContent=tasks.filter(t=>t.done).length;
-  totalTime.textContent=Math.floor(pomos*work/3600)+"h";
-}
-
-/* NOTIFY */
-function notify(t){
-  notification.textContent=t;
-  notification.classList.add("show");
-  setTimeout(()=>notification.classList.remove("show"),2500);
-}
-
-render();
 drawTasks();
 </script>
 
