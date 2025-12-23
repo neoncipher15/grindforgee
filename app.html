@@ -313,6 +313,20 @@ body{
 <div class="notification" id="notification"></div>
 
 <script>
+let completedToday = Number(localStorage.getItem("completedToday")) || 0;
+
+const todayKey = new Date().toDateString();
+const savedDay = localStorage.getItem("day");
+
+if (savedDay !== todayKey) {
+  completedToday = 0;
+  localStorage.setItem("completedToday", 0);
+  localStorage.setItem("day", todayKey);
+}
+
+
+
+  
 /* PARTICLES */
 const particles=document.getElementById("particles");
 for(let i=0;i<80;i++){
@@ -331,17 +345,21 @@ for(let i=0;i<80;i++){
 /* TASKS */
 let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
 
+  
 function drawTasks(){
   tasksList.innerHTML = "";
 
   tasks.forEach((t, i) => {
     const d = document.createElement("div");
     d.className = "task-item" + (t.done ? " completed" : "");
-
     const c = document.createElement("input");
     c.type = "checkbox";
     c.checked = t.done;
     c.onchange = () => {
+        if (!t.done) {
+          completedToday++;
+          localStorage.setItem("completedToday", completedToday);
+        }
       t.done = !t.done;
       save();
       drawTasks();
@@ -371,7 +389,7 @@ function drawTasks(){
 
 function save(){
   localStorage.setItem("tasks", JSON.stringify(tasks));
-  completedTasks.textContent = tasks.filter(t => t.done).length;
+  completedTasks.textContent = completedToday;
 }
 
 /* ADD TASK */
