@@ -329,48 +329,63 @@ for(let i=0;i<80;i++){
 }
 
 /* TASKS */
-let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
+let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
 
 function drawTasks(){
-  tasksList.innerHTML="";
-  tasks.forEach((t,i)=>{
-    const d=document.createElement("div");
-    d.className="task-item"+(t.done?" completed":"");
+  tasksList.innerHTML = "";
 
-    const c=document.createElement("input");
-    c.type="checkbox";
-    c.checked=t.done;
-    c.onchange=()=>{t.done=!t.done;save()};
+  tasks.forEach((t, i) => {
+    const d = document.createElement("div");
+    d.className = "task-item" + (t.done ? " completed" : "");
 
-    const s=document.createElement("span");
-    s.contentEditable=true;
-    s.innerText=t.text;
-    s.oninput=e=>{t.text=e.target.innerText;save()};
+    const c = document.createElement("input");
+    c.type = "checkbox";
+    c.checked = t.done;
+    c.onchange = () => {
+      t.done = !t.done;
+      save();
+      drawTasks();
+    };
 
-    const del=document.createElement("button");
-    del.className="delete-btn";
-    del.innerHTML="✕";
-    del.onclick=()=>{tasks.splice(i,1);save();drawTasks()};
+    const s = document.createElement("span");
+    s.contentEditable = true;
+    s.innerText = t.text;
+    s.oninput = e => {
+      t.text = e.target.innerText;
+      save();
+    };
 
-    d.append(c,s,del);
+    const del = document.createElement("button");
+    del.className = "delete-btn";
+    del.innerHTML = "✕";
+    del.onclick = () => {
+      tasks.splice(i, 1);
+      save();
+      drawTasks();
+    };
+
+    d.append(c, s, del);
     tasksList.append(d);
   });
-  save();
 }
 
 function save(){
-  localStorage.setItem("tasks",JSON.stringify(tasks));
-  completedTasks.textContent=tasks.filter(t=>t.done).length;
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  completedTasks.textContent = tasks.filter(t => t.done).length;
 }
 
-addTaskBtn.onclick=()=>{
-  if(!taskInput.value.trim()) return;
-  tasks.push({text:taskInput.value,done:false});
-  taskInput.value="";
+/* ADD TASK */
+addTaskBtn.onclick = () => {
+  if (!taskInput.value.trim()) return;
+  tasks.push({ text: taskInput.value, done: false });
+  taskInput.value = "";
+  save();
   drawTasks();
 };
 
+/* INIT */
 drawTasks();
+
 </script>
 
 </body>
