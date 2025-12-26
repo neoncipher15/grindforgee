@@ -5,136 +5,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GrindForge</title>
 
-<link rel="icon" href="GrindForge.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ================= WINDOWS 11 MICA SYSTEM ================= */
-:root{
-  --bg:#0e1016;
-
-  --mica:rgba(255,255,255,0.08);
-  --mica-strong:rgba(255,255,255,0.14);
-  --mica-soft:rgba(255,255,255,0.05);
-
-  --border:rgba(255,255,255,0.18);
-
-  --text:#f5f6f7;
-  --muted:#a1a1aa;
-  --accent:#5b8cff;
-
-  --radius:16px;
-}
-
 /* ================= RESET ================= */
 *{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+
+/* ================= WINDOWS 11 STYLE ================= */
+:root{
+  --bg:#0b0e14;
+  --mica:rgba(255,255,255,.08);
+  --mica-soft:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.18);
+  --text:#f3f4f6;
+  --muted:#a1a1aa;
+  --accent:#4f7cff;
+  --radius:14px;
+}
 
 body{
   font-family:Inter,system-ui,sans-serif;
   background:
-    radial-gradient(900px 600px at 15% -10%, #1a2a4a, transparent 60%),
-    radial-gradient(700px 500px at 85% 10%, #1f1b3a, transparent 55%),
-    linear-gradient(180deg,#0b0f16,#0b0f16);
+    radial-gradient(800px 500px at 10% -10%, #1b2a4a, transparent 60%),
+    radial-gradient(700px 400px at 90% 10%, #1f1b3a, transparent 55%),
+    linear-gradient(180deg,#0b0e14,#0b0e14);
   color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
 }
-
-/* ================= NOISE OVERLAY ================= */
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:0;
-}
-
-/* ================= HEADER ================= */
-header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  backdrop-filter:blur(22px) saturate(140%);
-  background:rgba(20,20,30,.6);
-  border-bottom:1px solid var(--border);
-}
-.header-inner{
-  max-width:1280px;
-  margin:auto;
-  padding:14px 24px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:800;
-  font-size:1.25rem;
-}
-.brand img{width:34px;height:34px}
 
 /* ================= LAYOUT ================= */
+header{
+  padding:18px 24px;
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(18px);
+}
+header h1{
+  font-size:1.3rem;
+  font-weight:800;
+}
+
 main{
-  max-width:1280px;
+  max-width:1200px;
   margin:auto;
   padding:32px 24px 56px;
   display:grid;
   grid-template-columns:1.2fr 1fr;
   gap:32px;
 }
-@media(max-width:1000px){
+@media(max-width:900px){
   main{grid-template-columns:1fr}
 }
 
 /* ================= PANELS ================= */
 .panel{
-  background:linear-gradient(
-    180deg,
-    var(--mica-strong),
-    var(--mica-soft)
-  );
-  backdrop-filter:blur(20px) saturate(140%);
+  background:linear-gradient(180deg,var(--mica),var(--mica-soft));
+  backdrop-filter:blur(18px);
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:22px;
-  box-shadow:0 16px 40px rgba(0,0,0,.45);
-}
-
-.panel-title{
-  font-weight:700;
-  margin-bottom:16px;
-  font-size:1.05rem;
 }
 
 /* ================= TIMER ================= */
-.timer-wrap{
+.timer{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:28px;
+  gap:24px;
 }
-
 .ring{
-  width:280px;
-  height:280px;
+  width:260px;
+  height:260px;
   border-radius:50%;
-  background:conic-gradient(
-    var(--accent) var(--deg,0deg),
-    rgba(255,255,255,.15) 0deg
-  );
+  background:conic-gradient(var(--accent) var(--deg,0deg), rgba(255,255,255,.15) 0deg);
   display:flex;
   align-items:center;
   justify-content:center;
 }
 .core{
-  width:220px;
-  height:220px;
+  width:200px;
+  height:200px;
   border-radius:50%;
-  background:rgba(10,12,18,.7);
+  background:rgba(10,12,18,.8);
   border:1px solid var(--border);
   display:flex;
   flex-direction:column;
@@ -142,22 +93,19 @@ main{
   justify-content:center;
 }
 .time{
-  font-size:3.2rem;
+  font-size:3rem;
   font-weight:800;
 }
 .phase{
   font-size:.75rem;
   letter-spacing:.2em;
   color:var(--muted);
-  margin-top:4px;
 }
 
 .controls{
   display:flex;
   gap:12px;
 }
-
-/* ================= BUTTONS ================= */
 button{
   padding:12px 20px;
   border-radius:12px;
@@ -166,19 +114,16 @@ button{
   color:var(--text);
   font-weight:600;
   cursor:pointer;
-  transition:.2s;
 }
-button:hover{background:var(--mica)}
-.primary{
-  background:linear-gradient(135deg,#5b8cff,#4674ff);
+button.primary{
+  background:linear-gradient(135deg,#4f7cff,#3b64ff);
   border:none;
-  box-shadow:0 8px 24px rgba(91,140,255,.4);
 }
 
 /* ================= INPUTS ================= */
 input{
   width:100%;
-  padding:12px 14px;
+  padding:12px;
   border-radius:12px;
   border:1px solid var(--border);
   background:var(--mica-soft);
@@ -186,18 +131,24 @@ input{
 }
 input::placeholder{color:var(--muted)}
 
-/* ================= QUICK SETTINGS ================= */
+/* ================= SETTINGS ================= */
 .settings{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
 }
-.settings label{
+label{
   font-size:.75rem;
   color:var(--muted);
 }
 
 /* ================= TASKS ================= */
+.tasks{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:14px;
+}
 .task{
   display:flex;
   align-items:center;
@@ -233,21 +184,16 @@ audio{display:none}
 </audio>
 
 <header>
-  <div class="header-inner">
-    <div class="brand">
-      <img src="GrindForge.png">
-      GrindForge
-    </div>
-  </div>
+  <h1>GrindForge</h1>
 </header>
 
 <main>
 
-<!-- TIMER -->
-<section class="panel timer-wrap">
+<!-- TIMER PANEL -->
+<section class="panel timer">
   <div class="ring" id="ring">
     <div class="core">
-      <div class="time" id="display">25:00</div>
+      <div class="time" id="time">25:00</div>
       <div class="phase" id="phase">WORK</div>
     </div>
   </div>
@@ -261,8 +207,9 @@ audio{display:none}
 <!-- SIDEBAR -->
 <section style="display:flex;flex-direction:column;gap:24px">
 
+<!-- SETTINGS -->
 <div class="panel">
-  <div class="panel-title">⚙ Quick Settings</div>
+  <h3>Quick Settings</h3><br>
   <div class="settings">
     <div>
       <label>Work (min)</label>
@@ -275,97 +222,113 @@ audio{display:none}
   </div>
 </div>
 
+<!-- TASKS -->
 <div class="panel">
-  <div class="panel-title">📋 Tasks</div>
-  <input id="taskInput" placeholder="Add a task and press Enter">
-  <div id="tasks" style="margin-top:14px;display:flex;flex-direction:column;gap:10px"></div>
+  <h3>Tasks</h3><br>
+  <input id="taskInput" placeholder="Type task and press Enter">
+  <div class="tasks" id="tasks"></div>
 </div>
 
 </section>
 </main>
 
 <script>
-/* ================= TIMER ================= */
+/* ================= TIMER LOGIC (WORKING) ================= */
 let mode="work";
 let total=1500;
 let time=1500;
-let timer=null;
+let interval=null;
 
-const display=document.getElementById("display");
+const timeEl=document.getElementById("time");
+const phaseEl=document.getElementById("phase");
 const ring=document.getElementById("ring");
-const phase=document.getElementById("phase");
 const alarm=document.getElementById("alarm");
 
 function render(){
-  display.textContent=
+  timeEl.textContent=
     Math.floor(time/60)+":"+String(time%60).padStart(2,"0");
   ring.style.setProperty("--deg",360*(1-time/total)+"deg");
 }
+
 function load(){
   total=(mode==="work"?work.value:break.value)*60;
   time=total;
-  phase.textContent=mode.toUpperCase();
+  phaseEl.textContent=mode.toUpperCase();
   render();
 }
+
 function start(){
-  if(timer) return;
-  timer=setInterval(()=>{
+  if(interval) return;
+  interval=setInterval(()=>{
     time--;
     render();
     if(time<=0){
-      clearInterval(timer);
-      timer=null;
+      clearInterval(interval);
+      interval=null;
       alarm.play();
       mode=mode==="work"?"break":"work";
       load();
     }
   },1000);
 }
-function pause(){clearInterval(timer);timer=null}
-function reset(){pause();load()}
+
+function pause(){
+  clearInterval(interval);
+  interval=null;
+}
+
+function reset(){
+  pause();
+  load();
+}
 
 start.onclick=start;
 pause.onclick=pause;
 reset.onclick=reset;
-
 work.onchange=load;
 break.onchange=load;
 load();
 
-/* ================= TASKS ================= */
+/* ================= TASK SYSTEM (WORKING) ================= */
 let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
 const list=document.getElementById("tasks");
 
-function save(){
-  localStorage.setItem("tasks",JSON.stringify(tasks));
-}
+function save(){localStorage.setItem("tasks",JSON.stringify(tasks));}
+
 function draw(){
   list.innerHTML="";
   tasks.forEach((t,i)=>{
     const d=document.createElement("div");
     d.className="task"+(t.done?" done":"");
+
     const c=document.createElement("input");
     c.type="checkbox";
     c.checked=t.done;
-    c.onchange=()=>{t.done=!t.done;save();draw()};
+    c.onchange=()=>{t.done=!t.done;save();draw();};
+
     const s=document.createElement("span");
     s.contentEditable=true;
     s.textContent=t.text;
-    s.oninput=e=>{t.text=e.target.textContent;save()};
+    s.oninput=e=>{t.text=e.target.textContent;save();};
+
     const x=document.createElement("button");
     x.textContent="✕";
-    x.onclick=()=>{tasks.splice(i,1);save();draw()};
+    x.onclick=()=>{tasks.splice(i,1);save();draw();};
+
     d.append(c,s,x);
     list.append(d);
   });
 }
+
 taskInput.onkeydown=e=>{
-  if(e.key==="Enter"&&taskInput.value.trim()){
+  if(e.key==="Enter" && taskInput.value.trim()){
     tasks.push({text:taskInput.value,done:false});
     taskInput.value="";
-    save();draw();
+    save();
+    draw();
   }
 };
+
 draw();
 </script>
 
