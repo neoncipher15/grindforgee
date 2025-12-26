@@ -7,231 +7,202 @@
 <link rel="icon" href="GrindForge.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ===== RESET ===== */
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+/* ==== RESET ==== */
+* {
+    margin:0; padding:0; box-sizing:border-box;
+    font-family:'Inter', sans-serif;
+}
 
-/* ===== BODY ===== */
+/* ==== BODY & BACKGROUND ==== */
 body {
-    background: linear-gradient(135deg, #0d1b2a, #1b2b44);
-    color: #e0e0e0;
+    background: linear-gradient(135deg, #0c1a30, #1b3558);
+    color:#d9d9d9;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
-    padding: 30px 20px;
+    min-height:100vh;
+    padding:30px 20px;
 }
 
-/* ===== HEADER ===== */
+/* ==== HEADER ==== */
 header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-    max-width: 1100px;
-    margin-bottom: 50px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    max-width:1000px;
+    width:100%;
+    margin-bottom:40px;
 }
 
 header img {
-    width: 50px;
-    height: 50px;
+    width:45px; height:45px;
 }
 
 header h1 {
-    font-size: 2.4rem;
-    font-weight: 800;
-    color: #7dd3fc; /* muted cyan */
+    font-size:2.6rem;
+    font-weight:800;
+    color:#7dd3fc;
 }
 
-/* ===== MAIN LAYOUT ===== */
+/* ==== MAIN FLEX ==== */
 .main {
-    display: flex;
-    gap: 40px;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    max-width: 1100px;
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+    justify-content:center;
+    width:100%;
+    max-width:1100px;
 }
 
-/* ===== CARD GLASSMORPHISM ===== */
+/* ==== CARD STYLE (GLASS) ==== */
 .card {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(20px);
-    border-radius: 30px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-    padding: 35px 30px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    border-radius:28px;
+    box-shadow:0 10px 28px rgba(0,0,0,0.48);
+    padding:28px 24px;
 }
 
-/* ===== TIMER CARD ===== */
-.timer-card {
-    width: 380px;
-    text-align: center;
-}
-
+/* ==== TIMER CARD ==== */
+.timer-card { width:380px; }
 .circle {
-    position: relative;
-    width: 220px;
-    height: 220px;
-    margin: 0 auto 35px;
+    position:relative;
+    width:230px;
+    height:230px;
+    margin:0 auto 36px;
 }
 
 svg circle {
-    fill: none;
-    stroke-width: 14;
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
-    transition: stroke-dashoffset 0.3s linear;
+    fill:none;
+    stroke-width:14;
+    transform:rotate(-90deg);
+    transform-origin:50% 50%;
+    transition: stroke-dashoffset 0.25s ease;
 }
 
-.circle-bg { stroke: #2a3a50; }
+.circle-bg { stroke:#2e3c54; }
 .circle-progress {
-    stroke: url(#gradient);
-    stroke-linecap: round;
-    stroke-dasharray: 628;
-    stroke-dashoffset: 628;
+    stroke: url(#grad);
+    stroke-linecap:round;
+    stroke-dasharray:628;
+    stroke-dashoffset:628;
 }
 
 .time-display {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 3rem;
-    font-weight: 800;
-    color: #e0e0e0;
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%, -50%);
+    font-size:3.2rem;
+    font-weight:800;
+    color:#e0e0e0;
 }
 
-/* Timer buttons */
+/* ==== TIMER BUTTONS ==== */
 .timer-card button {
-    width: 100%;
-    padding: 14px 0;
-    margin: 10px 0;
-    border: none;
-    border-radius: 14px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    width:100%;
+    padding:14px 0;
+    margin:8px 0;
+    border:none; border-radius:13px;
+    font-size:1rem; font-weight:700;
+    cursor:pointer; transition:all 0.2s ease;
 }
-
-.timer-card button:hover { transform: scale(1.02); }
+.timer-card button:hover { transform:scale(1.02); }
 
 .start-btn {
-    background: linear-gradient(90deg, #7dd3fc, #38bdf8);
-    color: #0d1b2a;
+    background: linear-gradient(90deg, #61dafb, #4bb6f5);
+    color:#0c1a30;
 }
-
 .break-btn {
-    background: linear-gradient(90deg, #a78bfa, #c084fc);
-    color: #0d1b2a;
+    background: linear-gradient(90deg, #8b6cf5, #a78bfa);
+    color:#0c1a30;
 }
-
 .reset-btn {
-    background: rgba(50,50,50,0.5);
-    color: #e0e0e0;
+    background: rgba(60,60,60,0.6);
+    color:#e0e0e0;
 }
 
-/* ===== TODO CARD ===== */
-.todo-card { width: 380px; }
-
+/* ==== TODO CARD ==== */
+.todo-card { width:380px; }
 .todo-card h2 {
-    margin-bottom: 20px;
-    font-size: 1.6rem;
-    color: #a5b4fc;
+    font-size:1.6rem;
+    font-weight:700;
+    color:#a5b4fc;
+    margin-bottom:16px;
 }
-
 .todo-input {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    display:flex; gap:10px; margin-bottom:16px;
 }
-
 .todo-input input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    font-size: 1rem;
-    background: rgba(255,255,255,0.1);
-    color: #e0e0e0;
+    flex:1;
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    background:rgba(255,255,255,0.12);
+    color:#f3f3f3;
 }
-
 .todo-input button {
-    padding: 10px 15px;
-    border-radius: 10px;
-    border: none;
-    background: #7dd3fc;
-    color: #0d1b2a;
-    font-weight: 700;
-    cursor: pointer;
+    padding:10px 14px;
+    border:none; border-radius:10px;
+    background:#7dd3fc;
+    color:#0c1a30;
+    font-weight:700;
+    cursor:pointer;
 }
-
-.todo-list {
-    list-style: none;
-}
-
+.todo-list { list-style:none; }
 .todo-list li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: rgba(255,255,255,0.08);
-    padding: 10px 12px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    backdrop-filter: blur(10px);
+    display:flex; gap:10px; align-items:center;
+    background:rgba(255,255,255,0.1);
+    padding:10px 12px; border-radius:12px;
+    margin-bottom:10px; backdrop-filter: blur(8px);
 }
-
 .todo-list li input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    accent-color: #7dd3fc;
-    border-radius: 50%;
+    width:20px; height:20px;
+    accent-color:#7dd3fc;
+    border-radius:50%;
 }
-
 .todo-list li span {
-    flex: 1;
-    margin-left: 10px;
-    font-size: 1rem;
+    flex:1; font-size:1rem;
+    color:#ececec;
 }
-
 .todo-list li button {
-    background: #f472b6;
-    border: none;
-    border-radius: 8px;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-weight: 600;
-    color: white;
+    background:#ed6387;
+    color:white;
+    border:none;
+    border-radius:8px;
+    padding:6px 10px;
+    cursor:pointer;
+    font-weight:600;
 }
 
-/* ===== STATS CARD ===== */
+/* ==== STATS CARD ==== */
 .stats-card {
-    width: 90%;
-    max-width: 900px;
-    display: flex;
-    justify-content: space-around;
-    margin-top: 45px;
-    gap: 20px;
+    width:95%;
+    max-width:900px;
+    display:flex;
+    justify-content:space-around;
+    margin-top:42px;
+    gap:16px;
+    flex-wrap:wrap;
 }
-
-.stats-block { text-align: center; }
-
+.stats-block {
+    text-align:center;
+    flex:1 1 160px;
+}
 .stats-block span {
-    display: block;
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: #7dd3fc;
+    font-size:2.4rem;
+    font-weight:800;
+    color:#61dafb;
 }
-
 .stats-block p {
-    font-weight: 600;
-    color: #cbd5e1;
+    font-size:1rem;
+    font-weight:600;
+    color:#d0d0d0;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width:880px){
-    .main { flex-direction: column; align-items: center; }
-    .stats-card { flex-direction: column; align-items: center; gap: 20px; }
+/* ==== RESPONSIVE ==== */
+@media(max-width:900px) {
+    .main { flex-direction:column; align-items:center; gap:30px; }
+    .stats-card { flex-direction:column; align-items:center; gap:20px; }
 }
 </style>
 </head>
@@ -246,15 +217,15 @@ svg circle {
     <!-- TIMER -->
     <div class="card timer-card">
         <div class="circle">
-            <svg width="220" height="220">
+            <svg width="230" height="230">
                 <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#7dd3fc"/>
-                        <stop offset="100%" stop-color="#a78bfa"/>
+                    <linearGradient id="grad">
+                        <stop offset="0%" stop-color="#61dafb"/>
+                        <stop offset="100%" stop-color="#8b6cf5"/>
                     </linearGradient>
                 </defs>
-                <circle class="circle-bg" cx="110" cy="110" r="100"></circle>
-                <circle class="circle-progress" cx="110" cy="110" r="100"></circle>
+                <circle class="circle-bg" cx="115" cy="115" r="100"></circle>
+                <circle class="circle-progress" cx="115" cy="115" r="100"></circle>
             </svg>
             <div class="time-display" id="timer">25:00</div>
         </div>
@@ -263,7 +234,7 @@ svg circle {
         <button class="reset-btn" onclick="resetTimer()">Reset</button>
     </div>
 
-    <!-- TODO -->
+    <!-- TODO LIST -->
     <div class="card todo-card">
         <h2>To‑Do List</h2>
         <div class="todo-input">
@@ -277,91 +248,82 @@ svg circle {
 <!-- STATS -->
 <div class="stats-card">
     <div class="stats-block">
-        <span id="hours">0</span>
-        <p>Hours Completed</p>
+        <span id="hours">0</span><p>Hours Completed</p>
     </div>
     <div class="stats-block">
-        <span id="tasks-completed">0</span>
-        <p>Tasks Completed</p>
+        <span id="tasks-completed">0</span><p>Tasks Completed</p>
     </div>
 </div>
 
 <script>
-// ===== TIMER =====
+// ==== TIMER LOGIC ====
 let timer = 25*60;
 let interval;
-let isRunning = false;
+let isRunning=false;
 const circleProgress = document.querySelector('.circle-progress');
 const totalLength = 2 * Math.PI * 100;
 circleProgress.style.strokeDasharray = totalLength;
 
-function updateCircle() {
-    const offset = totalLength - (timer / (25 * 60)) * totalLength;
+function updateCircle(){
+    const offset = totalLength - (timer/(25*60)) * totalLength;
     circleProgress.style.strokeDashoffset = offset;
 }
 
-function updateTimerDisplay() {
-    let minutes = Math.floor(timer/60);
-    let seconds = timer % 60;
-    document.getElementById('timer').textContent = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+function updateTimer() {
+    let m = Math.floor(timer/60);
+    let s = timer % 60;
+    document.getElementById('timer').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     updateCircle();
 }
 
-function startTimer() {
-    if (isRunning) return;
-    isRunning = true;
-    interval = setInterval(() => {
+function startTimer(){
+    if(isRunning) return;
+    isRunning=true;
+    interval=setInterval(()=>{
         timer--;
-        updateTimerDisplay();
-        if (timer <= 0) {
+        updateTimer();
+        if(timer<=0){
             clearInterval(interval);
-            isRunning = false;
-            alert("Time's up!");
+            isRunning=false;
             document.getElementById('hours').textContent++;
         }
-    }, 1000);
+    },1000);
 }
 
-function resetTimer() {
-    clearInterval(interval);
-    isRunning = false;
-    timer = 25*60;
-    updateTimerDisplay();
+function resetTimer(){
+    clearInterval(interval); isRunning=false;
+    timer=25*60; updateTimer();
 }
 
-function switchToBreak() {
-    clearInterval(interval);
-    isRunning = false;
-    timer = 5*60;
-    updateTimerDisplay();
+function switchToBreak(){
+    clearInterval(interval); isRunning=false;
+    timer=5*60; updateTimer();
 }
-updateTimerDisplay();
+updateTimer();
 
-// ===== TODO =====
-function addTodo() {
-    const input = document.getElementById('todo-input');
-    const value = input.value.trim();
-    if (!value) return;
-    const li = document.createElement('li');
-    li.innerHTML = `<input type="checkbox" onchange="updateTasks(this)">
-                    <span>${value}</span>
-                    <button onclick="deleteTodo(this)">Delete</button>`;
+// ==== TODO LIST ====
+function addTodo(){
+    let input=document.getElementById('todo-input');
+    let val=input.value.trim();
+    if(!val) return;
+    let li=document.createElement('li');
+    li.innerHTML=`<input type="checkbox" onchange="updateTasks(this)">
+                  <span>${val}</span>
+                  <button onclick="deleteTodo(this)">Delete</button>`;
     document.getElementById('todo-list').appendChild(li);
-    input.value = '';
+    input.value='';
 }
 
-function deleteTodo(btn) {
-    const li = btn.parentElement;
-    const checkbox = li.querySelector('input[type="checkbox"]');
-    if (checkbox.checked) {
-        document.getElementById('tasks-completed').textContent--;
-    }
+function deleteTodo(btn){
+    let li=btn.parentElement;
+    let cb=li.querySelector('input[type=checkbox]');
+    if(cb.checked) document.getElementById('tasks-completed').textContent--;
     li.remove();
 }
 
-function updateTasks(checkbox) {
-    const elem = document.getElementById('tasks-completed');
-    elem.textContent = checkbox.checked ? parseInt(elem.textContent)+1 : parseInt(elem.textContent)-1;
+function updateTasks(cb){
+    let elem=document.getElementById('tasks-completed');
+    elem.textContent = cb.checked ? parseInt(elem.textContent)+1 : parseInt(elem.textContent)-1;
 }
 </script>
 
