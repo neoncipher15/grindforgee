@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GrindForge</title>
-
+<title>GrindForge Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 /* ================= RESET ================= */
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
+body{font-family:Inter,system-ui,sans-serif;background:#0b0e14;color:#f3f4f6;}
 
-/* ================= WINDOWS 11 STYLE ================= */
+/* ================= WINDOWS 11 MICA ================= */
 :root{
   --bg:#0b0e14;
   --mica:rgba(255,255,255,.08);
@@ -24,45 +24,36 @@ html,body{height:100%}
   --radius:14px;
 }
 
-body{
-  font-family:Inter,system-ui,sans-serif;
-  background:
-    radial-gradient(800px 500px at 10% -10%, #1b2a4a, transparent 60%),
-    radial-gradient(700px 400px at 90% 10%, #1f1b3a, transparent 55%),
-    linear-gradient(180deg,#0b0e14,#0b0e14);
-  color:var(--text);
-}
-
-/* ================= LAYOUT ================= */
+/* ================= HEADER ================= */
 header{
-  padding:18px 24px;
+  padding:20px 30px;
+  backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
-  backdrop-filter:blur(18px);
+  position:sticky;
+  top:0;
+  z-index:10;
 }
-header h1{
-  font-size:1.3rem;
-  font-weight:800;
-}
+header h1{font-size:1.4rem;font-weight:800;}
 
+/* ================= MAIN LAYOUT ================= */
 main{
-  max-width:1200px;
-  margin:auto;
-  padding:32px 24px 56px;
   display:grid;
-  grid-template-columns:1.2fr 1fr;
-  gap:32px;
+  grid-template-columns:2fr 1fr;
+  gap:28px;
+  max-width:1400px;
+  margin:auto;
+  padding:30px 20px 80px;
 }
-@media(max-width:900px){
-  main{grid-template-columns:1fr}
-}
+@media(max-width:1000px){main{grid-template-columns:1fr}}
 
 /* ================= PANELS ================= */
 .panel{
   background:linear-gradient(180deg,var(--mica),var(--mica-soft));
-  backdrop-filter:blur(18px);
+  backdrop-filter:blur(20px);
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:22px;
+  box-shadow:0 20px 40px rgba(0,0,0,.4);
 }
 
 /* ================= TIMER ================= */
@@ -73,8 +64,8 @@ main{
   gap:24px;
 }
 .ring{
-  width:260px;
-  height:260px;
+  width:280px;
+  height:280px;
   border-radius:50%;
   background:conic-gradient(var(--accent) var(--deg,0deg), rgba(255,255,255,.15) 0deg);
   display:flex;
@@ -85,27 +76,17 @@ main{
   width:200px;
   height:200px;
   border-radius:50%;
-  background:rgba(10,12,18,.8);
+  background:rgba(10,12,18,.85);
   border:1px solid var(--border);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
 }
-.time{
-  font-size:3rem;
-  font-weight:800;
-}
-.phase{
-  font-size:.75rem;
-  letter-spacing:.2em;
-  color:var(--muted);
-}
+.time{font-size:3rem;font-weight:800;}
+.phase{font-size:.75rem;color:var(--muted);letter-spacing:.2em;}
 
-.controls{
-  display:flex;
-  gap:12px;
-}
+.controls{display:flex;gap:12px;}
 button{
   padding:12px 20px;
   border-radius:12px;
@@ -114,66 +95,51 @@ button{
   color:var(--text);
   font-weight:600;
   cursor:pointer;
+  transition:.2s;
 }
-button.primary{
-  background:linear-gradient(135deg,#4f7cff,#3b64ff);
-  border:none;
-}
-
-/* ================= INPUTS ================= */
-input{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:var(--mica-soft);
-  color:var(--text);
-}
-input::placeholder{color:var(--muted)}
+button:hover{background:var(--mica);}
+button.primary{background:linear-gradient(135deg,#4f7cff,#3b64ff);border:none;}
 
 /* ================= SETTINGS ================= */
-.settings{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-label{
-  font-size:.75rem;
-  color:var(--muted);
-}
+.settings{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+label{font-size:.75rem;color:var(--muted);}
+input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--mica-soft);color:var(--text);}
+input::placeholder{color:var(--muted);}
 
 /* ================= TASKS ================= */
-.tasks{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  margin-top:14px;
-}
-.task{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px;
-  border-radius:12px;
+.tasks{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+.task{display:flex;align-items:center;gap:10px;padding:12px;border-radius:12px;background:var(--mica-soft);border:1px solid var(--border);}
+.task.done{opacity:.5;text-decoration:line-through;}
+.task span{flex:1;}
+.task button{background:none;border:none;color:#ef4444;font-size:1.1rem;cursor:pointer;}
+
+/* ================= STATS ================= */
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:20px;}
+.stat-card{
   background:var(--mica-soft);
   border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+  text-align:center;
 }
-.task.done{
-  opacity:.5;
-  text-decoration:line-through;
-}
-.task span{
-  flex:1;
-}
-.task button{
-  background:none;
-  border:none;
-  color:#ef4444;
-  font-size:1.1rem;
-}
+.stat-value{font-size:1.5rem;font-weight:800;}
+.stat-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
 
-/* ================= AUDIO ================= */
-audio{display:none}
+/* ================= NOTIFICATION ================= */
+.notification{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  background:var(--mica);
+  border:1px solid var(--border);
+  padding:14px 18px;
+  border-radius:14px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:.3s;
+  z-index:20;
+}
+.notification.show{opacity:1;transform:translateY(0);}
 </style>
 </head>
 
@@ -183,153 +149,155 @@ audio{display:none}
   <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
 </audio>
 
-<header>
-  <h1>GrindForge</h1>
-</header>
+<header><h1>GrindForge Dashboard</h1></header>
 
 <main>
-
-<!-- TIMER PANEL -->
-<section class="panel timer">
-  <div class="ring" id="ring">
-    <div class="core">
-      <div class="time" id="time">25:00</div>
-      <div class="phase" id="phase">WORK</div>
+  <!-- TIMER PANEL -->
+  <section class="panel timer">
+    <div class="ring" id="ring">
+      <div class="core">
+        <div class="time" id="time">25:00</div>
+        <div class="phase" id="phase">WORK</div>
+      </div>
     </div>
-  </div>
-  <div class="controls">
-    <button class="primary" id="start">Start</button>
-    <button id="pause">Pause</button>
-    <button id="reset">Reset</button>
-  </div>
-</section>
-
-<!-- SIDEBAR -->
-<section style="display:flex;flex-direction:column;gap:24px">
-
-<!-- SETTINGS -->
-<div class="panel">
-  <h3>Quick Settings</h3><br>
-  <div class="settings">
-    <div>
-      <label>Work (min)</label>
-      <input id="work" type="number" value="25">
+    <div class="controls">
+      <button class="primary" id="start">Start</button>
+      <button id="pause">Pause</button>
+      <button id="reset">Reset</button>
     </div>
-    <div>
-      <label>Break (min)</label>
-      <input id="break" type="number" value="5">
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value" id="totalPom">0</div><div class="stat-label">Pomodoros</div></div>
+      <div class="stat-card"><div class="stat-value" id="streak">0</div><div class="stat-label">Streak</div></div>
+      <div class="stat-card"><div class="stat-value" id="totalTime">0h</div><div class="stat-label">Focus</div></div>
     </div>
-  </div>
-</div>
+  </section>
 
-<!-- TASKS -->
-<div class="panel">
-  <h3>Tasks</h3><br>
-  <input id="taskInput" placeholder="Type task and press Enter">
-  <div class="tasks" id="tasks"></div>
-</div>
+  <!-- SIDEBAR -->
+  <section style="display:flex;flex-direction:column;gap:24px;">
+    <!-- SETTINGS -->
+    <div class="panel">
+      <h3>Quick Settings</h3><br>
+      <div class="settings">
+        <div>
+          <label>Work (min)</label>
+          <input id="work" type="number" value="25">
+        </div>
+        <div>
+          <label>Break (min)</label>
+          <input id="break" type="number" value="5">
+        </div>
+      </div>
+    </div>
 
-</section>
+    <!-- TASKS -->
+    <div class="panel">
+      <h3>Tasks</h3><br>
+      <input id="taskInput" placeholder="Type task and press Enter">
+      <div class="tasks" id="tasks"></div>
+    </div>
+  </section>
 </main>
 
+<div class="notification" id="notif"></div>
+
 <script>
-/* ================= TIMER LOGIC (WORKING) ================= */
+/* =================== TIMER =================== */
 let mode="work";
-let total=1500;
-let time=1500;
+let total=25*60;
+let timeLeft=total;
 let interval=null;
+let pomCount=Number(localStorage.getItem("totalPom"))||0;
+let streakCount=Number(localStorage.getItem("streak"))||0;
+let focusTime=Number(localStorage.getItem("focusTime"))||0;
 
 const timeEl=document.getElementById("time");
 const phaseEl=document.getElementById("phase");
 const ring=document.getElementById("ring");
 const alarm=document.getElementById("alarm");
 
-function render(){
-  timeEl.textContent=
-    Math.floor(time/60)+":"+String(time%60).padStart(2,"0");
-  ring.style.setProperty("--deg",360*(1-time/total)+"deg");
+function renderTimer(){
+  timeEl.textContent=Math.floor(timeLeft/60)+":"+String(timeLeft%60).padStart(2,"0");
+  ring.style.setProperty("--deg",360*(1-timeLeft/total)+"deg");
 }
-
-function load(){
-  total=(mode==="work"?work.value:break.value)*60;
-  time=total;
+function loadPhase(){
+  total=(mode==="work"?Number(work.value):Number(break.value))*60;
+  timeLeft=total;
   phaseEl.textContent=mode.toUpperCase();
-  render();
+  renderTimer();
 }
-
-function start(){
+function startTimer(){
   if(interval) return;
   interval=setInterval(()=>{
-    time--;
-    render();
-    if(time<=0){
+    timeLeft--;
+    renderTimer();
+    if(timeLeft<=0){
       clearInterval(interval);
       interval=null;
       alarm.play();
+      if(mode==="work"){pomCount++;streakCount++;focusTime+=Number(work.value);}
+      else{mode="work";}
       mode=mode==="work"?"break":"work";
-      load();
+      localStorage.setItem("totalPom",pomCount);
+      localStorage.setItem("streak",streakCount);
+      localStorage.setItem("focusTime",focusTime);
+      updateStats();
+      loadPhase();
     }
   },1000);
 }
-
-function pause(){
-  clearInterval(interval);
-  interval=null;
+function pauseTimer(){clearInterval(interval);interval=null;}
+function resetTimer(){pauseTimer();loadPhase();}
+document.getElementById("start").onclick=startTimer;
+document.getElementById("pause").onclick=pauseTimer;
+document.getElementById("reset").onclick=resetTimer;
+work.onchange=loadPhase;break.onchange=loadPhase;
+function updateStats(){
+  document.getElementById("totalPom").textContent=pomCount;
+  document.getElementById("streak").textContent=streakCount;
+  document.getElementById("totalTime").textContent=focusTime+"h";
 }
+loadPhase();updateStats();
 
-function reset(){
-  pause();
-  load();
-}
-
-start.onclick=start;
-pause.onclick=pause;
-reset.onclick=reset;
-work.onchange=load;
-break.onchange=load;
-load();
-
-/* ================= TASK SYSTEM (WORKING) ================= */
+/* =================== TASKS =================== */
 let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
 const list=document.getElementById("tasks");
-
-function save(){localStorage.setItem("tasks",JSON.stringify(tasks));}
-
-function draw(){
+function saveTasks(){localStorage.setItem("tasks",JSON.stringify(tasks));}
+function drawTasks(){
   list.innerHTML="";
   tasks.forEach((t,i)=>{
     const d=document.createElement("div");
     d.className="task"+(t.done?" done":"");
-
     const c=document.createElement("input");
     c.type="checkbox";
     c.checked=t.done;
-    c.onchange=()=>{t.done=!t.done;save();draw();};
-
+    c.onchange=()=>{t.done=!t.done;saveTasks();drawTasks();}
     const s=document.createElement("span");
     s.contentEditable=true;
     s.textContent=t.text;
-    s.oninput=e=>{t.text=e.target.textContent;save();};
-
+    s.oninput=e=>{t.text=e.target.textContent;saveTasks();}
     const x=document.createElement("button");
     x.textContent="✕";
-    x.onclick=()=>{tasks.splice(i,1);save();draw();};
-
-    d.append(c,s,x);
-    list.append(d);
+    x.onclick=()=>{tasks.splice(i,1);saveTasks();drawTasks();}
+    d.append(c,s,x);list.append(d);
   });
 }
-
 taskInput.onkeydown=e=>{
   if(e.key==="Enter" && taskInput.value.trim()){
     tasks.push({text:taskInput.value,done:false});
     taskInput.value="";
-    save();
-    draw();
+    saveTasks();
+    drawTasks();
   }
 };
+drawTasks();
 
-draw();
+/* =================== NOTIFICATION =================== */
+function notify(msg){
+  const n=document.getElementById("notif");
+  n.textContent=msg;
+  n.classList.add("show");
+  setTimeout(()=>n.classList.remove("show"),2500);
+}
 </script>
 
 </body>
