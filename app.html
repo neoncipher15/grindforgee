@@ -8,17 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ===== RESET ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
 
 /* ===== BODY ===== */
 body {
-    background: linear-gradient(135deg, #0f1a3d, #0c2a62);
-    color: #ffffff;
+    background: linear-gradient(135deg, #0d1b2a, #1b2b44);
+    color: #e0e0e0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -32,19 +27,19 @@ header {
     align-items: center;
     gap: 15px;
     width: 100%;
-    max-width: 1000px;
-    margin-bottom: 40px;
+    max-width: 1100px;
+    margin-bottom: 50px;
 }
 
 header img {
-    width: 55px;
-    height: 55px;
+    width: 50px;
+    height: 50px;
 }
 
 header h1 {
     font-size: 2.4rem;
     font-weight: 800;
-    color: #4fd1c5;
+    color: #7dd3fc; /* muted cyan */
 }
 
 /* ===== MAIN LAYOUT ===== */
@@ -59,11 +54,11 @@ header h1 {
 
 /* ===== CARD GLASSMORPHISM ===== */
 .card {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(20px);
-    border-radius: 25px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    padding: 30px;
+    border-radius: 30px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    padding: 35px 30px;
 }
 
 /* ===== TIMER CARD ===== */
@@ -76,7 +71,7 @@ header h1 {
     position: relative;
     width: 220px;
     height: 220px;
-    margin: 0 auto 30px;
+    margin: 0 auto 35px;
 }
 
 svg circle {
@@ -87,12 +82,9 @@ svg circle {
     transition: stroke-dashoffset 0.3s linear;
 }
 
-.circle-bg {
-    stroke: #2a2a2a;
-}
-
+.circle-bg { stroke: #2a3a50; }
 .circle-progress {
-    stroke: #38bdf8;
+    stroke: url(#gradient);
     stroke-linecap: round;
     stroke-dasharray: 628;
     stroke-dashoffset: 628;
@@ -105,47 +97,46 @@ svg circle {
     transform: translate(-50%, -50%);
     font-size: 3rem;
     font-weight: 800;
-    color: #ffffff;
+    color: #e0e0e0;
 }
 
 /* Timer buttons */
 .timer-card button {
     width: 100%;
     padding: 14px 0;
-    margin: 8px 0;
+    margin: 10px 0;
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.2s ease;
 }
 
-.timer-card button:hover {
-    transform: scale(1.04);
-}
+.timer-card button:hover { transform: scale(1.02); }
+
 .start-btn {
-    background: linear-gradient(90deg, #38bdf8, #4fd1c5);
-    color: #0a0a0a;
+    background: linear-gradient(90deg, #7dd3fc, #38bdf8);
+    color: #0d1b2a;
 }
+
 .break-btn {
-    background: linear-gradient(90deg, #facc15, #f97316);
-    color: #0a0a0a;
+    background: linear-gradient(90deg, #a78bfa, #c084fc);
+    color: #0d1b2a;
 }
+
 .reset-btn {
-    background: #444;
-    color: #fff;
+    background: rgba(50,50,50,0.5);
+    color: #e0e0e0;
 }
 
 /* ===== TODO CARD ===== */
-.todo-card {
-    width: 380px;
-}
+.todo-card { width: 380px; }
 
 .todo-card h2 {
     margin-bottom: 20px;
     font-size: 1.6rem;
-    color: #38bdf8;
+    color: #a5b4fc;
 }
 
 .todo-input {
@@ -157,20 +148,20 @@ svg circle {
 .todo-input input {
     flex: 1;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 10px;
     border: none;
     outline: none;
     font-size: 1rem;
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
+    background: rgba(255,255,255,0.1);
+    color: #e0e0e0;
 }
 
 .todo-input button {
     padding: 10px 15px;
-    border-radius: 8px;
+    border-radius: 10px;
     border: none;
-    background: #4fd1c5;
-    color: #0a0a0a;
+    background: #7dd3fc;
+    color: #0d1b2a;
     font-weight: 700;
     cursor: pointer;
 }
@@ -183,16 +174,17 @@ svg circle {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(255,255,255,0.13);
+    background: rgba(255,255,255,0.08);
     padding: 10px 12px;
-    border-radius: 10px;
+    border-radius: 12px;
     margin-bottom: 10px;
+    backdrop-filter: blur(10px);
 }
 
 .todo-list li input[type="checkbox"] {
     width: 20px;
     height: 20px;
-    accent-color: #38bdf8;
+    accent-color: #7dd3fc;
     border-radius: 50%;
 }
 
@@ -203,7 +195,7 @@ svg circle {
 }
 
 .todo-list li button {
-    background: #f43f5e;
+    background: #f472b6;
     border: none;
     border-radius: 8px;
     padding: 5px 10px;
@@ -218,35 +210,28 @@ svg circle {
     max-width: 900px;
     display: flex;
     justify-content: space-around;
-    margin-top: 40px;
+    margin-top: 45px;
     gap: 20px;
 }
 
-.stats-block {
-    text-align: center;
-}
+.stats-block { text-align: center; }
 
 .stats-block span {
     display: block;
     font-size: 2.2rem;
     font-weight: 800;
-    color: #38bdf8;
+    color: #7dd3fc;
 }
 
 .stats-block p {
     font-weight: 600;
-    color: #e5e5e5;
+    color: #cbd5e1;
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 880px) {
-    .main {
-        flex-direction: column;
-        align-items: center;
-    }
-    .stats-card {
-        flex-direction: column;
-    }
+@media (max-width:880px){
+    .main { flex-direction: column; align-items: center; }
+    .stats-card { flex-direction: column; align-items: center; gap: 20px; }
 }
 </style>
 </head>
@@ -258,10 +243,16 @@ svg circle {
 </header>
 
 <div class="main">
-    <!-- Timer -->
+    <!-- TIMER -->
     <div class="card timer-card">
         <div class="circle">
             <svg width="220" height="220">
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#7dd3fc"/>
+                        <stop offset="100%" stop-color="#a78bfa"/>
+                    </linearGradient>
+                </defs>
                 <circle class="circle-bg" cx="110" cy="110" r="100"></circle>
                 <circle class="circle-progress" cx="110" cy="110" r="100"></circle>
             </svg>
