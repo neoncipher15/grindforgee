@@ -1,518 +1,208 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GrindForge</title>
 <link rel="icon" href="GrindForge.png" type="image/png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0b0f17;
-  --panel:#0f172a;
-  --panel-soft:#020617;
-  --border:rgba(255,255,255,0.08);
-  --text:#e5e7eb;
-  --muted:#9ca3af;
-  --accent:#6366f1;
-  --radius:16px;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:Inter,system-ui,sans-serif;
-  background:radial-gradient(1200px 600px at 50% -10%, #111827, #020617 70%);
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
-}
-.particles{position:fixed;inset:0;z-index:0}
-.particle{
-  position:absolute;
-  background:white;
-  border-radius:50%;
-  animation:float linear infinite;
-}
-@keyframes float{
-  from{transform:translateY(100vh)}
-  to{transform:translateY(-120vh)}
-}
+    /* ========== RESET ========== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
 
-/* HEADER */
-.header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  backdrop-filter:blur(16px);
-  background:rgba(11,15,23,.85);
-  border-bottom:1px solid var(--border);
-}
-.header-content{
-  max-width:1200px;
-  margin:auto;
-  padding:16px 24px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.logo-section{display:flex;align-items:center;gap:12px}
-.logo{width:36px;height:36px}
-.brand-title{font-weight:800;font-size:1.3rem}
-.header-stats{display:flex;gap:12px}
-.stat-pill{
-  padding:8px 14px;
-  border-radius:999px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  font-size:.85rem;
-  color:var(--muted);
-}
+    body {
+        background: linear-gradient(180deg, #1c003e, #2a0066);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 40px 20px;
+    }
 
-/* DASHBOARD */
-.dashboard{
-  position:relative;
-  z-index:1;
-  max-width:1200px;
-  margin:auto;
-  padding:32px 24px;
-  display:grid;
-  grid-template-columns:1fr 380px;
-  gap:32px;
-}
-@media(max-width:1000px){
-  .dashboard{grid-template-columns:1fr}
-}
+    /* ===== Header ===== */
+    header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 50px;
+        width: 100%;
+        max-width: 600px;
+        justify-content: flex-start; /* aligned left */
+    }
 
-/* TIMER */
-.hero-timer{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:32px;
-}
-.timer-mega{
-  width:300px;
-  height:300px;
-  border-radius:50%;
-  background:conic-gradient(var(--accent) var(--progress,0deg), #1f2937 0deg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.timer-inner{
-  width:240px;
-  height:240px;
-  border-radius:50%;
-  background:var(--panel);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-}
-.timer-display{font-size:3.5rem;font-weight:800}
-.phase-badge{
-  margin-top:6px;
-  font-size:.8rem;
-  letter-spacing:.2em;
-  color:var(--muted);
-}
-.timer-controls{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-.btn{
-  padding:12px 22px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:var(--panel);
-  color:var(--text);
-  font-weight:600;
-  cursor:pointer;
-}
-.btn-primary{
-  background:var(--accent);
-  border:none;
-  color:white;
-}
+    header img {
+        width: 50px;
+        height: 50px;
+    }
 
-/* SIDEBAR */
-.sidebar{display:flex;flex-direction:column;gap:24px}
-.panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:24px;
-}
-.panel-title{
-  font-size:1.05rem;
-  font-weight:700;
-  margin-bottom:16px;
-}
+    header h1 {
+        font-size: 2rem;
+        color: #d199ff;
+    }
 
-/* SETTINGS */
-.settings-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-.settings-grid label{
-  font-size:.75rem;
-  color:var(--muted);
-}
-.settings-grid input{
-  width:100%;
-  margin-top:4px;
-  padding:8px 10px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:var(--panel-soft);
-  color:var(--text);
-}
+    /* ===== Timer Card ===== */
+    .timer-card {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 50px 30px;
+        border-radius: 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        width: 320px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
 
-/* TASKS */
-.task-input-container{
-  display:flex;
-  gap:10px;
-  margin-bottom:14px;
-}
-.task-input-container input{
-  flex:1;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:var(--panel-soft);
-  color:var(--text);
-}
-.tasks-list{display:flex;flex-direction:column;gap:10px}
-.task-item{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  padding:10px 12px;
-  border-radius:12px;
-  background:var(--panel-soft);
-  border:1px solid var(--border);
-}
-.task-item.completed{opacity:.5;text-decoration:line-through}
-.task-item span{flex:1}
-.delete-btn{
-  background:none;
-  border:none;
-  color:#ef4444;
-  font-size:1.1rem;
-  cursor:pointer;
-}
+    .timer-card .time {
+        font-size: 3.5rem;
+        margin-bottom: 25px;
+        background: linear-gradient(to right, #a855f7, #f43f5e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-/* STATS */
-.stats-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-.stat-card{
-  background:var(--panel-soft);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:16px;
-  text-align:center;
-}
-.stat-value{font-size:1.7rem;font-weight:800}
-.stat-label{
-  font-size:.7rem;
-  color:var(--muted);
-  letter-spacing:.1em;
-  text-transform:uppercase;
-}
+    .timer-card button {
+        width: 100%; /* full width */
+        padding: 15px 0;
+        margin: 10px 0;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: transform 0.2s;
+    }
 
-/* NOTIFICATION */
-.notification{
-  position:fixed;
-  bottom:24px;
-  right:24px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  padding:14px 18px;
-  border-radius:14px;
-  opacity:0;
-  transform:translateY(20px);
-  transition:.3s;
-  z-index:20;
-}
-.notification.show{opacity:1;transform:translateY(0)}
+    .timer-card button:hover {
+        transform: scale(1.03);
+    }
+
+    .start-btn { background: #a855f7; color: white; }
+    .reset-btn { background: #555; color: white; }
+    .break-btn { background: #444; color: white; }
+
+    /* ===== Stats ===== */
+    .stats {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .stat-card {
+        flex: 1 1 120px;
+        min-width: 120px;
+        padding: 25px 15px;
+        border-radius: 15px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .completed { background: #a855f7; }
+    .streak { background: #f43f5e; }
+    .focus-min { background: #10b981; }
+
+    /* ===== Tips ===== */
+    .tips {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 25px 25px;
+        border-radius: 15px;
+        max-width: 550px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .tips h2 {
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+    }
+
+    .tips ul {
+        list-style: disc;
+        padding-left: 25px;
+    }
+
+    .tips li {
+        margin-bottom: 8px;
+        font-size: 1rem;
+    }
 </style>
-<style type="text/css" id="operaUserStyle"></style></head>
-
+</head>
 <body>
-  
-<audio id="alarmSound" preload="auto">
-  <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
-</audio>
 
-
-<div class="particles" id="particles"><div class="particle" style="width: 2.05318px; height: 2.05318px; left: 79.2426%; top: 22.4411%; opacity: 0.137179; animation-duration: 11.935s;"></div><div class="particle" style="width: 2.78718px; height: 2.78718px; left: 56.4222%; top: 91.3228%; opacity: 0.86646; animation-duration: 32.5822s;"></div><div class="particle" style="width: 3.56081px; height: 3.56081px; left: 22.8978%; top: 5.86966%; opacity: 0.840764; animation-duration: 10.1005s;"></div><div class="particle" style="width: 1.10647px; height: 1.10647px; left: 32.2078%; top: 19.1603%; opacity: 0.364075; animation-duration: 13.6364s;"></div><div class="particle" style="width: 3.25493px; height: 3.25493px; left: 75.9675%; top: 81.424%; opacity: 0.870995; animation-duration: 27.011s;"></div><div class="particle" style="width: 3.23981px; height: 3.23981px; left: 61.5627%; top: 35.8603%; opacity: 0.0956809; animation-duration: 27.4622s;"></div><div class="particle" style="width: 1.10001px; height: 1.10001px; left: 70.7501%; top: 67.4604%; opacity: 0.513991; animation-duration: 25.6733s;"></div><div class="particle" style="width: 2.81226px; height: 2.81226px; left: 41.9735%; top: 87.8713%; opacity: 0.996716; animation-duration: 12.185s;"></div><div class="particle" style="width: 2.20819px; height: 2.20819px; left: 95.0192%; top: 37.094%; opacity: 0.963547; animation-duration: 31.39s;"></div><div class="particle" style="width: 1.8711px; height: 1.8711px; left: 35.2188%; top: 33.8765%; opacity: 0.646986; animation-duration: 19.3582s;"></div><div class="particle" style="width: 3.33823px; height: 3.33823px; left: 77.9387%; top: 74.4367%; opacity: 0.807095; animation-duration: 21.9243s;"></div><div class="particle" style="width: 2.76516px; height: 2.76516px; left: 62.1072%; top: 22.7718%; opacity: 0.975084; animation-duration: 37.7502s;"></div><div class="particle" style="width: 3.32215px; height: 3.32215px; left: 57.6281%; top: 71.7511%; opacity: 0.441044; animation-duration: 29.6834s;"></div><div class="particle" style="width: 2.24825px; height: 2.24825px; left: 54.2567%; top: 96.2803%; opacity: 0.535555; animation-duration: 20.7027s;"></div><div class="particle" style="width: 2.79506px; height: 2.79506px; left: 37.9871%; top: 0.558614%; opacity: 0.614608; animation-duration: 22.9057s;"></div><div class="particle" style="width: 1.30716px; height: 1.30716px; left: 98.7595%; top: 48.4847%; opacity: 0.757594; animation-duration: 27.0622s;"></div><div class="particle" style="width: 3.59259px; height: 3.59259px; left: 62.9165%; top: 70.7084%; opacity: 0.143792; animation-duration: 35.4041s;"></div><div class="particle" style="width: 3.19271px; height: 3.19271px; left: 99.0936%; top: 27.8263%; opacity: 0.290525; animation-duration: 21.2788s;"></div><div class="particle" style="width: 3.88891px; height: 3.88891px; left: 46.4112%; top: 5.1447%; opacity: 0.148643; animation-duration: 22.0489s;"></div><div class="particle" style="width: 1.13506px; height: 1.13506px; left: 93.7215%; top: 58.7049%; opacity: 0.868412; animation-duration: 34.3681s;"></div><div class="particle" style="width: 1.43658px; height: 1.43658px; left: 41.4279%; top: 46.8967%; opacity: 0.822768; animation-duration: 19.8239s;"></div><div class="particle" style="width: 1.33188px; height: 1.33188px; left: 4.03731%; top: 14.7579%; opacity: 0.849395; animation-duration: 35.59s;"></div><div class="particle" style="width: 2.86104px; height: 2.86104px; left: 16.1961%; top: 9.86018%; opacity: 0.407574; animation-duration: 34.3911s;"></div><div class="particle" style="width: 2.7695px; height: 2.7695px; left: 9.82659%; top: 99.0015%; opacity: 0.574478; animation-duration: 17.0574s;"></div><div class="particle" style="width: 2.46726px; height: 2.46726px; left: 84.0989%; top: 17.5069%; opacity: 0.857651; animation-duration: 35.9305s;"></div><div class="particle" style="width: 1.13031px; height: 1.13031px; left: 92.2704%; top: 25.135%; opacity: 0.273557; animation-duration: 20.403s;"></div><div class="particle" style="width: 2.83697px; height: 2.83697px; left: 2.95509%; top: 93.5971%; opacity: 0.340296; animation-duration: 16.2151s;"></div><div class="particle" style="width: 3.6164px; height: 3.6164px; left: 86.1867%; top: 44.8095%; opacity: 0.0802424; animation-duration: 36.7989s;"></div><div class="particle" style="width: 3.25398px; height: 3.25398px; left: 40.7631%; top: 29.9449%; opacity: 0.139902; animation-duration: 36.8365s;"></div><div class="particle" style="width: 3.92849px; height: 3.92849px; left: 95.1766%; top: 86.4873%; opacity: 0.0459117; animation-duration: 11.7141s;"></div><div class="particle" style="width: 1.36751px; height: 1.36751px; left: 28.6753%; top: 80.9355%; opacity: 0.0476511; animation-duration: 35.2606s;"></div><div class="particle" style="width: 1.9961px; height: 1.9961px; left: 91.2368%; top: 37.1773%; opacity: 0.695687; animation-duration: 39.0012s;"></div><div class="particle" style="width: 2.80078px; height: 2.80078px; left: 19.665%; top: 34.1653%; opacity: 0.782413; animation-duration: 16.0771s;"></div><div class="particle" style="width: 1.12761px; height: 1.12761px; left: 98.5038%; top: 13.8784%; opacity: 0.937021; animation-duration: 15.3308s;"></div><div class="particle" style="width: 1.82319px; height: 1.82319px; left: 83.1943%; top: 79.2889%; opacity: 0.47256; animation-duration: 13.1878s;"></div><div class="particle" style="width: 1.3807px; height: 1.3807px; left: 35.8963%; top: 22.8163%; opacity: 0.152169; animation-duration: 34.1663s;"></div><div class="particle" style="width: 3.09125px; height: 3.09125px; left: 74.0342%; top: 67.9768%; opacity: 0.204467; animation-duration: 22.7233s;"></div><div class="particle" style="width: 2.50138px; height: 2.50138px; left: 60.0917%; top: 19.1198%; opacity: 0.968681; animation-duration: 24.6911s;"></div><div class="particle" style="width: 3.75627px; height: 3.75627px; left: 19.2983%; top: 20.0565%; opacity: 0.826218; animation-duration: 14.4216s;"></div><div class="particle" style="width: 1.72425px; height: 1.72425px; left: 72.2173%; top: 76.7832%; opacity: 0.317143; animation-duration: 28.4834s;"></div><div class="particle" style="width: 2.76111px; height: 2.76111px; left: 92.1422%; top: 6.32173%; opacity: 0.381577; animation-duration: 26.0263s;"></div><div class="particle" style="width: 2.47404px; height: 2.47404px; left: 60.5248%; top: 4.84779%; opacity: 0.311997; animation-duration: 36.3427s;"></div><div class="particle" style="width: 1.77781px; height: 1.77781px; left: 1.13976%; top: 9.92965%; opacity: 0.17129; animation-duration: 16.133s;"></div><div class="particle" style="width: 3.0332px; height: 3.0332px; left: 55.8152%; top: 97.7561%; opacity: 0.44615; animation-duration: 34.0856s;"></div><div class="particle" style="width: 2.74256px; height: 2.74256px; left: 44.2432%; top: 73.4098%; opacity: 0.939548; animation-duration: 37.023s;"></div><div class="particle" style="width: 3.17558px; height: 3.17558px; left: 5.05919%; top: 49.2599%; opacity: 0.0353311; animation-duration: 10.0869s;"></div><div class="particle" style="width: 3.7874px; height: 3.7874px; left: 85.9848%; top: 14.6519%; opacity: 0.750699; animation-duration: 37.4649s;"></div><div class="particle" style="width: 1.96265px; height: 1.96265px; left: 37.494%; top: 89.6504%; opacity: 0.683701; animation-duration: 29.2862s;"></div><div class="particle" style="width: 3.53785px; height: 3.53785px; left: 3.86636%; top: 63.477%; opacity: 0.847048; animation-duration: 27.9398s;"></div><div class="particle" style="width: 2.29143px; height: 2.29143px; left: 79.7844%; top: 36.8005%; opacity: 0.367815; animation-duration: 26.1382s;"></div><div class="particle" style="width: 2.47918px; height: 2.47918px; left: 63.5555%; top: 87.7695%; opacity: 0.169546; animation-duration: 32.44s;"></div><div class="particle" style="width: 2.30476px; height: 2.30476px; left: 25.5992%; top: 50.6369%; opacity: 0.719717; animation-duration: 27.5991s;"></div><div class="particle" style="width: 2.69412px; height: 2.69412px; left: 80.5075%; top: 58.5536%; opacity: 0.123781; animation-duration: 13.3295s;"></div><div class="particle" style="width: 1.2915px; height: 1.2915px; left: 34.1496%; top: 93.811%; opacity: 0.115276; animation-duration: 38.2503s;"></div><div class="particle" style="width: 2.80765px; height: 2.80765px; left: 18.4269%; top: 79.5155%; opacity: 0.59151; animation-duration: 37.4459s;"></div><div class="particle" style="width: 3.28296px; height: 3.28296px; left: 99.2455%; top: 10.0175%; opacity: 0.0175897; animation-duration: 39.7934s;"></div><div class="particle" style="width: 2.49785px; height: 2.49785px; left: 65.3475%; top: 6.5343%; opacity: 0.957168; animation-duration: 34.0796s;"></div><div class="particle" style="width: 3.09117px; height: 3.09117px; left: 0.272804%; top: 94.6056%; opacity: 0.453548; animation-duration: 39.1789s;"></div><div class="particle" style="width: 1.85978px; height: 1.85978px; left: 27.6753%; top: 54.7204%; opacity: 0.0388052; animation-duration: 10.2774s;"></div><div class="particle" style="width: 3.25822px; height: 3.25822px; left: 0.24924%; top: 64.2355%; opacity: 0.392442; animation-duration: 19.0469s;"></div><div class="particle" style="width: 3.63611px; height: 3.63611px; left: 84.405%; top: 40.1298%; opacity: 0.356724; animation-duration: 18.1347s;"></div><div class="particle" style="width: 3.79807px; height: 3.79807px; left: 10.4665%; top: 53.7675%; opacity: 0.966593; animation-duration: 34.7322s;"></div><div class="particle" style="width: 3.68179px; height: 3.68179px; left: 67.8095%; top: 31.6441%; opacity: 0.728354; animation-duration: 16.2662s;"></div><div class="particle" style="width: 1.45347px; height: 1.45347px; left: 43.6218%; top: 14.4585%; opacity: 0.397527; animation-duration: 34.891s;"></div><div class="particle" style="width: 3.07266px; height: 3.07266px; left: 93.4917%; top: 2.74723%; opacity: 0.0228866; animation-duration: 10.1841s;"></div><div class="particle" style="width: 1.27462px; height: 1.27462px; left: 88.9463%; top: 35.9476%; opacity: 0.595923; animation-duration: 16.0099s;"></div><div class="particle" style="width: 1.89522px; height: 1.89522px; left: 3.7615%; top: 73.7322%; opacity: 0.593418; animation-duration: 39.3083s;"></div><div class="particle" style="width: 3.17837px; height: 3.17837px; left: 88.3846%; top: 32.4165%; opacity: 0.30591; animation-duration: 16.3541s;"></div><div class="particle" style="width: 2.09194px; height: 2.09194px; left: 95.5662%; top: 16.4533%; opacity: 0.581614; animation-duration: 39.6724s;"></div><div class="particle" style="width: 2.04573px; height: 2.04573px; left: 40.9337%; top: 67.5828%; opacity: 0.0645036; animation-duration: 23.6162s;"></div><div class="particle" style="width: 2.81757px; height: 2.81757px; left: 75.9881%; top: 41.5488%; opacity: 0.581028; animation-duration: 10.4766s;"></div><div class="particle" style="width: 2.40493px; height: 2.40493px; left: 1.28546%; top: 14.5678%; opacity: 0.695343; animation-duration: 22.0875s;"></div><div class="particle" style="width: 2.01285px; height: 2.01285px; left: 97.0566%; top: 42.7308%; opacity: 0.0770521; animation-duration: 28.1446s;"></div><div class="particle" style="width: 3.13878px; height: 3.13878px; left: 87.9143%; top: 35.6908%; opacity: 0.443112; animation-duration: 33.7158s;"></div><div class="particle" style="width: 2.26123px; height: 2.26123px; left: 78.9043%; top: 9.85074%; opacity: 0.378876; animation-duration: 11.2751s;"></div><div class="particle" style="width: 3.06579px; height: 3.06579px; left: 99.5305%; top: 91.0336%; opacity: 0.564345; animation-duration: 23.9373s;"></div><div class="particle" style="width: 3.2211px; height: 3.2211px; left: 14.4354%; top: 40.8962%; opacity: 0.832245; animation-duration: 15.2972s;"></div><div class="particle" style="width: 2.05866px; height: 2.05866px; left: 59.7452%; top: 61.05%; opacity: 0.984446; animation-duration: 10.2103s;"></div><div class="particle" style="width: 3.61322px; height: 3.61322px; left: 67.3371%; top: 13.7944%; opacity: 0.649133; animation-duration: 13.6155s;"></div><div class="particle" style="width: 3.74402px; height: 3.74402px; left: 79.0938%; top: 65.353%; opacity: 0.639276; animation-duration: 14.8461s;"></div></div>
-
-<header class="header">
-  <div class="header-content">
-    <div class="logo-section">
-      <img src="GrindForge.png" class="logo">
-      <div class="brand-title">GrindForge</div>
-    </div>
-    <div class="header-stats">
-      <div class="stat-pill"><span id="headerPomodoros">0</span> Today</div>
-      <div class="stat-pill">Streak: <span id="headerStreak">0</span></div>
-    </div>
-  </div>
+<header>
+    <img src="GrindForge.png" alt="GrindForge Logo">
+    <h1>GrindForge</h1>
 </header>
 
-<main class="dashboard">
-<section class="hero-timer">
-  <div class="timer-mega" id="timerMega" style="--progress: 36.999999999999986deg;">
-    <div class="timer-inner">
-      <div class="timer-display" id="timerDisplay">107:40</div>
-      <div class="phase-badge" id="phaseBadge">WORK</div>
-    </div>
-  </div>
-  <div class="timer-controls">
-    <button class="btn btn-primary" id="startBtn">▶ Start</button>
-    <button class="btn" id="pauseBtn">⏸ Pause</button>
-    <button class="btn" id="resetBtn">🔄 Reset</button>
-  </div>
-</section>
+<div class="timer-card">
+    <div class="time" id="timer">25:00</div>
+    <button class="start-btn" onclick="startTimer()">Start</button>
+    <button class="break-btn" onclick="switchToBreak()">Switch to Break</button>
+    <button class="reset-btn" onclick="resetTimer()">Reset</button>
+</div>
 
-<aside class="sidebar">
+<div class="stats">
+    <div class="stat-card completed">0<br>Completed</div>
+    <div class="stat-card streak">0<br>Current Streak</div>
+    <div class="stat-card focus-min">0<br>Focus Minutes</div>
+</div>
 
-  <div class="panel">
-    <h3 class="panel-title">⚙ Quick Settings</h3>
-    <div class="settings-grid">
-      <div><label>Work</label><input type="number" id="workTime" value="25"></div>
-      <div><label>Short Break</label><input type="number" id="shortBreak" value="5"></div>
-      <div><label>Long Break</label><input type="number" id="longBreak" value="15"></div>
-      <div><label>Interval</label><input type="number" id="longBreakInterval" value="4"></div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <h3 class="panel-title">📋 Task Forge</h3>
-    <div class="task-input-container">
-      <input id="taskInput" placeholder="What are you forging today?">
-      <button class="btn btn-primary" id="addTaskBtn">Add</button>
-    </div>
-    <div class="tasks-list" id="tasksList"></div>
-  </div>
-
-  <div class="panel">
-    <h3 class="panel-title">📊 Grind Stats</h3>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-value" id="totalPomodoros">3</div><div class="stat-label">Pomodoros</div></div>
-      <div class="stat-card"><div class="stat-value" id="totalTime">0h</div><div class="stat-label">Focus</div></div>
-      <div class="stat-card"><div class="stat-value" id="currentStreak">3</div><div class="stat-label">Streak</div></div>
-      <div class="stat-card"><div class="stat-value" id="completedTasks">0</div><div class="stat-label">Tasks</div></div>
-    </div>
-  </div>
-
-</aside>
-</main>
-
-<div class="notification" id="notification"></div>
+<div class="tips">
+    <h2>Pro Tips for Maximum Productivity</h2>
+    <ul>
+        <li>During work sessions, eliminate all distractions and focus on a single task</li>
+        <li>Use break time to step away from your desk, stretch, and rest your eyes</li>
+        <li>After 4 pomodoros, take a longer 15-30 minute break to recharge</li>
+        <li>Track your progress and celebrate your completed sessions!</li>
+    </ul>
+</div>
 
 <script>
-const alarm = document.getElementById("alarmSound");
-
-function playAlarm() {
-  alarm.currentTime = 0;
-  alarm.play().catch(() => {});
-}
-
-/* ================== DATE RESET ================== */
-let completedToday = Number(localStorage.getItem("completedToday")) || 0;
-const todayKey = new Date().toDateString();
-if (localStorage.getItem("day") !== todayKey) {
-  completedToday = 0;
-  localStorage.setItem("completedToday", 0);
-  localStorage.setItem("day", todayKey);
-}
-headerPomodoros.textContent = completedToday;
-completedTasks.textContent = completedToday;
-
-/* ================== PARTICLES ================== */
-const particles = document.getElementById("particles");
-for (let i = 0; i < 80; i++) {
-  const p = document.createElement("div");
-  p.className = "particle";
-  const s = Math.random() * 3 + 1;
-  p.style.width = s + "px";
-  p.style.height = s + "px";
-  p.style.left = Math.random() * 100 + "%";
-  p.style.top = Math.random() * 100 + "%";
-  p.style.opacity = Math.random();
-  p.style.animationDuration = (10 + Math.random() * 30) + "s";
-  particles.appendChild(p);
-}
-
-/* ================== TIMER LOGIC ================== */
-let timer = null;
-let secondsLeft = 25 * 60;
-let totalSeconds = secondsLeft;
-let phase = "work";
-let pomodoroCount = Number(localStorage.getItem("totalPomodoros")) || 0;
-let streak = Number(localStorage.getItem("streak")) || 0;
-
-totalPomodoros.textContent = pomodoroCount;
-currentStreak.textContent = streak;
-
-function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
-
-function updateRing() {
-  const deg = 360 * (1 - secondsLeft / totalSeconds);
-  timerMega.style.setProperty("--progress", `${deg}deg`);
-}
+let timer = 25 * 60;
+let interval;
+let isRunning = false;
 
 function startTimer() {
-  if (timer) return;
-
-  timer = setInterval(() => {
-    secondsLeft--;
-    timerDisplay.textContent = formatTime(secondsLeft);
-    updateRing();
-
-    if (secondsLeft <= 0) {
-      clearInterval(timer);
-      timer = null;
-      handlePhaseEnd();
-    }
-  }, 1000);
-}
-
-function pauseTimer() {
-  clearInterval(timer);
-  timer = null;
+    if (isRunning) return;
+    isRunning = true;
+    interval = setInterval(() => {
+        timer--;
+        updateTimerDisplay();
+        if (timer <= 0) {
+            clearInterval(interval);
+            isRunning = false;
+            alert("Time's up!");
+        }
+    }, 1000);
 }
 
 function resetTimer() {
-  pauseTimer();
-  loadPhase(phase);
+    clearInterval(interval);
+    isRunning = false;
+    timer = 25 * 60;
+    updateTimerDisplay();
 }
 
-function loadPhase(p) {
-  phase = p;
-  phaseBadge.textContent = phase.toUpperCase();
-
-  if (phase === "work") {
-    totalSeconds = Number(workTime.value) * 60;
-  } else if (phase === "short") {
-    totalSeconds = Number(shortBreak.value) * 60;
-  } else {
-    totalSeconds = Number(longBreak.value) * 60;
-  }
-
-  secondsLeft = totalSeconds;
-  timerDisplay.textContent = formatTime(secondsLeft);
-  updateRing();
+function switchToBreak() {
+    clearInterval(interval);
+    isRunning = false;
+    timer = 5 * 60;
+    updateTimerDisplay();
 }
 
-function handlePhaseEnd() {
-  playAlarm(); // 🔔 ALARM HERE
-
-  if (phase === "work") {
-    pomodoroCount++;
-    completedToday++;
-    streak++;
-
-    localStorage.setItem("totalPomodoros", pomodoroCount);
-    localStorage.setItem("completedToday", completedToday);
-    localStorage.setItem("streak", streak);
-
-    headerPomodoros.textContent = completedToday;
-    totalPomodoros.textContent = pomodoroCount;
-    currentStreak.textContent = streak;
-
-    if (pomodoroCount % Number(longBreakInterval.value) === 0) {
-      loadPhase("long");
-    } else {
-      loadPhase("short");
-    }
-  } else {
-    loadPhase("work");
-  }
-
-  startTimer();
+function updateTimerDisplay() {
+    let minutes = Math.floor(timer / 60);
+    let seconds = timer % 60;
+    document.getElementById('timer').textContent = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
 }
-
-/* ================== BUTTONS ================== */
-startBtn.onclick = startTimer;
-pauseBtn.onclick = pauseTimer;
-resetBtn.onclick = resetTimer;
-
-/* ================== QUICK SETTINGS LIVE UPDATE ================== */
-[workTime, shortBreak, longBreak].forEach(input => {
-  input.onchange = () => resetTimer();
-});
-
-/* ================== TASK SYSTEM ================== */
-let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-
-function saveTasks() {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-  completedTasks.textContent = completedToday;
-}
-
-function drawTasks() {
-  tasksList.innerHTML = "";
-
-  tasks.forEach((t, i) => {
-    const d = document.createElement("div");
-    d.className = "task-item" + (t.done ? " completed" : "");
-
-    const c = document.createElement("input");
-    c.type = "checkbox";
-    c.checked = t.done;
-    c.onchange = () => {
-      if (!t.done) completedToday++;
-      t.done = !t.done;
-      localStorage.setItem("completedToday", completedToday);
-      saveTasks();
-      drawTasks();
-    };
-
-    const s = document.createElement("span");
-    s.contentEditable = true;
-    s.innerText = t.text;
-    s.oninput = e => {
-      t.text = e.target.innerText;
-      saveTasks();
-    };
-
-    const del = document.createElement("button");
-    del.className = "delete-btn";
-    del.innerHTML = "✕";
-    del.onclick = () => {
-      tasks.splice(i, 1);
-      saveTasks();
-      drawTasks();
-    };
-
-    d.append(c, s, del);
-    tasksList.append(d);
-  });
-}
-
-addTaskBtn.onclick = () => {
-  if (!taskInput.value.trim()) return;
-  tasks.push({ text: taskInput.value, done: false });
-  taskInput.value = "";
-  saveTasks();
-  drawTasks();
-};
-
-/* ================== INIT ================== */
-loadPhase("work");
-drawTasks();
 </script>
 
-
-
-<div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"></div></body></html>
+</body>
+</html>
