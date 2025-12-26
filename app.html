@@ -11,7 +11,7 @@
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
 
 body {
-    background-color:#0a0a0a;
+    background: linear-gradient(135deg,#0f172a,#1e3a8a);
     color:#e5e5e5;
     display:flex;
     flex-direction:column;
@@ -32,7 +32,7 @@ header {
 header img { width:50px; height:50px; }
 header h1 { font-size:2rem; color:#4fd1c5; }
 
-/* ===== MAIN CARD ===== */
+/* ===== MAIN FLEX ===== */
 .main {
     display:flex;
     gap:40px;
@@ -44,12 +44,13 @@ header h1 { font-size:2rem; color:#4fd1c5; }
 
 /* ===== TIMER CARD ===== */
 .timer-card {
-    background:#1c1c1c;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
     border-radius:30px;
     padding:40px;
     width:350px;
     text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,0.6);
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
     position:relative;
 }
 
@@ -97,11 +98,12 @@ svg circle {
 
 /* ===== TODO CARD ===== */
 .todo-card {
-    background:#1c1c1c;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
     border-radius:30px;
     padding:30px;
     width:350px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.6);
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
 }
 
 .todo-card h2 { margin-bottom:20px; font-size:1.5rem; color:#38bdf8; }
@@ -113,6 +115,8 @@ svg circle {
     border:none;
     outline:none;
     font-size:1rem;
+    background: rgba(255,255,255,0.1);
+    color:#fff;
 }
 .todo-input button {
     padding:10px 15px;
@@ -129,10 +133,11 @@ svg circle {
     display:flex;
     align-items:center;
     justify-content:space-between;
-    background:#222;
+    background: rgba(255,255,255,0.1);
     padding:10px 15px;
     border-radius:12px;
     margin-bottom:10px;
+    backdrop-filter: blur(10px);
 }
 
 .todo-list li input[type="checkbox"] {
@@ -158,18 +163,21 @@ svg circle {
 
 /* ===== STATS CARD ===== */
 .stats-card {
-    background:#1c1c1c;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
     border-radius:30px;
     padding:30px;
     width:740px;
     display:flex;
     justify-content:space-around;
     margin-top:40px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.6);
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    flex-wrap:wrap;
 }
 
 .stats-block {
     text-align:center;
+    margin-bottom:10px;
 }
 
 .stats-block span {
@@ -181,6 +189,11 @@ svg circle {
 }
 .stats-block p { font-weight:600; color:#e5e5e5; }
 
+/* ===== RESPONSIVE ===== */
+@media(max-width:800px){
+    .main { flex-direction:column; align-items:center; gap:30px; }
+    .stats-card { width:100%; flex-direction:column; align-items:center; gap:20px; }
+}
 </style>
 </head>
 <body>
@@ -259,7 +272,6 @@ function startTimer() {
             clearInterval(interval);
             isRunning=false;
             alert("Time's up!");
-            // increment hours
             let hours = document.getElementById('hours');
             hours.textContent = parseInt(hours.textContent)+1;
         }
