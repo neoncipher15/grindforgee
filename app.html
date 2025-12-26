@@ -1,134 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>GrindForge</title>
-<link rel="icon" href="GrindForge.png" type="image/png">
+
+<link rel="icon" href="GrindForge.png" type="image/png" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+/* ================= ROOT ================= */
 :root{
-  --bg:#0b0f17;
+  --bg:#020617;
 
-  /* GLASS SYSTEM */
-  --glass:rgba(255,255,255,0.08);
-  --glass-strong:rgba(255,255,255,0.14);
-  --glass-soft:rgba(255,255,255,0.04);
+  --glass-strong:rgba(255,255,255,.16);
+  --glass:rgba(255,255,255,.10);
+  --glass-soft:rgba(255,255,255,.04);
 
-  --panel:rgba(255,255,255,0.10);
-  --panel-soft:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,.18);
 
-  --border:rgba(255,255,255,0.18);
-  --text:#f3f4f6;
+  --text:#f4f4f5;
   --muted:#a1a1aa;
   --accent:#7c7cff;
 
-  --radius:18px;
-  --blur:18px;
+  --radius-lg:22px;
+  --radius-md:16px;
+  --radius-sm:12px;
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+/* ================= RESET ================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{font-size:16px}
 
 body{
-  font-family:Inter,system-ui,sans-serif;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   background:
-    radial-gradient(1200px 600px at 10% -10%, #1e1b4b, transparent 60%),
-    radial-gradient(800px 500px at 90% 10%, #312e81, transparent 60%),
-    radial-gradient(1000px 700px at 50% 120%, #020617, #020617);
+    radial-gradient(1200px 600px at 10% -10%, #1e1b4b 0%, transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, #312e81 0%, transparent 55%),
+    linear-gradient(180deg,#020617,#020617);
   color:var(--text);
   min-height:100vh;
   overflow-x:hidden;
 }
 
-/* PARTICLES */
-.particles{position:fixed;inset:0;z-index:0}
+/* ================= PARTICLES ================= */
+.particles{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+}
 .particle{
   position:absolute;
   background:white;
   border-radius:50%;
+  opacity:.8;
   animation:float linear infinite;
 }
 @keyframes float{
-  from{transform:translateY(100vh)}
+  from{transform:translateY(110vh)}
   to{transform:translateY(-120vh)}
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 .header{
   position:sticky;
   top:0;
   z-index:10;
-  background:rgba(10,10,20,.55);
-  backdrop-filter:blur(22px) saturate(150%);
+  background:rgba(10,10,25,.6);
+  backdrop-filter:blur(18px) saturate(150%);
   border-bottom:1px solid var(--border);
 }
 .header-content{
-  max-width:1200px;
+  max-width:1320px;
   margin:auto;
-  padding:16px 24px;
+  padding:16px 32px;
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
-.logo-section{display:flex;align-items:center;gap:12px}
-.logo{width:36px;height:36px}
-.brand-title{font-weight:800;font-size:1.3rem}
-
-.header-stats{display:flex;gap:12px}
+.logo-wrap{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.logo{
+  width:36px;
+  height:36px;
+}
+.brand{
+  font-size:1.35rem;
+  font-weight:800;
+}
+.header-stats{
+  display:flex;
+  gap:12px;
+}
 .stat-pill{
   padding:8px 14px;
   border-radius:999px;
-  background:var(--panel);
-  backdrop-filter:blur(14px);
+  background:var(--glass);
   border:1px solid var(--border);
-  font-size:.85rem;
+  font-size:.8rem;
   color:var(--muted);
 }
 
-/* DASHBOARD */
+/* ================= DASHBOARD ================= */
 .dashboard{
   position:relative;
   z-index:1;
-  max-width:1200px;
+  max-width:1320px;
   margin:auto;
-  padding:32px 24px;
+  padding:48px 32px 64px;
   display:grid;
-  grid-template-columns:1fr 380px;
-  gap:32px;
+  grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);
+  gap:40px;
 }
-@media(max-width:1000px){
-  .dashboard{grid-template-columns:1fr}
+@media(max-width:1100px){
+  .dashboard{
+    grid-template-columns:1fr;
+    padding:32px 20px 48px;
+  }
 }
 
-/* TIMER */
-.hero-timer{
+/* ================= PANELS ================= */
+.panel{
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,.14),
+      rgba(255,255,255,.04)
+    );
+  backdrop-filter:blur(14px) saturate(140%);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:28px;
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.12);
+}
+.panel-title{
+  font-size:1.1rem;
+  font-weight:700;
+  margin-bottom:18px;
+}
+
+/* ================= TIMER ================= */
+.hero{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:32px;
+  gap:36px;
 }
-.timer-mega{
-  width:300px;
-  height:300px;
+
+.timer-ring{
+  width:320px;
+  height:320px;
   border-radius:50%;
   background:
     conic-gradient(
       var(--accent) var(--progress,0deg),
       rgba(255,255,255,.18) 0deg
     );
-  box-shadow:
-    0 0 70px rgba(124,124,255,.4),
-    inset 0 0 30px rgba(255,255,255,.25);
   display:flex;
   align-items:center;
   justify-content:center;
+  box-shadow:0 0 0 12px rgba(124,124,255,.08);
 }
-.timer-inner{
-  width:240px;
-  height:240px;
+.timer-core{
+  width:250px;
+  height:250px;
   border-radius:50%;
-  background:rgba(10,10,20,.65);
+  background:rgba(10,10,25,.65);
   backdrop-filter:blur(20px);
   border:1px solid var(--border);
   display:flex;
@@ -136,56 +183,59 @@ body{
   align-items:center;
   justify-content:center;
 }
-.timer-display{font-size:3.5rem;font-weight:800}
-.phase-badge{
+.time{
+  font-size:3.6rem;
+  font-weight:800;
+}
+.phase{
   margin-top:6px;
-  font-size:.8rem;
-  letter-spacing:.2em;
+  font-size:.75rem;
+  letter-spacing:.25em;
   color:var(--muted);
 }
-.timer-controls{display:flex;gap:12px;flex-wrap:wrap}
 
-/* BUTTONS */
+.controls{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+/* ================= BUTTONS ================= */
 .btn{
   padding:12px 22px;
   border-radius:14px;
   border:1px solid var(--border);
-  background:var(--panel-soft);
-  backdrop-filter:blur(14px);
+  background:var(--glass-soft);
   color:var(--text);
   font-weight:600;
   cursor:pointer;
   transition:.25s;
 }
-.btn:hover{background:var(--panel)}
-
+.btn:hover{
+  background:var(--glass);
+  transform:translateY(-1px);
+}
 .btn-primary{
   background:linear-gradient(135deg,#7c7cff,#5b5bf6);
   border:none;
   color:white;
-  box-shadow:0 10px 30px rgba(124,124,255,.45);
+  box-shadow:0 12px 30px rgba(124,124,255,.4);
 }
 
-/* SIDEBAR */
-.sidebar{display:flex;flex-direction:column;gap:24px}
-.panel{
-  background:linear-gradient(180deg,var(--glass-strong),var(--glass-soft));
-  backdrop-filter:blur(var(--blur)) saturate(140%);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:24px;
-  box-shadow:0 20px 40px rgba(0,0,0,.45);
+/* ================= SIDEBAR ================= */
+.sidebar{
+  display:flex;
+  flex-direction:column;
+  gap:28px;
 }
-.panel-title{font-size:1.05rem;font-weight:700;margin-bottom:16px}
 
-/* INPUTS */
+/* ================= INPUTS ================= */
 input{
   width:100%;
-  padding:10px 12px;
-  border-radius:12px;
+  padding:12px 14px;
+  border-radius:14px;
   border:1px solid var(--border);
-  background:var(--panel-soft);
-  backdrop-filter:blur(10px);
+  background:var(--glass-soft);
   color:var(--text);
   outline:none;
 }
@@ -195,19 +245,21 @@ input:focus{
   box-shadow:0 0 0 2px rgba(124,124,255,.35);
 }
 
-/* TASKS */
-.task-item{
+/* ================= TASKS ================= */
+.task{
   display:flex;
-  gap:10px;
   align-items:center;
-  padding:12px;
+  gap:12px;
+  padding:14px;
   border-radius:14px;
-  background:var(--panel-soft);
-  backdrop-filter:blur(12px);
+  background:var(--glass-soft);
   border:1px solid var(--border);
 }
-.task-item.completed{opacity:.5;text-decoration:line-through}
-.delete-btn{
+.task.done{
+  opacity:.5;
+  text-decoration:line-through;
+}
+.task button{
   background:none;
   border:none;
   color:#ef4444;
@@ -215,45 +267,38 @@ input:focus{
   cursor:pointer;
 }
 
-/* STATS */
-.stat-card{
-  background:var(--panel-soft);
-  backdrop-filter:blur(14px);
+/* ================= STATS ================= */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+.stat{
+  background:var(--glass-soft);
   border:1px solid var(--border);
   border-radius:14px;
   padding:18px;
   text-align:center;
 }
-.stat-value{font-size:1.7rem;font-weight:800}
+.stat-value{
+  font-size:1.7rem;
+  font-weight:800;
+}
 .stat-label{
   font-size:.7rem;
+  letter-spacing:.12em;
   color:var(--muted);
-  letter-spacing:.1em;
   text-transform:uppercase;
 }
 
-/* NOTIFICATION */
-.notification{
-  position:fixed;
-  bottom:24px;
-  right:24px;
-  background:var(--panel);
-  backdrop-filter:blur(16px);
-  border:1px solid var(--border);
-  padding:14px 18px;
-  border-radius:14px;
-  opacity:0;
-  transform:translateY(20px);
-  transition:.3s;
-  z-index:20;
-}
-.notification.show{opacity:1;transform:translateY(0)}
+/* ================= AUDIO ================= */
+audio{display:none}
 </style>
 </head>
 
 <body>
 
-<audio id="alarmSound" preload="auto">
+<audio id="alarm">
   <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
 </audio>
 
@@ -261,264 +306,125 @@ input:focus{
 
 <header class="header">
   <div class="header-content">
-    <div class="logo-section">
+    <div class="logo-wrap">
       <img src="GrindForge.png" class="logo">
-      <div class="brand-title">GrindForge</div>
+      <div class="brand">GrindForge</div>
     </div>
     <div class="header-stats">
-      <div class="stat-pill"><span id="headerPomodoros">0</span> Today</div>
-      <div class="stat-pill">Streak: <span id="headerStreak">0</span></div>
+      <div class="stat-pill">Today: <span id="today">0</span></div>
+      <div class="stat-pill">Streak: <span id="streak">0</span></div>
     </div>
   </div>
 </header>
 
 <main class="dashboard">
-<section class="hero-timer">
-  <div class="timer-mega" id="timerMega">
-    <div class="timer-inner">
-      <div class="timer-display" id="timerDisplay">25:00</div>
-      <div class="phase-badge" id="phaseBadge">WORK</div>
+
+<section class="hero panel">
+  <div class="timer-ring" id="ring">
+    <div class="timer-core">
+      <div class="time" id="display">25:00</div>
+      <div class="phase" id="phase">WORK</div>
     </div>
   </div>
-  <div class="timer-controls">
-    <button class="btn btn-primary" id="startBtn">▶ Start</button>
-    <button class="btn" id="pauseBtn">⏸ Pause</button>
-    <button class="btn" id="resetBtn">🔄 Reset</button>
+  <div class="controls">
+    <button class="btn btn-primary" id="start">Start</button>
+    <button class="btn" id="pause">Pause</button>
+    <button class="btn" id="reset">Reset</button>
   </div>
 </section>
 
 <aside class="sidebar">
 
-  <div class="panel">
-    <h3 class="panel-title">⚙ Quick Settings</h3>
-    <div class="settings-grid">
-      <div><label>Work</label><input type="number" id="workTime" value="25"></div>
-      <div><label>Short Break</label><input type="number" id="shortBreak" value="5"></div>
-      <div><label>Long Break</label><input type="number" id="longBreak" value="15"></div>
-      <div><label>Interval</label><input type="number" id="longBreakInterval" value="4"></div>
-    </div>
-  </div>
+<div class="panel">
+  <div class="panel-title">📋 Tasks</div>
+  <input id="taskInput" placeholder="What are you forging today?">
+  <div id="tasks" style="margin-top:16px;display:flex;flex-direction:column;gap:10px"></div>
+</div>
 
-  <div class="panel">
-    <h3 class="panel-title">📋 Task Forge</h3>
-    <div class="task-input-container">
-      <input id="taskInput" placeholder="What are you forging today?">
-      <button class="btn btn-primary" id="addTaskBtn">Add</button>
-    </div>
-    <div class="tasks-list" id="tasksList"></div>
+<div class="panel">
+  <div class="panel-title">📊 Stats</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-value" id="pomos">0</div><div class="stat-label">Pomodoros</div></div>
+    <div class="stat"><div class="stat-value" id="focus">0h</div><div class="stat-label">Focus</div></div>
   </div>
-
-  <div class="panel">
-    <h3 class="panel-title">📊 Grind Stats</h3>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-value" id="totalPomodoros">0</div><div class="stat-label">Pomodoros</div></div>
-      <div class="stat-card"><div class="stat-value" id="totalTime">0h</div><div class="stat-label">Focus</div></div>
-      <div class="stat-card"><div class="stat-value" id="currentStreak">0</div><div class="stat-label">Streak</div></div>
-      <div class="stat-card"><div class="stat-value" id="completedTasks">0</div><div class="stat-label">Tasks</div></div>
-    </div>
-  </div>
+</div>
 
 </aside>
 </main>
 
-<div class="notification" id="notification"></div>
-
 <script>
-const alarm = document.getElementById("alarmSound");
-
-function playAlarm() {
-  alarm.currentTime = 0;
-  alarm.play().catch(() => {});
+/* PARTICLES */
+const p=document.getElementById("particles");
+for(let i=0;i<90;i++){
+  const d=document.createElement("div");
+  d.className="particle";
+  const s=Math.random()*2+1;
+  d.style.width=d.style.height=s+"px";
+  d.style.left=Math.random()*100+"%";
+  d.style.animationDuration=10+Math.random()*30+"s";
+  p.appendChild(d);
 }
 
-/* ================== DATE RESET ================== */
-let completedToday = Number(localStorage.getItem("completedToday")) || 0;
-const todayKey = new Date().toDateString();
-if (localStorage.getItem("day") !== todayKey) {
-  completedToday = 0;
-  localStorage.setItem("completedToday", 0);
-  localStorage.setItem("day", todayKey);
-}
-headerPomodoros.textContent = completedToday;
-completedTasks.textContent = completedToday;
+/* TIMER */
+let time=1500,total=1500,t=null;
+const display=document.getElementById("display");
+const ring=document.getElementById("ring");
+const alarm=document.getElementById("alarm");
 
-/* ================== PARTICLES ================== */
-const particles = document.getElementById("particles");
-for (let i = 0; i < 80; i++) {
-  const p = document.createElement("div");
-  p.className = "particle";
-  const s = Math.random() * 3 + 1;
-  p.style.width = s + "px";
-  p.style.height = s + "px";
-  p.style.left = Math.random() * 100 + "%";
-  p.style.top = Math.random() * 100 + "%";
-  p.style.opacity = Math.random();
-  p.style.animationDuration = (10 + Math.random() * 30) + "s";
-  particles.appendChild(p);
+function draw(){
+  display.textContent=
+    Math.floor(time/60)+":"+String(time%60).padStart(2,"0");
+  ring.style.setProperty("--progress",360*(1-time/total)+"deg");
 }
 
-/* ================== TIMER LOGIC ================== */
-let timer = null;
-let secondsLeft = 25 * 60;
-let totalSeconds = secondsLeft;
-let phase = "work";
-let pomodoroCount = Number(localStorage.getItem("totalPomodoros")) || 0;
-let streak = Number(localStorage.getItem("streak")) || 0;
-
-totalPomodoros.textContent = pomodoroCount;
-currentStreak.textContent = streak;
-
-function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
-
-function updateRing() {
-  const deg = 360 * (1 - secondsLeft / totalSeconds);
-  timerMega.style.setProperty("--progress", `${deg}deg`);
-}
-
-function startTimer() {
-  if (timer) return;
-
-  timer = setInterval(() => {
-    secondsLeft--;
-    timerDisplay.textContent = formatTime(secondsLeft);
-    updateRing();
-
-    if (secondsLeft <= 0) {
-      clearInterval(timer);
-      timer = null;
-      handlePhaseEnd();
+function start(){
+  if(t) return;
+  t=setInterval(()=>{
+    time--;
+    draw();
+    if(time<=0){
+      clearInterval(t);t=null;
+      alarm.play();
     }
-  }, 1000);
+  },1000);
 }
+function pause(){clearInterval(t);t=null;}
+function reset(){pause();time=total;draw();}
 
-function pauseTimer() {
-  clearInterval(timer);
-  timer = null;
-}
+start.onclick=start;
+pause.onclick=pause;
+reset.onclick=reset;
+draw();
 
-function resetTimer() {
-  pauseTimer();
-  loadPhase(phase);
-}
-
-function loadPhase(p) {
-  phase = p;
-  phaseBadge.textContent = phase.toUpperCase();
-
-  if (phase === "work") {
-    totalSeconds = Number(workTime.value) * 60;
-  } else if (phase === "short") {
-    totalSeconds = Number(shortBreak.value) * 60;
-  } else {
-    totalSeconds = Number(longBreak.value) * 60;
+/* TASKS */
+const tasks=[];
+const list=document.getElementById("tasks");
+taskInput.onkeydown=e=>{
+  if(e.key==="Enter" && taskInput.value.trim()){
+    const t={text:taskInput.value,done:false};
+    tasks.push(t);
+    taskInput.value="";
+    render();
   }
-
-  secondsLeft = totalSeconds;
-  timerDisplay.textContent = formatTime(secondsLeft);
-  updateRing();
-}
-
-function handlePhaseEnd() {
-  playAlarm(); // 🔔 ALARM HERE
-
-  if (phase === "work") {
-    pomodoroCount++;
-    completedToday++;
-    streak++;
-
-    localStorage.setItem("totalPomodoros", pomodoroCount);
-    localStorage.setItem("completedToday", completedToday);
-    localStorage.setItem("streak", streak);
-
-    headerPomodoros.textContent = completedToday;
-    totalPomodoros.textContent = pomodoroCount;
-    currentStreak.textContent = streak;
-
-    if (pomodoroCount % Number(longBreakInterval.value) === 0) {
-      loadPhase("long");
-    } else {
-      loadPhase("short");
-    }
-  } else {
-    loadPhase("work");
-  }
-
-  startTimer();
-}
-
-/* ================== BUTTONS ================== */
-startBtn.onclick = startTimer;
-pauseBtn.onclick = pauseTimer;
-resetBtn.onclick = resetTimer;
-
-/* ================== QUICK SETTINGS LIVE UPDATE ================== */
-[workTime, shortBreak, longBreak].forEach(input => {
-  input.onchange = () => resetTimer();
-});
-
-/* ================== TASK SYSTEM ================== */
-let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-
-function saveTasks() {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-  completedTasks.textContent = completedToday;
-}
-
-function drawTasks() {
-  tasksList.innerHTML = "";
-
-  tasks.forEach((t, i) => {
-    const d = document.createElement("div");
-    d.className = "task-item" + (t.done ? " completed" : "");
-
-    const c = document.createElement("input");
-    c.type = "checkbox";
-    c.checked = t.done;
-    c.onchange = () => {
-      if (!t.done) completedToday++;
-      t.done = !t.done;
-      localStorage.setItem("completedToday", completedToday);
-      saveTasks();
-      drawTasks();
-    };
-
-    const s = document.createElement("span");
-    s.contentEditable = true;
-    s.innerText = t.text;
-    s.oninput = e => {
-      t.text = e.target.innerText;
-      saveTasks();
-    };
-
-    const del = document.createElement("button");
-    del.className = "delete-btn";
-    del.innerHTML = "✕";
-    del.onclick = () => {
-      tasks.splice(i, 1);
-      saveTasks();
-      drawTasks();
-    };
-
-    d.append(c, s, del);
-    tasksList.append(d);
+};
+function render(){
+  list.innerHTML="";
+  tasks.forEach((t,i)=>{
+    const d=document.createElement("div");
+    d.className="task"+(t.done?" done":"");
+    const c=document.createElement("input");
+    c.type="checkbox";
+    c.checked=t.done;
+    c.onchange=()=>{t.done=!t.done;render()};
+    const s=document.createElement("span");
+    s.textContent=t.text;
+    const x=document.createElement("button");
+    x.textContent="✕";
+    x.onclick=()=>{tasks.splice(i,1);render()};
+    d.append(c,s,x);
+    list.append(d);
   });
 }
-
-addTaskBtn.onclick = () => {
-  if (!taskInput.value.trim()) return;
-  tasks.push({ text: taskInput.value, done: false });
-  taskInput.value = "";
-  saveTasks();
-  drawTasks();
-};
-
-/* ================== INIT ================== */
-loadPhase("work");
-drawTasks();
 </script>
 
 </body>
