@@ -16,8 +16,8 @@
     }
 
     body {
-        background: linear-gradient(180deg, #1c003e, #2a0066);
-        color: #fff;
+        background-color: #0a0a0a; /* ChatGPT dark background */
+        color: #e5e5e5;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -32,8 +32,8 @@
         gap: 15px;
         margin-bottom: 50px;
         width: 100%;
-        max-width: 600px;
-        justify-content: flex-start; /* aligned left */
+        max-width: 800px;
+        justify-content: flex-start;
     }
 
     header img {
@@ -43,47 +43,47 @@
 
     header h1 {
         font-size: 2rem;
-        color: #d199ff;
+        color: #4fd1c5; /* teal accent for modern look */
     }
 
     /* ===== Timer Card ===== */
     .timer-card {
-        background: rgba(255, 255, 255, 0.08);
-        padding: 50px 30px;
-        border-radius: 20px;
+        background-color: #1c1c1c; /* dark card background */
+        padding: 60px 40px;
+        border-radius: 25px;
         text-align: center;
         margin-bottom: 40px;
-        width: 320px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        width: 400px; /* larger card */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
 
     .timer-card .time {
-        font-size: 3.5rem;
-        margin-bottom: 25px;
-        background: linear-gradient(to right, #a855f7, #f43f5e);
+        font-size: 4rem;
+        margin-bottom: 35px;
+        background: linear-gradient(90deg, #4fd1c5, #38bdf8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     .timer-card button {
-        width: 100%; /* full width */
-        padding: 15px 0;
-        margin: 10px 0;
+        width: 100%;
+        padding: 18px 0;
+        margin: 12px 0;
         border: none;
         border-radius: 12px;
         cursor: pointer;
         font-weight: 600;
-        font-size: 1rem;
-        transition: transform 0.2s;
+        font-size: 1.1rem;
+        transition: all 0.2s;
     }
 
     .timer-card button:hover {
         transform: scale(1.03);
     }
 
-    .start-btn { background: #a855f7; color: white; }
-    .reset-btn { background: #555; color: white; }
-    .break-btn { background: #444; color: white; }
+    .start-btn { background: #4fd1c5; color: #0a0a0a; }
+    .break-btn { background: #38bdf8; color: #0a0a0a; }
+    .reset-btn { background: #333; color: #e5e5e5; }
 
     /* ===== Stats ===== */
     .stats {
@@ -95,32 +95,34 @@
     }
 
     .stat-card {
-        flex: 1 1 120px;
-        min-width: 120px;
-        padding: 25px 15px;
-        border-radius: 15px;
+        flex: 1 1 140px;
+        min-width: 140px;
+        padding: 30px 15px;
+        border-radius: 20px;
         text-align: center;
         font-weight: 600;
         font-size: 1rem;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        background-color: #1c1c1c;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
     }
 
-    .completed { background: #a855f7; }
-    .streak { background: #f43f5e; }
-    .focus-min { background: #10b981; }
+    .completed { color: #4fd1c5; }
+    .streak { color: #38bdf8; }
+    .focus-min { color: #facc15; }
 
     /* ===== Tips ===== */
     .tips {
-        background: rgba(255, 255, 255, 0.08);
-        padding: 25px 25px;
-        border-radius: 15px;
-        max-width: 550px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        background-color: #1c1c1c;
+        padding: 30px 30px;
+        border-radius: 20px;
+        max-width: 600px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
     }
 
     .tips h2 {
         margin-bottom: 15px;
-        font-size: 1.3rem;
+        font-size: 1.4rem;
+        color: #38bdf8;
     }
 
     .tips ul {
