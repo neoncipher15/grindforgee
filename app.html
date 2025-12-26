@@ -1,182 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GrindForge</title>
 
-<link rel="icon" href="GrindForge.png" type="image/png" />
+<link rel="icon" href="GrindForge.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ================= ROOT ================= */
+/* ================= WINDOWS 11 MICA SYSTEM ================= */
 :root{
-  --bg:#020617;
+  --bg:#0e1016;
 
-  --glass-strong:rgba(255,255,255,.16);
-  --glass:rgba(255,255,255,.10);
-  --glass-soft:rgba(255,255,255,.04);
+  --mica:rgba(255,255,255,0.08);
+  --mica-strong:rgba(255,255,255,0.14);
+  --mica-soft:rgba(255,255,255,0.05);
 
-  --border:rgba(255,255,255,.18);
+  --border:rgba(255,255,255,0.18);
 
-  --text:#f4f4f5;
+  --text:#f5f6f7;
   --muted:#a1a1aa;
-  --accent:#7c7cff;
+  --accent:#5b8cff;
 
-  --radius-lg:22px;
-  --radius-md:16px;
-  --radius-sm:12px;
+  --radius:16px;
 }
 
 /* ================= RESET ================= */
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-html{font-size:16px}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
-  font-family:Inter,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  font-family:Inter,system-ui,sans-serif;
   background:
-    radial-gradient(1200px 600px at 10% -10%, #1e1b4b 0%, transparent 60%),
-    radial-gradient(900px 500px at 90% 0%, #312e81 0%, transparent 55%),
-    linear-gradient(180deg,#020617,#020617);
+    radial-gradient(900px 600px at 15% -10%, #1a2a4a, transparent 60%),
+    radial-gradient(700px 500px at 85% 10%, #1f1b3a, transparent 55%),
+    linear-gradient(180deg,#0b0f16,#0b0f16);
   color:var(--text);
   min-height:100vh;
   overflow-x:hidden;
 }
 
-/* ================= PARTICLES ================= */
-.particles{
+/* ================= NOISE OVERLAY ================= */
+body::after{
+  content:"";
   position:fixed;
   inset:0;
-  z-index:0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
   pointer-events:none;
-}
-.particle{
-  position:absolute;
-  background:white;
-  border-radius:50%;
-  opacity:.8;
-  animation:float linear infinite;
-}
-@keyframes float{
-  from{transform:translateY(110vh)}
-  to{transform:translateY(-120vh)}
+  z-index:0;
 }
 
 /* ================= HEADER ================= */
-.header{
+header{
   position:sticky;
   top:0;
   z-index:10;
-  background:rgba(10,10,25,.6);
-  backdrop-filter:blur(18px) saturate(150%);
+  backdrop-filter:blur(22px) saturate(140%);
+  background:rgba(20,20,30,.6);
   border-bottom:1px solid var(--border);
 }
-.header-content{
-  max-width:1320px;
+.header-inner{
+  max-width:1280px;
   margin:auto;
-  padding:16px 32px;
+  padding:14px 24px;
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
-.logo-wrap{
+.brand{
   display:flex;
   align-items:center;
-  gap:12px;
-}
-.logo{
-  width:36px;
-  height:36px;
-}
-.brand{
-  font-size:1.35rem;
+  gap:10px;
   font-weight:800;
+  font-size:1.25rem;
 }
-.header-stats{
-  display:flex;
-  gap:12px;
-}
-.stat-pill{
-  padding:8px 14px;
-  border-radius:999px;
-  background:var(--glass);
-  border:1px solid var(--border);
-  font-size:.8rem;
-  color:var(--muted);
-}
+.brand img{width:34px;height:34px}
 
-/* ================= DASHBOARD ================= */
-.dashboard{
-  position:relative;
-  z-index:1;
-  max-width:1320px;
+/* ================= LAYOUT ================= */
+main{
+  max-width:1280px;
   margin:auto;
-  padding:48px 32px 64px;
+  padding:32px 24px 56px;
   display:grid;
-  grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);
-  gap:40px;
+  grid-template-columns:1.2fr 1fr;
+  gap:32px;
 }
-@media(max-width:1100px){
-  .dashboard{
-    grid-template-columns:1fr;
-    padding:32px 20px 48px;
-  }
+@media(max-width:1000px){
+  main{grid-template-columns:1fr}
 }
 
 /* ================= PANELS ================= */
 .panel{
-  background:
-    linear-gradient(180deg,
-      rgba(255,255,255,.14),
-      rgba(255,255,255,.04)
-    );
-  backdrop-filter:blur(14px) saturate(140%);
+  background:linear-gradient(
+    180deg,
+    var(--mica-strong),
+    var(--mica-soft)
+  );
+  backdrop-filter:blur(20px) saturate(140%);
   border:1px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:28px;
-  box-shadow:
-    0 20px 40px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.12);
+  border-radius:var(--radius);
+  padding:22px;
+  box-shadow:0 16px 40px rgba(0,0,0,.45);
 }
+
 .panel-title{
-  font-size:1.1rem;
   font-weight:700;
-  margin-bottom:18px;
+  margin-bottom:16px;
+  font-size:1.05rem;
 }
 
 /* ================= TIMER ================= */
-.hero{
+.timer-wrap{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:36px;
+  gap:28px;
 }
 
-.timer-ring{
-  width:320px;
-  height:320px;
+.ring{
+  width:280px;
+  height:280px;
   border-radius:50%;
-  background:
-    conic-gradient(
-      var(--accent) var(--progress,0deg),
-      rgba(255,255,255,.18) 0deg
-    );
+  background:conic-gradient(
+    var(--accent) var(--deg,0deg),
+    rgba(255,255,255,.15) 0deg
+  );
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 0 0 12px rgba(124,124,255,.08);
 }
-.timer-core{
-  width:250px;
-  height:250px;
+.core{
+  width:220px;
+  height:220px;
   border-radius:50%;
-  background:rgba(10,10,25,.65);
-  backdrop-filter:blur(20px);
+  background:rgba(10,12,18,.7);
   border:1px solid var(--border);
   display:flex;
   flex-direction:column;
@@ -184,111 +142,83 @@ body{
   justify-content:center;
 }
 .time{
-  font-size:3.6rem;
+  font-size:3.2rem;
   font-weight:800;
 }
 .phase{
-  margin-top:6px;
   font-size:.75rem;
-  letter-spacing:.25em;
+  letter-spacing:.2em;
   color:var(--muted);
+  margin-top:4px;
 }
 
 .controls{
   display:flex;
   gap:12px;
-  flex-wrap:wrap;
 }
 
 /* ================= BUTTONS ================= */
-.btn{
-  padding:12px 22px;
-  border-radius:14px;
+button{
+  padding:12px 20px;
+  border-radius:12px;
   border:1px solid var(--border);
-  background:var(--glass-soft);
+  background:var(--mica-soft);
   color:var(--text);
   font-weight:600;
   cursor:pointer;
-  transition:.25s;
+  transition:.2s;
 }
-.btn:hover{
-  background:var(--glass);
-  transform:translateY(-1px);
-}
-.btn-primary{
-  background:linear-gradient(135deg,#7c7cff,#5b5bf6);
+button:hover{background:var(--mica)}
+.primary{
+  background:linear-gradient(135deg,#5b8cff,#4674ff);
   border:none;
-  color:white;
-  box-shadow:0 12px 30px rgba(124,124,255,.4);
-}
-
-/* ================= SIDEBAR ================= */
-.sidebar{
-  display:flex;
-  flex-direction:column;
-  gap:28px;
+  box-shadow:0 8px 24px rgba(91,140,255,.4);
 }
 
 /* ================= INPUTS ================= */
 input{
   width:100%;
   padding:12px 14px;
-  border-radius:14px;
+  border-radius:12px;
   border:1px solid var(--border);
-  background:var(--glass-soft);
+  background:var(--mica-soft);
   color:var(--text);
-  outline:none;
 }
 input::placeholder{color:var(--muted)}
-input:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 2px rgba(124,124,255,.35);
+
+/* ================= QUICK SETTINGS ================= */
+.settings{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.settings label{
+  font-size:.75rem;
+  color:var(--muted);
 }
 
 /* ================= TASKS ================= */
 .task{
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:14px;
-  border-radius:14px;
-  background:var(--glass-soft);
+  gap:10px;
+  padding:12px;
+  border-radius:12px;
+  background:var(--mica-soft);
   border:1px solid var(--border);
 }
 .task.done{
   opacity:.5;
   text-decoration:line-through;
 }
+.task span{
+  flex:1;
+}
 .task button{
   background:none;
   border:none;
   color:#ef4444;
   font-size:1.1rem;
-  cursor:pointer;
-}
-
-/* ================= STATS ================= */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:16px;
-}
-.stat{
-  background:var(--glass-soft);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:18px;
-  text-align:center;
-}
-.stat-value{
-  font-size:1.7rem;
-  font-weight:800;
-}
-.stat-label{
-  font-size:.7rem;
-  letter-spacing:.12em;
-  color:var(--muted);
-  text-transform:uppercase;
 }
 
 /* ================= AUDIO ================= */
@@ -302,112 +232,114 @@ audio{display:none}
   <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
 </audio>
 
-<div class="particles" id="particles"></div>
-
-<header class="header">
-  <div class="header-content">
-    <div class="logo-wrap">
-      <img src="GrindForge.png" class="logo">
-      <div class="brand">GrindForge</div>
-    </div>
-    <div class="header-stats">
-      <div class="stat-pill">Today: <span id="today">0</span></div>
-      <div class="stat-pill">Streak: <span id="streak">0</span></div>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <img src="GrindForge.png">
+      GrindForge
     </div>
   </div>
 </header>
 
-<main class="dashboard">
+<main>
 
-<section class="hero panel">
-  <div class="timer-ring" id="ring">
-    <div class="timer-core">
+<!-- TIMER -->
+<section class="panel timer-wrap">
+  <div class="ring" id="ring">
+    <div class="core">
       <div class="time" id="display">25:00</div>
       <div class="phase" id="phase">WORK</div>
     </div>
   </div>
   <div class="controls">
-    <button class="btn btn-primary" id="start">Start</button>
-    <button class="btn" id="pause">Pause</button>
-    <button class="btn" id="reset">Reset</button>
+    <button class="primary" id="start">Start</button>
+    <button id="pause">Pause</button>
+    <button id="reset">Reset</button>
   </div>
 </section>
 
-<aside class="sidebar">
+<!-- SIDEBAR -->
+<section style="display:flex;flex-direction:column;gap:24px">
 
 <div class="panel">
-  <div class="panel-title">📋 Tasks</div>
-  <input id="taskInput" placeholder="What are you forging today?">
-  <div id="tasks" style="margin-top:16px;display:flex;flex-direction:column;gap:10px"></div>
-</div>
-
-<div class="panel">
-  <div class="panel-title">📊 Stats</div>
-  <div class="stats">
-    <div class="stat"><div class="stat-value" id="pomos">0</div><div class="stat-label">Pomodoros</div></div>
-    <div class="stat"><div class="stat-value" id="focus">0h</div><div class="stat-label">Focus</div></div>
+  <div class="panel-title">⚙ Quick Settings</div>
+  <div class="settings">
+    <div>
+      <label>Work (min)</label>
+      <input id="work" type="number" value="25">
+    </div>
+    <div>
+      <label>Break (min)</label>
+      <input id="break" type="number" value="5">
+    </div>
   </div>
 </div>
 
-</aside>
+<div class="panel">
+  <div class="panel-title">📋 Tasks</div>
+  <input id="taskInput" placeholder="Add a task and press Enter">
+  <div id="tasks" style="margin-top:14px;display:flex;flex-direction:column;gap:10px"></div>
+</div>
+
+</section>
 </main>
 
 <script>
-/* PARTICLES */
-const p=document.getElementById("particles");
-for(let i=0;i<90;i++){
-  const d=document.createElement("div");
-  d.className="particle";
-  const s=Math.random()*2+1;
-  d.style.width=d.style.height=s+"px";
-  d.style.left=Math.random()*100+"%";
-  d.style.animationDuration=10+Math.random()*30+"s";
-  p.appendChild(d);
-}
+/* ================= TIMER ================= */
+let mode="work";
+let total=1500;
+let time=1500;
+let timer=null;
 
-/* TIMER */
-let time=1500,total=1500,t=null;
 const display=document.getElementById("display");
 const ring=document.getElementById("ring");
+const phase=document.getElementById("phase");
 const alarm=document.getElementById("alarm");
 
-function draw(){
+function render(){
   display.textContent=
     Math.floor(time/60)+":"+String(time%60).padStart(2,"0");
-  ring.style.setProperty("--progress",360*(1-time/total)+"deg");
+  ring.style.setProperty("--deg",360*(1-time/total)+"deg");
 }
-
+function load(){
+  total=(mode==="work"?work.value:break.value)*60;
+  time=total;
+  phase.textContent=mode.toUpperCase();
+  render();
+}
 function start(){
-  if(t) return;
-  t=setInterval(()=>{
+  if(timer) return;
+  timer=setInterval(()=>{
     time--;
-    draw();
+    render();
     if(time<=0){
-      clearInterval(t);t=null;
+      clearInterval(timer);
+      timer=null;
       alarm.play();
+      mode=mode==="work"?"break":"work";
+      load();
     }
   },1000);
 }
-function pause(){clearInterval(t);t=null;}
-function reset(){pause();time=total;draw();}
+function pause(){clearInterval(timer);timer=null}
+function reset(){pause();load()}
 
 start.onclick=start;
 pause.onclick=pause;
 reset.onclick=reset;
-draw();
 
-/* TASKS */
-const tasks=[];
+work.onchange=load;
+break.onchange=load;
+load();
+
+/* ================= TASKS ================= */
+let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
 const list=document.getElementById("tasks");
-taskInput.onkeydown=e=>{
-  if(e.key==="Enter" && taskInput.value.trim()){
-    const t={text:taskInput.value,done:false};
-    tasks.push(t);
-    taskInput.value="";
-    render();
-  }
-};
-function render(){
+
+function save(){
+  localStorage.setItem("tasks",JSON.stringify(tasks));
+}
+function draw(){
   list.innerHTML="";
   tasks.forEach((t,i)=>{
     const d=document.createElement("div");
@@ -415,16 +347,26 @@ function render(){
     const c=document.createElement("input");
     c.type="checkbox";
     c.checked=t.done;
-    c.onchange=()=>{t.done=!t.done;render()};
+    c.onchange=()=>{t.done=!t.done;save();draw()};
     const s=document.createElement("span");
+    s.contentEditable=true;
     s.textContent=t.text;
+    s.oninput=e=>{t.text=e.target.textContent;save()};
     const x=document.createElement("button");
     x.textContent="✕";
-    x.onclick=()=>{tasks.splice(i,1);render()};
+    x.onclick=()=>{tasks.splice(i,1);save();draw()};
     d.append(c,s,x);
     list.append(d);
   });
 }
+taskInput.onkeydown=e=>{
+  if(e.key==="Enter"&&taskInput.value.trim()){
+    tasks.push({text:taskInput.value,done:false});
+    taskInput.value="";
+    save();draw();
+  }
+};
+draw();
 </script>
 
 </body>
