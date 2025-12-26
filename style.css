@@ -347,3 +347,54 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ===== TASK CHECKBOX (CIRCULAR, TRANSPARENT) ===== */
+.task-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  background: transparent;
+
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.2s ease;
+}
+
+/* Hover (subtle, no glow) */
+.task-item input[type="checkbox"]:hover {
+  border-color: white;
+  transform: scale(1.05);
+}
+
+/* Checked state */
+.task-item input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Inner dot */
+.task-item input[type="checkbox"]::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+  transform: scale(0);
+  transition: transform 0.2s ease;
+}
+
+/* Show inner dot when checked */
+.task-item input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
