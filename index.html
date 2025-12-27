@@ -347,6 +347,19 @@ h1{
   transform:translateY(-8px) scale(1.01);
 }
 
+/* Download button layout */
+.cta-buttons{
+  display:flex;
+  gap:32px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.download-btn::before{
+  content:'💾';
+}
+
+
 .section{
   max-width:1400px;
   margin:0 auto;
@@ -752,7 +765,20 @@ h1{
       </div>
       <h1>GrindForge</h1>
       <p class="tagline">Master your focus with the ultimate <strong>Pomodoro experience</strong>. Timer • Tasks • Quotes • Stats. <strong>Built for relentless grinders.</strong></p>
-      <a href="app.html" class="launch-btn">Launch App 🚀</a>
+      <div class="cta-buttons">
+  <a href="app.html" class="launch-btn" id="launchAppBtn">
+    Launch App 🚀
+  </a>
+
+  <a
+    href="https://github.com/neoncipher15/grindforgee/releases/tag/%23GrindForge"
+    class="launch-btn download-btn"
+    target="_blank"
+  >
+    Download App 💾
+  </a>
+</div>
+
     </div>
   </section>
 
@@ -822,7 +848,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Enhanced launch button
-  const launchBtn = document.querySelector('.launch-btn');
+  const launchBtn = document.getElementById('launchAppBtn');
+
   launchBtn.addEventListener('click', function(e) {
     if (this.getAttribute('href') === 'app.html') {
       e.preventDefault();
