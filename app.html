@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GrindForge</title>
+<link rel="icon" type="image/png" href="/GrindForge.png">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -44,6 +45,17 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.brand-logo{
+  width:34px;
+  height:34px;
+  object-fit:contain;
+  border-radius:6px;
 }
 .brand-title{font-weight:800;font-size:1.3rem}
 .header-stats{display:flex;gap:12px}
@@ -275,7 +287,10 @@ body{
 
 <header class="header">
   <div class="header-content">
-    <div class="brand-title">GrindForge</div>
+    <div class="brand">
+      <img src="./GrindForge.png" alt="GrindForge" class="brand-logo">
+      <div class="brand-title">GrindForge</div>
+    </div>
     <div class="header-stats">
       <div class="stat-pill"><span id="headerPomodoros">0</span> Today</div>
       <div class="stat-pill">Streak: <span id="headerStreak">0</span></div>
@@ -332,13 +347,17 @@ body{
   <div class="hero-timer"></div>
 
   <div class="quick-settings-btn">
-    <button class="btn" onclick="toggleSettings()">⚙ QUICK SETTINGS</button>
+    <button class="btn" id="quickSettingsBtn">⚙ QUICK SETTINGS</button>
   </div>
 
   <div class="settings-modal" id="settingsModal">
     <label>Work</label><input id="workTime" type="number" value="25">
     <label>Short Break</label><input id="shortBreak" type="number" value="5">
     <label>Long Break</label><input id="longBreak" type="number" value="15">
+    <div class="settings-actions" style="display:flex;gap:8px;margin-top:8px;">
+      <button class="btn" id="saveSettingsBtn">Save</button>
+      <button class="btn" id="closeSettingsBtn">Close</button>
+    </div>
   </div>
   <div id="popupTasks" class="task-popup"></div>
 </div>
@@ -354,6 +373,7 @@ const pauseBtn = document.getElementById("pauseBtn");
 const resetBtn = document.getElementById("resetBtn");
 const lockBtn = document.getElementById("lockBtn");
 const exitLock = document.getElementById("exitLock");
+const quickSettingsBtn = document.getElementById("quickSettingsBtn");
 
 function format(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
 function update(){
@@ -368,11 +388,12 @@ function start(){
   },1000);
 }
 function pause(){clearInterval(timer);timer=null}
-function reset(){pause();secondsLeft=totalSeconds;update()}
+function doReset(){pause();secondsLeft=totalSeconds;update()} 
 
-startBtn.onclick=start;
-pauseBtn.onclick=pause;
-resetBtn.onclick=reset;
+startBtn.addEventListener('click', start);
+pauseBtn.addEventListener('click', pause);
+resetBtn.addEventListener('click', doReset);
+if(quickSettingsBtn) quickSettingsBtn.addEventListener('click', toggleSettings);
 
 lockBtn.onclick = ()=>{
   // show lock overlay and move timer into it
@@ -394,6 +415,42 @@ exitLock.onclick = ()=>{
 function toggleSettings(){
   document.getElementById("settingsModal").classList.toggle("show");
 }
+
+// ===== SETTINGS persistence & handlers =====
+const workInput = document.getElementById('workTime');
+const shortInput = document.getElementById('shortBreak');
+const longInput = document.getElementById('longBreak');
+const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+
+function applySettingsToTimer(){
+  const w = Number(workInput?.value) || 25;
+  totalSeconds = w*60;
+  secondsLeft = totalSeconds;
+  update();
+}
+
+if(saveSettingsBtn){
+  saveSettingsBtn.addEventListener('click', ()=>{
+    const w = Number(workInput.value) || 25;
+    const s = Number(shortInput.value) || 5;
+    const l = Number(longInput.value) || 15;
+    localStorage.setItem('pf_work', w);
+    localStorage.setItem('pf_short', s);
+    localStorage.setItem('pf_long', l);
+    applySettingsToTimer();
+    toggleSettings();
+  });
+}
+if(closeSettingsBtn) closeSettingsBtn.addEventListener('click', toggleSettings);
+
+// populate inputs from storage
+const savedWork = Number(localStorage.getItem('pf_work'));
+if(savedWork) workInput.value = savedWork;
+const savedShort = Number(localStorage.getItem('pf_short'));
+if(savedShort) shortInput.value = savedShort;
+const savedLong = Number(localStorage.getItem('pf_long'));
+if(savedLong) longInput.value = savedLong;
 
 // ===== TASKS (structured local implementation) =====
 const tasksListEl = document.getElementById('tasksList');
@@ -419,7 +476,7 @@ function renderTasks(){
     const d = document.createElement('div');
     d.className = 'task-item';
     const mins = t.minutes ? `<span class=\"task-min\"> • ${t.minutes}m</span>` : '';
-    d.innerHTML = `<span>${escapeHtml(t.text)}</span>${mins} <button class=\"btn\" data-i=\"${i}\" style=\"margin-left:8px;padding:6px 8px;\">Done</button>`;
+    d.innerHTML = `<span>${escapeHtml(t.text)}</span>${mins} <button class=\"task-remove\" data-i=\"${i}\" aria-label=\"Remove task\">×</button>`; 
     tasksListEl.appendChild(d);
     const p = d.cloneNode(true);
     popupTasks.appendChild(p);
