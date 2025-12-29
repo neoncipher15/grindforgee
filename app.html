@@ -213,7 +213,20 @@ body{
   border:1px solid var(--border);
   background:var(--panel-soft);
   color:var(--text);
+  -moz-appearance:textfield; /* remove spinner on Firefox */
 }
+/* remove number input spinners on WebKit browsers within quick settings */
+.settings-modal input[type=number]::-webkit-outer-spin-button,
+.settings-modal input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* task input placeholder styling */
+.task-entry .task-input::placeholder{
+  color:var(--muted);
+  font-style:italic;
+  opacity:0.95;
+} 
 
 /* ================= LOCK IN EXIT ================= */
 .exit-lock{
@@ -265,7 +278,7 @@ body{
   <div class="panel">
     <h3 class="panel-title">📝 Tasks</h3>
     <div class="task-entry" style="display:flex;gap:8px;margin-bottom:12px;">
-      <input id="taskInput" class="task-input" placeholder="Add task..." />
+      <input id="taskInput" class="task-input" placeholder="e.g. ✍️ Plan feature release — 25m" />
       <button class="btn" id="addTaskBtn">Add</button>
     </div>
     <div id="tasksList" class="tasks-list"></div>
