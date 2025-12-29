@@ -221,12 +221,45 @@ body{
   -webkit-appearance: none;
   margin: 0;
 }
-/* task input placeholder styling */
+/* task entry layout & placeholder design */
+.task-entry{
+  display:flex;
+  gap:8px;
+  margin-bottom:12px;
+  align-items:flex-start;
+}
+.task-input-wrap{ position:relative; flex:1; }
+.task-input{
+  width:100%;
+  padding:10px 10px 10px 40px; /* space for icon */
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--panel-soft);
+  color:var(--text);
+  font-weight:500;
+}
+/* inline pencil icon (SVG data URI) */
+.task-input{
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A6B0B9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 20h9'/><path d='M16.5 3.5L20.5 7.5 7 21l-4 1 1-4L16.5 3.5z'/></svg>");
+  background-repeat:no-repeat;
+  background-position:12px center;
+  background-size:18px 18px;
+}
 .task-entry .task-input::placeholder{
+  color:rgba(166,176,185,0.95);
+  font-style:normal;
+  font-weight:500;
+  opacity:1;
+}
+.task-placeholder-helper{
+  position:absolute;
+  left:40px;
+  top:44px;
+  font-size:.75rem;
   color:var(--muted);
-  font-style:italic;
-  opacity:0.95;
-} 
+}
+.task-placeholder-helper code{ background:rgba(255,255,255,0.03); padding:2px 6px; border-radius:6px; font-family:monospace; color:var(--text); }
+ 
 
 /* ================= LOCK IN EXIT ================= */
 .exit-lock{
@@ -277,8 +310,11 @@ body{
 
   <div class="panel">
     <h3 class="panel-title">📝 Tasks</h3>
-    <div class="task-entry" style="display:flex;gap:8px;margin-bottom:12px;">
-      <input id="taskInput" class="task-input" placeholder="e.g. ✍️ Plan feature release — 25m" />
+    <div class="task-entry">
+      <div class="task-input-wrap">
+        <input id="taskInput" class="task-input" placeholder="e.g. Plan feature — 25m" />
+        <div class="task-placeholder-helper">Tip: use <code>— 25m</code> to set duration — press <strong>Enter</strong> to add</div>
+      </div>
       <button class="btn" id="addTaskBtn">Add</button>
     </div>
     <div id="tasksList" class="tasks-list"></div>
@@ -376,6 +412,11 @@ addTaskBtn.onclick = ()=>{
   localStorage.setItem('tasks', JSON.stringify(tasks));
   renderTasks();
 };
+
+// allow Enter to add tasks
+taskInput.addEventListener('keydown', e=>{
+  if(e.key==="Enter") addTaskBtn.click();
+});
 
 // delegate delete (done)
 popupTasks.addEventListener('click', e=>{
