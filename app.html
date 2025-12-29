@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+/* ================= THEME ================= */
 :root {
   --bg:#0b0f17;
   --panel:#0f172a;
@@ -26,16 +27,17 @@ body {
   background:radial-gradient(1200px 600px at 50% -10%,#111827,#020617 70%);
   color:var(--text);
   min-height:100vh;
+  overflow-x:hidden;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 .header {
   position:sticky;
   top:0;
-  backdrop-filter:blur(16px);
-  background:rgba(11,15,23,0.9);
-  border-bottom:1px solid var(--border);
   z-index:10;
+  backdrop-filter:blur(16px);
+  background:rgba(11,15,23,.9);
+  border-bottom:1px solid var(--border);
 }
 
 .header-content {
@@ -61,7 +63,7 @@ body {
   color:var(--muted);
 }
 
-/* DASHBOARD */
+/* ================= DASHBOARD ================= */
 .dashboard {
   max-width:1200px;
   margin:auto;
@@ -71,7 +73,7 @@ body {
   gap:32px;
 }
 
-/* PANELS */
+/* ================= PANELS ================= */
 .panel {
   background:var(--panel);
   border:1px solid var(--border);
@@ -79,7 +81,7 @@ body {
   padding:24px;
 }
 
-/* POMODORO */
+/* ================= POMODORO ================= */
 .pomodoro-panel {
   display:flex;
   flex-direction:column;
@@ -141,7 +143,7 @@ body {
   color:var(--muted);
 }
 
-/* BUTTONS */
+/* ================= BUTTONS ================= */
 .btn {
   padding:12px 22px;
   border-radius:14px;
@@ -156,26 +158,11 @@ body {
   border:none;
 }
 
-/* SIDEBAR */
+/* ================= SIDEBAR ================= */
 .sidebar {
   display:flex;
   flex-direction:column;
   gap:24px;
-}
-
-.task-input {
-  display:flex;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-.task-input input {
-  flex:1;
-  padding:10px;
-  border-radius:12px;
-  background:var(--panel-soft);
-  border:1px solid var(--border);
-  color:var(--text);
 }
 
 .task {
@@ -186,21 +173,21 @@ body {
   margin-bottom:8px;
 }
 
-/* ===== LOCK IN MODE ===== */
+/* ================= LOCK-IN OVERLAY ================= */
 .focus-overlay {
   position:fixed;
   inset:0;
   background:
     radial-gradient(
-      600px 400px at 50% 40%,
-      rgba(255,255,255,0.06),
-      rgba(2,6,23,0.95) 70%
+      700px 500px at 50% 50%,
+      rgba(255,255,255,.08),
+      rgba(2,6,23,.96) 70%
     );
-  backdrop-filter:blur(14px);
+  backdrop-filter:blur(18px);
   opacity:0;
   pointer-events:none;
   transition:.4s ease;
-  z-index:40;
+  z-index:50;
 }
 
 .focus-overlay.active {
@@ -208,55 +195,100 @@ body {
   pointer-events:auto;
 }
 
-.focus-mode .pomodoro-panel {
-  position:relative;
+/* ================= FULLSCREEN TIMER ================= */
+.fullscreen-timer {
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
   z-index:60;
-  transform:scale(1.04);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.08),
-    0 40px 120px rgba(47,129,247,0.35);
-  transition:.4s ease;
 }
 
-.focus-mode .sidebar,
-.focus-mode .header {
-  opacity:.35;
-  filter:blur(2px);
-  pointer-events:none;
+.fullscreen-timer.active {
+  display:flex;
 }
 
-/* TASK POPUP */
+.full-ring {
+  width:70vmin;
+  height:70vmin;
+  border-radius:50%;
+  background:conic-gradient(var(--accent) var(--progress,0deg),#1f2937 0);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 40px 120px rgba(47,129,247,.35);
+}
+
+.full-inner {
+  width:60vmin;
+  height:60vmin;
+  border-radius:50%;
+  background:var(--panel);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:6vmin;
+  font-weight:800;
+}
+
+/* ================= TASK POPUP ================= */
 .task-popup {
   position:fixed;
   bottom:24px;
   right:24px;
   width:260px;
-  background:rgba(15,23,42,0.7);
+  background:rgba(15,23,42,.7);
   backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,.12);
   border-radius:14px;
   padding:14px;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);
   display:none;
   z-index:70;
 }
 
-.task-popup h4 {
-  margin-bottom:10px;
-  font-size:.85rem;
-  color:var(--muted);
+/* ================= QUICK SETTINGS ================= */
+.quick-settings-btn {
+  position:fixed;
+  bottom:24px;
+  left:24px;
+  z-index:70;
+  display:none;
+}
+
+.settings-popup {
+  position:fixed;
+  bottom:80px;
+  left:24px;
+  width:260px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  display:none;
+  z-index:80;
+}
+
+.settings-popup input {
+  width:100%;
+  margin-top:6px;
+  padding:8px;
+  background:var(--panel-soft);
+  border:1px solid var(--border);
+  border-radius:10px;
+  color:var(--text);
 }
 </style>
 </head>
 
 <body>
 
-<div class="focus-overlay" id="focusOverlay"></div>
+<div class="focus-overlay" id="overlay"></div>
 
 <header class="header">
   <div class="header-content">
     <div class="brand-title">GrindForge</div>
-    <div class="stat-pill">LOCK IN</div>
+    <div class="stat-pill">Focus</div>
   </div>
 </header>
 
@@ -269,9 +301,9 @@ body {
     </div>
 
     <div class="hero-timer">
-      <div class="timer-mega" id="ring">
+      <div class="timer-mega" id="smallRing">
         <div class="timer-inner">
-          <div class="timer-display" id="time">25:00</div>
+          <div class="timer-display" id="smallTime">25:00</div>
           <div class="phase-badge">WORK</div>
         </div>
       </div>
@@ -286,76 +318,125 @@ body {
   <aside class="sidebar">
     <div class="panel">
       <h3>📋 Tasks</h3>
-      <div class="task-input">
-        <input id="taskInput" placeholder="What are you forging?">
-        <button class="btn btn-primary" id="addTask">Add</button>
-      </div>
-      <div id="taskList"></div>
+      <input id="taskInput" placeholder="Task…" style="width:100%;margin-bottom:10px">
+      <div id="tasks"></div>
     </div>
   </aside>
 
 </main>
 
+<!-- FULLSCREEN TIMER -->
+<div class="fullscreen-timer" id="fullTimer">
+  <div class="full-ring" id="fullRing">
+    <div class="full-inner" id="fullTime">25:00</div>
+  </div>
+</div>
+
+<!-- TASK POPUP -->
 <div class="task-popup" id="taskPopup">
-  <h4>TASKS</h4>
+  <strong>Tasks</strong>
   <div id="popupTasks"></div>
 </div>
 
-<script>
-let seconds=1500, total=1500, timer=null;
-const time=document.getElementById("time");
-const ring=document.getElementById("ring");
+<!-- QUICK SETTINGS -->
+<button class="btn quick-settings-btn" id="qsBtn">⚙</button>
 
-function update(){
-  time.textContent=`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,"0")}`;
-  ring.style.setProperty("--progress",`${360*(1-seconds/total)}deg`);
+<div class="settings-popup" id="qsPopup">
+  <label>Work (min)</label>
+  <input id="workInput" type="number" value="25">
+</div>
+
+<script>
+/* ================= TIMER ================= */
+let workMinutes = 25;
+let seconds = workMinutes * 60;
+let total = seconds;
+let timer = null;
+
+const smallTime = document.getElementById("smallTime");
+const fullTime = document.getElementById("fullTime");
+const smallRing = document.getElementById("smallRing");
+const fullRing = document.getElementById("fullRing");
+
+function update() {
+  const t = `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,"0")}`;
+  smallTime.textContent = t;
+  fullTime.textContent = t;
+  const deg = 360 * (1 - seconds / total);
+  smallRing.style.setProperty("--progress",`${deg}deg`);
+  fullRing.style.setProperty("--progress",`${deg}deg`);
 }
 
-document.getElementById("start").onclick=()=>{
-  if(timer) return;
-  timer=setInterval(()=>{
-    seconds--; update();
-    if(seconds<=0){ clearInterval(timer); timer=null; }
-  },1000);
+document.getElementById("start").onclick = () => {
+  if (timer) return;
+  timer = setInterval(() => {
+    seconds--;
+    update();
+    if (seconds <= 0) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }, 1000);
 };
 
-document.getElementById("pause").onclick=()=>{ clearInterval(timer); timer=null; };
+document.getElementById("pause").onclick = () => {
+  clearInterval(timer);
+  timer = null;
+};
 
 update();
 
-/* LOCK IN */
-const lockBtn=document.getElementById("lockBtn");
-const overlay=document.getElementById("focusOverlay");
-const popup=document.getElementById("taskPopup");
+/* ================= LOCK IN ================= */
+const lockBtn = document.getElementById("lockBtn");
+const overlay = document.getElementById("overlay");
+const fullTimer = document.getElementById("fullTimer");
+const taskPopup = document.getElementById("taskPopup");
+const qsBtn = document.getElementById("qsBtn");
 
-lockBtn.onclick=()=>{
-  document.body.classList.toggle("focus-mode");
+lockBtn.onclick = () => {
   overlay.classList.toggle("active");
-  popup.style.display = popup.style.display==="block"?"none":"block";
-  lockBtn.textContent = lockBtn.textContent==="🗖"?"✕":"🗖";
+  fullTimer.classList.toggle("active");
+  taskPopup.style.display = fullTimer.classList.contains("active") ? "block" : "none";
+  qsBtn.style.display = fullTimer.classList.contains("active") ? "block" : "none";
+  lockBtn.textContent = lockBtn.textContent === "🗖" ? "✕" : "🗖";
 };
 
-/* TASKS */
-const tasks=[];
-const list=document.getElementById("taskList");
-const pop=document.getElementById("popupTasks");
+/* ================= TASKS ================= */
+const tasks = [];
+const tasksDiv = document.getElementById("tasks");
+const popupTasks = document.getElementById("popupTasks");
 
-document.getElementById("addTask").onclick=()=>{
-  const v=document.getElementById("taskInput").value.trim();
-  if(!v) return;
-  tasks.push(v);
-  document.getElementById("taskInput").value="";
-  render();
+document.getElementById("taskInput").onkeydown = e => {
+  if (e.key === "Enter" && e.target.value.trim()) {
+    tasks.push(e.target.value);
+    e.target.value = "";
+    renderTasks();
+  }
 };
 
-function render(){
-  list.innerHTML="";
-  pop.innerHTML="";
-  tasks.forEach(t=>{
-    list.innerHTML+=`<div class="task">${t}</div>`;
-    pop.innerHTML+=`<div>• ${t}</div>`;
+function renderTasks() {
+  tasksDiv.innerHTML = "";
+  popupTasks.innerHTML = "";
+  tasks.forEach(t => {
+    tasksDiv.innerHTML += `<div class="task">${t}</div>`;
+    popupTasks.innerHTML += `<div>• ${t}</div>`;
   });
 }
+
+/* ================= QUICK SETTINGS ================= */
+const qsPopup = document.getElementById("qsPopup");
+const workInput = document.getElementById("workInput");
+
+qsBtn.onclick = () => {
+  qsPopup.style.display = qsPopup.style.display === "block" ? "none" : "block";
+};
+
+workInput.onchange = () => {
+  workMinutes = +workInput.value;
+  seconds = workMinutes * 60;
+  total = seconds;
+  update();
+};
 </script>
 
 </body>
