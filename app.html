@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>GrindForge</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ================= THEME ================= */
 :root {
   --bg:#0b0f17;
   --panel:#0f172a;
@@ -20,9 +19,9 @@
   --radius:16px;
 }
 
-* { box-sizing:border-box; margin:0; padding:0; }
+*{margin:0;padding:0;box-sizing:border-box}
 
-body {
+body{
   font-family:Inter,system-ui,sans-serif;
   background:radial-gradient(1200px 600px at 50% -10%,#111827,#020617 70%);
   color:var(--text);
@@ -31,7 +30,7 @@ body {
 }
 
 /* ================= HEADER ================= */
-.header {
+.header{
   position:sticky;
   top:0;
   z-index:10;
@@ -39,8 +38,7 @@ body {
   background:rgba(11,15,23,.9);
   border-bottom:1px solid var(--border);
 }
-
-.header-content {
+.header-content{
   max-width:1200px;
   margin:auto;
   padding:16px 24px;
@@ -48,13 +46,10 @@ body {
   justify-content:space-between;
   align-items:center;
 }
-
-.brand-title {
-  font-weight:800;
-  font-size:1.3rem;
-}
-
-.stat-pill {
+.logo-section{display:flex;gap:12px;align-items:center}
+.brand-title{font-weight:800;font-size:1.3rem}
+.header-stats{display:flex;gap:12px}
+.stat-pill{
   padding:8px 14px;
   border-radius:999px;
   background:var(--panel);
@@ -64,7 +59,7 @@ body {
 }
 
 /* ================= DASHBOARD ================= */
-.dashboard {
+.dashboard{
   max-width:1200px;
   margin:auto;
   padding:32px 24px;
@@ -72,56 +67,27 @@ body {
   grid-template-columns:1fr 380px;
   gap:32px;
 }
-
-/* ================= PANELS ================= */
-.panel {
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:24px;
+@media(max-width:1000px){
+  .dashboard{grid-template-columns:1fr}
 }
 
-/* ================= POMODORO ================= */
-.pomodoro-panel {
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-.pomodoro-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:24px;
-}
-
-.icon-btn {
-  background:var(--panel-soft);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:6px 10px;
-  cursor:pointer;
-  color:var(--text);
-}
-
-.hero-timer {
+/* ================= TIMER ================= */
+.hero-timer{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:32px;
+  gap:28px;
 }
-
-.timer-mega {
+.timer-mega{
   width:300px;
   height:300px;
   border-radius:50%;
-  background:conic-gradient(var(--accent) var(--progress,0deg),#1f2937 0);
+  background:conic-gradient(var(--accent) var(--progress,0deg),#1f2937 0deg);
   display:flex;
   align-items:center;
   justify-content:center;
 }
-
-.timer-inner {
+.timer-inner{
   width:240px;
   height:240px;
   border-radius:50%;
@@ -131,312 +97,216 @@ body {
   align-items:center;
   justify-content:center;
 }
-
-.timer-display {
+.timer-display{
   font-size:3.5rem;
   font-weight:800;
 }
-
-.phase-badge {
-  font-size:.75rem;
+.phase-badge{
+  margin-top:6px;
+  font-size:.8rem;
   letter-spacing:.2em;
   color:var(--muted);
 }
 
 /* ================= BUTTONS ================= */
-.btn {
+.timer-controls{display:flex;gap:12px;flex-wrap:wrap}
+.btn{
   padding:12px 22px;
   border-radius:14px;
   border:1px solid var(--border);
   background:var(--panel);
   color:var(--text);
+  font-weight:600;
   cursor:pointer;
 }
-
-.btn-primary {
+.btn-primary{
   background:linear-gradient(135deg,#1f6feb,#2f81f7);
   border:none;
+  color:#fff;
+  box-shadow:0 8px 24px rgba(47,129,247,.45);
 }
 
 /* ================= SIDEBAR ================= */
-.sidebar {
-  display:flex;
-  flex-direction:column;
-  gap:24px;
+.sidebar{display:flex;flex-direction:column;gap:24px}
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
 }
+.panel-title{font-weight:700;margin-bottom:16px}
 
-.task {
-  padding:10px;
+/* ================= TASKS ================= */
+.task-item{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 12px;
   border-radius:12px;
   background:var(--panel-soft);
   border:1px solid var(--border);
-  margin-bottom:8px;
 }
+.task-item.completed{opacity:.5;text-decoration:line-through}
 
-/* ================= LOCK-IN OVERLAY ================= */
-.focus-overlay {
+/* ================= LOCK IN OVERLAY ================= */
+.lockin{
   position:fixed;
   inset:0;
-  background:
-    radial-gradient(
-      700px 500px at 50% 50%,
-      rgba(255,255,255,.08),
-      rgba(2,6,23,.96) 70%
-    );
-  backdrop-filter:blur(18px);
-  opacity:0;
-  pointer-events:none;
-  transition:.4s ease;
+  background:rgba(2,6,23,.95);
   z-index:50;
-}
-
-.focus-overlay.active {
-  opacity:1;
-  pointer-events:auto;
-}
-
-/* ================= FULLSCREEN TIMER ================= */
-.fullscreen-timer {
-  position:fixed;
-  inset:0;
   display:none;
+}
+.lockin.active{display:block}
+
+.lockin-timer{
+  position:absolute;
+  inset:0;
+  display:flex;
   align-items:center;
   justify-content:center;
-  z-index:60;
 }
 
-.fullscreen-timer.active {
-  display:flex;
-}
-
-.full-ring {
+.lockin .timer-mega{
   width:70vmin;
   height:70vmin;
-  border-radius:50%;
-  background:conic-gradient(var(--accent) var(--progress,0deg),#1f2937 0);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 40px 120px rgba(47,129,247,.35);
+}
+.lockin .timer-inner{
+  width:55vmin;
+  height:55vmin;
+}
+.lockin .timer-display{font-size:6rem}
+
+.lockin-exit{
+  position:absolute;
+  top:24px;
+  right:24px;
 }
 
-.full-inner {
-  width:60vmin;
-  height:60vmin;
-  border-radius:50%;
-  background:var(--panel);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:6vmin;
-  font-weight:800;
+.lockin-settings{
+  position:absolute;
+  bottom:24px;
+  left:24px;
 }
-
-/* ================= TASK POPUP ================= */
-.task-popup {
-  position:fixed;
+.lockin-tasks{
+  position:absolute;
   bottom:24px;
   right:24px;
-  width:260px;
-  background:rgba(15,23,42,.7);
-  backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:14px;
-  padding:14px;
-  display:none;
-  z-index:70;
+  width:300px;
 }
 
-/* ================= QUICK SETTINGS ================= */
-.quick-settings-btn {
-  position:fixed;
-  bottom:24px;
-  left:24px;
-  z-index:70;
-  display:none;
-}
-
-.settings-popup {
-  position:fixed;
-  bottom:80px;
-  left:24px;
-  width:260px;
+/* ================= MODALS ================= */
+.popup{
   background:var(--panel);
   border:1px solid var(--border);
-  border-radius:14px;
-  padding:16px;
+  border-radius:16px;
+  padding:20px;
   display:none;
-  z-index:80;
 }
-
-.settings-popup input {
-  width:100%;
-  margin-top:6px;
-  padding:8px;
-  background:var(--panel-soft);
-  border:1px solid var(--border);
-  border-radius:10px;
-  color:var(--text);
-}
+.popup.show{display:block}
 </style>
 </head>
 
 <body>
 
-<div class="focus-overlay" id="overlay"></div>
-
 <header class="header">
   <div class="header-content">
-    <div class="brand-title">GrindForge</div>
-    <div class="stat-pill">Focus</div>
+    <div class="logo-section">
+      <div class="brand-title">GrindForge</div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill"><span id="headerPomodoros">0</span> Today</div>
+      <div class="stat-pill">Streak: <span id="headerStreak">0</span></div>
+    </div>
   </div>
 </header>
 
 <main class="dashboard">
-
-  <section class="panel pomodoro-panel">
-    <div class="pomodoro-header">
-      <h3>⏱ Focus Forge</h3>
-      <button class="icon-btn" id="lockBtn">🗖</button>
+<section class="hero-timer">
+  <div class="timer-mega" id="timerMega">
+    <div class="timer-inner">
+      <div class="timer-display" id="timerDisplay">25:00</div>
+      <div class="phase-badge" id="phaseBadge">WORK</div>
     </div>
+  </div>
+  <div class="timer-controls">
+    <button class="btn btn-primary" id="startBtn">Start</button>
+    <button class="btn" id="pauseBtn">Pause</button>
+    <button class="btn" id="resetBtn">Reset</button>
+    <button class="btn" id="lockBtn">LOCK IN</button>
+  </div>
+</section>
 
-    <div class="hero-timer">
-      <div class="timer-mega" id="smallRing">
-        <div class="timer-inner">
-          <div class="timer-display" id="smallTime">25:00</div>
-          <div class="phase-badge">WORK</div>
-        </div>
-      </div>
-
-      <div>
-        <button class="btn btn-primary" id="start">Start</button>
-        <button class="btn" id="pause">Pause</button>
-      </div>
-    </div>
-  </section>
-
-  <aside class="sidebar">
-    <div class="panel">
-      <h3>📋 Tasks</h3>
-      <input id="taskInput" placeholder="Task…" style="width:100%;margin-bottom:10px">
-      <div id="tasks"></div>
-    </div>
-  </aside>
-
+<aside class="sidebar">
+  <div class="panel">
+    <h3 class="panel-title">📋 Task Forge</h3>
+    <div id="tasksList"></div>
+  </div>
+</aside>
 </main>
 
-<!-- FULLSCREEN TIMER -->
-<div class="fullscreen-timer" id="fullTimer">
-  <div class="full-ring" id="fullRing">
-    <div class="full-inner" id="fullTime">25:00</div>
+<!-- LOCK IN MODE -->
+<div class="lockin" id="lockin">
+  <div class="lockin-timer">
+    <div class="timer-mega" id="lockTimer"></div>
+  </div>
+
+  <button class="btn lockin-exit" id="exitLock">EXIT LOCK-IN</button>
+
+  <div class="lockin-settings">
+    <button class="btn" onclick="toggleSettings()">SETTINGS</button>
+    <div class="popup" id="settingsPopup">
+      <label>Work <input id="workTime" type="number" value="25"></label><br><br>
+      <label>Short <input id="shortBreak" type="number" value="5"></label><br><br>
+      <label>Long <input id="longBreak" type="number" value="15"></label>
+    </div>
+  </div>
+
+  <div class="lockin-tasks popup show">
+    <h4>Tasks</h4>
+    <div id="lockTasks"></div>
   </div>
 </div>
 
-<!-- TASK POPUP -->
-<div class="task-popup" id="taskPopup">
-  <strong>Tasks</strong>
-  <div id="popupTasks"></div>
-</div>
-
-<!-- QUICK SETTINGS -->
-<button class="btn quick-settings-btn" id="qsBtn">⚙</button>
-
-<div class="settings-popup" id="qsPopup">
-  <label>Work (min)</label>
-  <input id="workInput" type="number" value="25">
-</div>
-
 <script>
-/* ================= TIMER ================= */
-let workMinutes = 25;
-let seconds = workMinutes * 60;
-let total = seconds;
-let timer = null;
+let secondsLeft=1500,totalSeconds=1500,timer=null,phase="work";
 
-const smallTime = document.getElementById("smallTime");
-const fullTime = document.getElementById("fullTime");
-const smallRing = document.getElementById("smallRing");
-const fullRing = document.getElementById("fullRing");
+const display=document.getElementById("timerDisplay");
+const mega=document.getElementById("timerMega");
+const lockin=document.getElementById("lockin");
 
-function update() {
-  const t = `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,"0")}`;
-  smallTime.textContent = t;
-  fullTime.textContent = t;
-  const deg = 360 * (1 - seconds / total);
-  smallRing.style.setProperty("--progress",`${deg}deg`);
-  fullRing.style.setProperty("--progress",`${deg}deg`);
+function format(t){
+  return Math.floor(t/60)+":"+String(t%60).padStart(2,"0");
 }
-
-document.getElementById("start").onclick = () => {
-  if (timer) return;
-  timer = setInterval(() => {
-    seconds--;
+function update(){
+  display.textContent=format(secondsLeft);
+  mega.style.setProperty("--progress",(360*(1-secondsLeft/totalSeconds))+"deg");
+}
+function start(){
+  if(timer) return;
+  timer=setInterval(()=>{
+    secondsLeft--;
     update();
-    if (seconds <= 0) {
-      clearInterval(timer);
-      timer = null;
-    }
-  }, 1000);
-};
+    if(secondsLeft<=0){clearInterval(timer);timer=null;}
+  },1000);
+}
+function pause(){clearInterval(timer);timer=null;}
+function reset(){pause();secondsLeft=totalSeconds;update();}
 
-document.getElementById("pause").onclick = () => {
-  clearInterval(timer);
-  timer = null;
-};
+document.getElementById("startBtn").onclick=start;
+document.getElementById("pauseBtn").onclick=pause;
+document.getElementById("resetBtn").onclick=reset;
+
+document.getElementById("lockBtn").onclick=()=>lockin.classList.add("active");
+document.getElementById("exitLock").onclick=()=>lockin.classList.remove("active");
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") lockin.classList.remove("active");
+});
+
+function toggleSettings(){
+  document.getElementById("settingsPopup").classList.toggle("show");
+}
 
 update();
-
-/* ================= LOCK IN ================= */
-const lockBtn = document.getElementById("lockBtn");
-const overlay = document.getElementById("overlay");
-const fullTimer = document.getElementById("fullTimer");
-const taskPopup = document.getElementById("taskPopup");
-const qsBtn = document.getElementById("qsBtn");
-
-lockBtn.onclick = () => {
-  overlay.classList.toggle("active");
-  fullTimer.classList.toggle("active");
-  taskPopup.style.display = fullTimer.classList.contains("active") ? "block" : "none";
-  qsBtn.style.display = fullTimer.classList.contains("active") ? "block" : "none";
-  lockBtn.textContent = lockBtn.textContent === "🗖" ? "✕" : "🗖";
-};
-
-/* ================= TASKS ================= */
-const tasks = [];
-const tasksDiv = document.getElementById("tasks");
-const popupTasks = document.getElementById("popupTasks");
-
-document.getElementById("taskInput").onkeydown = e => {
-  if (e.key === "Enter" && e.target.value.trim()) {
-    tasks.push(e.target.value);
-    e.target.value = "";
-    renderTasks();
-  }
-};
-
-function renderTasks() {
-  tasksDiv.innerHTML = "";
-  popupTasks.innerHTML = "";
-  tasks.forEach(t => {
-    tasksDiv.innerHTML += `<div class="task">${t}</div>`;
-    popupTasks.innerHTML += `<div>• ${t}</div>`;
-  });
-}
-
-/* ================= QUICK SETTINGS ================= */
-const qsPopup = document.getElementById("qsPopup");
-const workInput = document.getElementById("workInput");
-
-qsBtn.onclick = () => {
-  qsPopup.style.display = qsPopup.style.display === "block" ? "none" : "block";
-};
-
-workInput.onchange = () => {
-  workMinutes = +workInput.value;
-  seconds = workMinutes * 60;
-  total = seconds;
-  update();
-};
 </script>
 
 </body>
