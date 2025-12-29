@@ -318,6 +318,14 @@ body{
       <button class="btn" id="addTaskBtn">Add</button>
     </div>
     <div id="tasksList" class="tasks-list"></div>
+  </div>
+
+  <div class="panel">
+    <h3 class="panel-title">📅 Today</h3>
+    <div class="today-stats">
+      <div>Tasks done: <strong id="todayTasksDone">0</strong></div>
+      <div>Time: <strong id="todayTime">0h 0m</strong></div>
+    </div>
   </div> 
 </aside>
 </main>
@@ -371,25 +379,43 @@ startBtn.onclick=start;
 pauseBtn.onclick=pause;
 resetBtn.onclick=reset;
 
-lockBtn.onclick=()=>{
-  lockin.classList.add("active");
-  lockin.querySelector(".hero-timer").append(timerSection);
+lockBtn.onclick = ()=>{
+  // show lock overlay and move timer into it
+  if(!lockin.classList.contains('active')){
+    lockin.classList.add('active');
+    const hero = lockin.querySelector('.hero-timer');
+    if(hero && timerSection && !hero.contains(timerSection)) hero.appendChild(timerSection);
+  }
 };
-exitLock.onclick=()=>{
-  lockin.classList.remove("active");
-  document.querySelector(".dashboard").prepend(timerSection);
+exitLock.onclick = ()=>{
+  // hide overlay and move timer back if needed
+  if(lockin.classList.contains('active')){
+    lockin.classList.remove('active');
+    const dashboard = document.querySelector('.dashboard');
+    if(dashboard && timerSection && !dashboard.contains(timerSection)) dashboard.prepend(timerSection);
+  }
 };
 
 function toggleSettings(){
   document.getElementById("settingsModal").classList.toggle("show");
 }
 
-// ===== TASKS (simple local implementation) =====
+// ===== TASKS (structured local implementation) =====
 const tasksListEl = document.getElementById('tasksList');
 const popupTasks = document.getElementById('popupTasks');
 const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
-let tasks = JSON.parse(localStorage.getItem('tasks')||'[]');
+let tasks = JSON.parse(localStorage.getItem('tasks')||'[]'); // items are {text, minutes, createdAt}
+let completedTasks = JSON.parse(localStorage.getItem('completedTasks')||'[]');
+
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s])); }
+function parseTaskInput(input){
+  const m = String(input).trim().match(/^(.*?)\s*(?:[—–-]\s*)?(\d+)?\s*m?\s*$/i);
+  if(!m) return { text: String(input).trim(), minutes: 0 };
+  const minutes = m[2] ? parseInt(m[2],10) : 0;
+  const text = (m[1]||'').trim() || input.trim();
+  return { text, minutes };
+}
 
 function renderTasks(){
   tasksListEl.innerHTML = '';
@@ -397,46 +423,70 @@ function renderTasks(){
   tasks.forEach((t, i)=>{
     const d = document.createElement('div');
     d.className = 'task-item';
-    d.innerHTML = `<span>${t}</span> <button class="btn" data-i="${i}" style="margin-left:8px;padding:6px 8px;">Done</button>`;
-    const p = d.cloneNode(true);
+    const mins = t.minutes ? `<span class=\"task-min\"> • ${t.minutes}m</span>` : '';
+    d.innerHTML = `<span>${escapeHtml(t.text)}</span>${mins} <button class=\"btn\" data-i=\"${i}\" style=\"margin-left:8px;padding:6px 8px;\">Done</button>`;
     tasksListEl.appendChild(d);
+    const p = d.cloneNode(true);
     popupTasks.appendChild(p);
   });
+  renderDailyStats();
+}
+
+function addTaskText(raw){
+  const parsed = parseTaskInput(raw);
+  tasks.push({ text: parsed.text, minutes: parsed.minutes, createdAt: Date.now() });
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  renderTasks();
 }
 
 addTaskBtn.onclick = ()=>{
   const v = taskInput.value.trim();
   if(!v) return;
-  tasks.push(v);
+  addTaskText(v);
   taskInput.value = '';
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  renderTasks();
 };
 
 // allow Enter to add tasks
-taskInput.addEventListener('keydown', e=>{
-  if(e.key==="Enter") addTaskBtn.click();
-});
+if(taskInput) taskInput.addEventListener('keydown', e=>{ if(e.key==="Enter") addTaskBtn.click(); });
 
-// delegate delete (done)
+function markDone(idx){
+  const t = tasks[idx];
+  if(!t) return;
+  const completed = { ...t, completedAt: Date.now() };
+  completedTasks.push(completed);
+  localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+  tasks.splice(idx,1);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  renderTasks();
+}
+
+// delegate done
 popupTasks.addEventListener('click', e=>{
   const btn = e.target.closest('button[data-i]');
   if(!btn) return;
   const idx = Number(btn.dataset.i);
-  tasks.splice(idx,1);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  renderTasks();
+  markDone(idx);
 });
 
-// mirror deletes in sidebar
 tasksListEl.addEventListener('click', e=>{
   const btn = e.target.closest('button[data-i]');
   if(!btn) return;
   const idx = Number(btn.dataset.i);
-  tasks.splice(idx,1);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  renderTasks();
+  markDone(idx);
 });
+
+function renderDailyStats(){
+  const today = new Date().toISOString().slice(0,10);
+  let done = 0, minutes = 0;
+  (completedTasks||[]).forEach(c=>{
+    const d = new Date(c.completedAt).toISOString().slice(0,10);
+    if(d===today){ done++; minutes += (c.minutes||0); }
+  });
+  const tasksEl = document.getElementById('todayTasksDone');
+  const timeEl = document.getElementById('todayTime');
+  if(tasksEl) tasksEl.textContent = done;
+  if(timeEl) timeEl.textContent = `${Math.floor(minutes/60)}h ${minutes%60}m`;
+}
 
 renderTasks();
 
