@@ -1,70 +1,92 @@
+// ================= TIMER =================
+const display = document.getElementById("timerDisplay");
+const badge = document.getElementById("phaseBadge");
+const ring = document.getElementById("timerMega");
 const alarm = document.getElementById("alarmSound");
-const timerDisplay = document.getElementById("timerDisplay");
-const phaseBadge = document.getElementById("phaseBadge");
-const timerMega = document.getElementById("timerMega");
 
-let timer=null, secondsLeft=1500, totalSeconds=1500, phase="work";
+let seconds = 1500;
+let total = 1500;
+let timer = null;
+let phase = "work";
 
-function formatTime(s){
+function format(s){
   return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
 }
 
 function updateRing(){
-  timerMega.style.setProperty("--progress",`${360*(1-secondsLeft/totalSeconds)}deg`);
+  ring.style.setProperty("--progress",`${360*(1-seconds/total)}deg`);
 }
 
 function loadPhase(p){
-  phase=p;
-  phaseBadge.textContent=p.toUpperCase();
-  totalSeconds=(p==="work"?25:p==="short"?5:15)*60;
-  secondsLeft=totalSeconds;
-  timerDisplay.textContent=formatTime(secondsLeft);
+  phase = p;
+  badge.textContent = p.toUpperCase();
+  total = (p==="work"?25:5)*60;
+  seconds = total;
+  display.textContent = format(seconds);
   updateRing();
 }
 
-function startTimer(){
+function start(){
   if(timer) return;
-  timer=setInterval(()=>{
-    secondsLeft--;
-    timerDisplay.textContent=formatTime(secondsLeft);
+  timer = setInterval(()=>{
+    seconds--;
+    display.textContent = format(seconds);
     updateRing();
-    if(secondsLeft<=0){
-      clearInterval(timer); timer=null;
+    if(seconds<=0){
+      clearInterval(timer);
+      timer=null;
       alarm.play().catch(()=>{});
-      loadPhase(phase==="work"?"short":"work");
-      startTimer();
+      loadPhase(phase==="work"?"break":"work");
+      start();
     }
   },1000);
 }
 
-document.getElementById("startBtn").onclick=startTimer;
-document.getElementById("pauseBtn").onclick=()=>{clearInterval(timer);timer=null};
-document.getElementById("resetBtn").onclick=()=>{clearInterval(timer);timer=null;loadPhase(phase)};
+document.getElementById("startBtn").onclick = start;
+document.getElementById("pauseBtn").onclick = ()=>{clearInterval(timer);timer=null};
+document.getElementById("resetBtn").onclick = ()=>{clearInterval(timer);timer=null;loadPhase(phase)};
 
-// LOCK IN MODE
-const maximizeBtn=document.getElementById("maximizeBtn");
-const dashboard=document.querySelector(".dashboard");
-const taskPopup=document.getElementById("taskPopup");
-const popupTasks=document.getElementById("popupTasks");
+loadPhase("work");
 
-let locked=false;
-let tasks=[];
+// ================= TASKS =================
+const taskInput = document.getElementById("taskInput");
+const tasksList = document.getElementById("tasksList");
+const popupTasks = document.getElementById("popupTasks");
 
-maximizeBtn.onclick=()=>{
-  locked=!locked;
-  dashboard.classList.toggle("lock-in",locked);
-  taskPopup.style.display=locked?"block":"none";
-  maximizeBtn.textContent=locked?"✕":"🗖";
-  renderPopupTasks();
+let tasks = [];
+
+document.getElementById("addTaskBtn").onclick = ()=>{
+  if(!taskInput.value.trim()) return;
+  tasks.push(taskInput.value);
+  taskInput.value="";
+  renderTasks();
 };
 
-function renderPopupTasks(){
+function renderTasks(){
+  tasksList.innerHTML="";
   popupTasks.innerHTML="";
   tasks.forEach(t=>{
     const d=document.createElement("div");
-    d.textContent=(t.done?"✔ ":"• ")+t.text;
-    popupTasks.appendChild(d);
+    d.className="task-item";
+    d.textContent=t;
+    tasksList.appendChild(d);
+
+    const p=document.createElement("div");
+    p.textContent="• "+t;
+    popupTasks.appendChild(p);
   });
 }
 
-loadPhase("work");
+// ================= LOCK IN MODE =================
+const maximizeBtn = document.getElementById("maximizeBtn");
+const dashboard = document.getElementById("dashboard");
+const taskPopup = document.getElementById("taskPopup");
+
+let locked = false;
+
+maximizeBtn.onclick = ()=>{
+  locked=!locked;
+  dashboard.classList.toggle("lock-in",locked);
+  taskPopup.style.display = locked?"block":"none";
+  maximizeBtn.textContent = locked?"✕":"🗖";
+};
