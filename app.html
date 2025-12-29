@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GrindForge</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-:root {
+:root{
   --bg:#0b0f17;
   --panel:#0f172a;
   --panel-soft:#020617;
-  --border:rgba(255,255,255,0.08);
+  --border:rgba(255,255,255,.08);
   --text:#e5e7eb;
   --muted:#9ca3af;
   --accent:#2f81f7;
@@ -26,7 +26,6 @@ body{
   background:radial-gradient(1200px 600px at 50% -10%,#111827,#020617 70%);
   color:var(--text);
   min-height:100vh;
-  overflow-x:hidden;
 }
 
 /* ================= HEADER ================= */
@@ -46,7 +45,6 @@ body{
   justify-content:space-between;
   align-items:center;
 }
-.logo-section{display:flex;gap:12px;align-items:center}
 .brand-title{font-weight:800;font-size:1.3rem}
 .header-stats{display:flex;gap:12px}
 .stat-pill{
@@ -67,9 +65,7 @@ body{
   grid-template-columns:1fr 380px;
   gap:32px;
 }
-@media(max-width:1000px){
-  .dashboard{grid-template-columns:1fr}
-}
+@media(max-width:1000px){.dashboard{grid-template-columns:1fr}}
 
 /* ================= TIMER ================= */
 .hero-timer{
@@ -97,10 +93,7 @@ body{
   align-items:center;
   justify-content:center;
 }
-.timer-display{
-  font-size:3.5rem;
-  font-weight:800;
-}
+.timer-display{font-size:3.5rem;font-weight:800}
 .phase-badge{
   margin-top:6px;
   font-size:.8rem;
@@ -136,36 +129,43 @@ body{
 }
 .panel-title{font-weight:700;margin-bottom:16px}
 
-/* ================= TASKS ================= */
-.task-item{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  padding:10px 12px;
-  border-radius:12px;
+/* ================= STATS ================= */
+.stats-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.stat-card{
   background:var(--panel-soft);
   border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  text-align:center;
 }
-.task-item.completed{opacity:.5;text-decoration:line-through}
+.stat-value{font-size:1.7rem;font-weight:800}
+.stat-label{
+  font-size:.7rem;
+  color:var(--muted);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
 
-/* ================= LOCK IN OVERLAY ================= */
+/* ================= LOCK IN MODE ================= */
 .lockin{
   position:fixed;
   inset:0;
   background:rgba(2,6,23,.95);
+  backdrop-filter:blur(10px);
   z-index:50;
   display:none;
 }
 .lockin.active{display:block}
 
-.lockin-timer{
+.lockin .hero-timer{
   position:absolute;
   inset:0;
-  display:flex;
-  align-items:center;
   justify-content:center;
 }
-
 .lockin .timer-mega{
   width:70vmin;
   height:70vmin;
@@ -176,33 +176,45 @@ body{
 }
 .lockin .timer-display{font-size:6rem}
 
-.lockin-exit{
-  position:absolute;
-  top:24px;
-  right:24px;
-}
-
-.lockin-settings{
+/* ================= QUICK SETTINGS (PREMIUM) ================= */
+.quick-settings-btn{
   position:absolute;
   bottom:24px;
   left:24px;
 }
-.lockin-tasks{
+.settings-modal{
   position:absolute;
-  bottom:24px;
-  right:24px;
-  width:300px;
-}
-
-/* ================= MODALS ================= */
-.popup{
-  background:var(--panel);
+  bottom:70px;
+  left:24px;
+  background:rgba(15,23,42,.9);
+  backdrop-filter:blur(14px);
   border:1px solid var(--border);
-  border-radius:16px;
+  border-radius:18px;
   padding:20px;
   display:none;
+  width:260px;
 }
-.popup.show{display:block}
+.settings-modal.show{display:block}
+.settings-modal label{
+  font-size:.75rem;
+  color:var(--muted);
+}
+.settings-modal input{
+  width:100%;
+  margin:6px 0 14px;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--panel-soft);
+  color:var(--text);
+}
+
+/* ================= LOCK IN EXIT ================= */
+.exit-lock{
+  position:absolute;
+  top:24px;
+  right:24px;
+}
 </style>
 </head>
 
@@ -210,9 +222,7 @@ body{
 
 <header class="header">
   <div class="header-content">
-    <div class="logo-section">
-      <div class="brand-title">GrindForge</div>
-    </div>
+    <div class="brand-title">GrindForge</div>
     <div class="header-stats">
       <div class="stat-pill"><span id="headerPomodoros">0</span> Today</div>
       <div class="stat-pill">Streak: <span id="headerStreak">0</span></div>
@@ -221,7 +231,7 @@ body{
 </header>
 
 <main class="dashboard">
-<section class="hero-timer">
+<section class="hero-timer" id="timerSection">
   <div class="timer-mega" id="timerMega">
     <div class="timer-inner">
       <div class="timer-display" id="timerDisplay">25:00</div>
@@ -238,72 +248,69 @@ body{
 
 <aside class="sidebar">
   <div class="panel">
-    <h3 class="panel-title">📋 Task Forge</h3>
-    <div id="tasksList"></div>
+    <h3 class="panel-title">📊 Grind Stats</h3>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value" id="totalPomodoros">0</div><div class="stat-label">Pomodoros</div></div>
+      <div class="stat-card"><div class="stat-value" id="currentStreak">0</div><div class="stat-label">Streak</div></div>
+    </div>
   </div>
 </aside>
 </main>
 
-<!-- LOCK IN MODE -->
+<!-- LOCK IN OVERLAY -->
 <div class="lockin" id="lockin">
-  <div class="lockin-timer">
-    <div class="timer-mega" id="lockTimer"></div>
+  <button class="btn exit-lock" id="exitLock">EXIT</button>
+
+  <div class="hero-timer"></div>
+
+  <div class="quick-settings-btn">
+    <button class="btn" onclick="toggleSettings()">⚙ QUICK SETTINGS</button>
   </div>
 
-  <button class="btn lockin-exit" id="exitLock">EXIT LOCK-IN</button>
-
-  <div class="lockin-settings">
-    <button class="btn" onclick="toggleSettings()">SETTINGS</button>
-    <div class="popup" id="settingsPopup">
-      <label>Work <input id="workTime" type="number" value="25"></label><br><br>
-      <label>Short <input id="shortBreak" type="number" value="5"></label><br><br>
-      <label>Long <input id="longBreak" type="number" value="15"></label>
-    </div>
-  </div>
-
-  <div class="lockin-tasks popup show">
-    <h4>Tasks</h4>
-    <div id="lockTasks"></div>
+  <div class="settings-modal" id="settingsModal">
+    <label>Work</label><input id="workTime" type="number" value="25">
+    <label>Short Break</label><input id="shortBreak" type="number" value="5">
+    <label>Long Break</label><input id="longBreak" type="number" value="15">
   </div>
 </div>
 
 <script>
-let secondsLeft=1500,totalSeconds=1500,timer=null,phase="work";
-
+let timer=null,secondsLeft=1500,totalSeconds=1500;
 const display=document.getElementById("timerDisplay");
 const mega=document.getElementById("timerMega");
 const lockin=document.getElementById("lockin");
+const timerSection=document.getElementById("timerSection");
 
-function format(t){
-  return Math.floor(t/60)+":"+String(t%60).padStart(2,"0");
-}
+function format(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
 function update(){
   display.textContent=format(secondsLeft);
   mega.style.setProperty("--progress",(360*(1-secondsLeft/totalSeconds))+"deg");
 }
 function start(){
-  if(timer) return;
+  if(timer)return;
   timer=setInterval(()=>{
-    secondsLeft--;
-    update();
+    secondsLeft--;update();
     if(secondsLeft<=0){clearInterval(timer);timer=null;}
   },1000);
 }
-function pause(){clearInterval(timer);timer=null;}
-function reset(){pause();secondsLeft=totalSeconds;update();}
+function pause(){clearInterval(timer);timer=null}
+function reset(){pause();secondsLeft=totalSeconds;update()}
 
-document.getElementById("startBtn").onclick=start;
-document.getElementById("pauseBtn").onclick=pause;
-document.getElementById("resetBtn").onclick=reset;
+startBtn.onclick=start;
+pauseBtn.onclick=pause;
+resetBtn.onclick=reset;
 
-document.getElementById("lockBtn").onclick=()=>lockin.classList.add("active");
-document.getElementById("exitLock").onclick=()=>lockin.classList.remove("active");
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape") lockin.classList.remove("active");
-});
+lockBtn.onclick=()=>{
+  lockin.classList.add("active");
+  lockin.querySelector(".hero-timer").append(timerSection);
+};
+exitLock.onclick=()=>{
+  lockin.classList.remove("active");
+  document.querySelector(".dashboard").prepend(timerSection);
+};
 
 function toggleSettings(){
-  document.getElementById("settingsPopup").classList.toggle("show");
+  document.getElementById("settingsModal").classList.toggle("show");
 }
 
 update();
