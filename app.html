@@ -151,30 +151,32 @@ body{
 }
 
 /* ================= LOCK IN MODE ================= */
-.lockin{
+.lock-in{
   position:fixed;
   inset:0;
   background:rgba(2,6,23,.95);
   backdrop-filter:blur(10px);
-  z-index:50;
+  z-index:999;
   display:none;
+  justify-content:center;
+  align-items:center;
 }
-.lockin.active{display:block}
+.lock-in.active{display:flex}
 
-.lockin .hero-timer{
+.lock-in .hero-timer{
   position:absolute;
   inset:0;
   justify-content:center;
 }
-.lockin .timer-mega{
+.lock-in .timer-mega{
   width:70vmin;
   height:70vmin;
 }
-.lockin .timer-inner{
+.lock-in .timer-inner{
   width:55vmin;
   height:55vmin;
 }
-.lockin .timer-display{font-size:6rem}
+.lock-in .timer-display{font-size:6rem} 
 
 /* ================= QUICK SETTINGS (PREMIUM) ================= */
 .quick-settings-btn{
@@ -254,11 +256,16 @@ body{
       <div class="stat-card"><div class="stat-value" id="currentStreak">0</div><div class="stat-label">Streak</div></div>
     </div>
   </div>
+
+  <div class="panel">
+    <h3 class="panel-title">📝 Tasks</h3>
+    <div id="tasksList" class="tasks-list"></div>
+  </div>
 </aside>
 </main>
 
 <!-- LOCK IN OVERLAY -->
-<div class="lockin" id="lockin">
+<div class="lock-in" id="lockin">
   <button class="btn exit-lock" id="exitLock">EXIT</button>
 
   <div class="hero-timer"></div>
@@ -280,6 +287,11 @@ const display=document.getElementById("timerDisplay");
 const mega=document.getElementById("timerMega");
 const lockin=document.getElementById("lockin");
 const timerSection=document.getElementById("timerSection");
+const startBtn = document.getElementById("startBtn");
+const pauseBtn = document.getElementById("pauseBtn");
+const resetBtn = document.getElementById("resetBtn");
+const lockBtn = document.getElementById("lockBtn");
+const exitLock = document.getElementById("exitLock");
 
 function format(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
 function update(){
@@ -316,5 +328,7 @@ function toggleSettings(){
 update();
 </script>
 
+<div id="popupTasks" class="task-popup"></div>
+
 </body>
-</html>
+</html> 
