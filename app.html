@@ -167,7 +167,9 @@ body{
   position:absolute;
   inset:0;
   justify-content:center;
-}
+  z-index:1;
+
+} 
 .lock-in .timer-mega{
   width:70vmin;
   height:70vmin;
@@ -183,10 +185,11 @@ body{
   position:absolute;
   bottom:24px;
   left:24px;
+  z-index:1002;
 }
 .settings-modal{
   position:absolute;
-  bottom:70px;
+  bottom:96px; /* raised so it sits above the button with some gap */
   left:24px;
   background:rgba(15,23,42,.9);
   backdrop-filter:blur(14px);
@@ -195,8 +198,9 @@ body{
   padding:20px;
   display:none;
   width:260px;
+  z-index:1002;
 }
-.settings-modal.show{display:block}
+.settings-modal.show{display:block} 
 .settings-modal label{
   font-size:.75rem;
   color:var(--muted);
@@ -216,7 +220,8 @@ body{
   position:absolute;
   top:24px;
   right:24px;
-}
+  z-index:1003;
+} 
 </style>
 </head>
 
@@ -259,8 +264,12 @@ body{
 
   <div class="panel">
     <h3 class="panel-title">📝 Tasks</h3>
+    <div class="task-entry" style="display:flex;gap:8px;margin-bottom:12px;">
+      <input id="taskInput" class="task-input" placeholder="Add task..." />
+      <button class="btn" id="addTaskBtn">Add</button>
+    </div>
     <div id="tasksList" class="tasks-list"></div>
-  </div>
+  </div> 
 </aside>
 </main>
 
@@ -279,6 +288,7 @@ body{
     <label>Short Break</label><input id="shortBreak" type="number" value="5">
     <label>Long Break</label><input id="longBreak" type="number" value="15">
   </div>
+  <div id="popupTasks" class="task-popup"></div>
 </div>
 
 <script>
@@ -325,10 +335,59 @@ function toggleSettings(){
   document.getElementById("settingsModal").classList.toggle("show");
 }
 
+// ===== TASKS (simple local implementation) =====
+const tasksListEl = document.getElementById('tasksList');
+const popupTasks = document.getElementById('popupTasks');
+const taskInput = document.getElementById('taskInput');
+const addTaskBtn = document.getElementById('addTaskBtn');
+let tasks = JSON.parse(localStorage.getItem('tasks')||'[]');
+
+function renderTasks(){
+  tasksListEl.innerHTML = '';
+  popupTasks.innerHTML = '';
+  tasks.forEach((t, i)=>{
+    const d = document.createElement('div');
+    d.className = 'task-item';
+    d.innerHTML = `<span>${t}</span> <button class="btn" data-i="${i}" style="margin-left:8px;padding:6px 8px;">Done</button>`;
+    const p = d.cloneNode(true);
+    tasksListEl.appendChild(d);
+    popupTasks.appendChild(p);
+  });
+}
+
+addTaskBtn.onclick = ()=>{
+  const v = taskInput.value.trim();
+  if(!v) return;
+  tasks.push(v);
+  taskInput.value = '';
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  renderTasks();
+};
+
+// delegate delete (done)
+popupTasks.addEventListener('click', e=>{
+  const btn = e.target.closest('button[data-i]');
+  if(!btn) return;
+  const idx = Number(btn.dataset.i);
+  tasks.splice(idx,1);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  renderTasks();
+});
+
+// mirror deletes in sidebar
+tasksListEl.addEventListener('click', e=>{
+  const btn = e.target.closest('button[data-i]');
+  if(!btn) return;
+  const idx = Number(btn.dataset.i);
+  tasks.splice(idx,1);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  renderTasks();
+});
+
+renderTasks();
+
 update();
 </script>
-
-<div id="popupTasks" class="task-popup"></div>
 
 </body>
 </html> 
