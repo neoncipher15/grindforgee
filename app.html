@@ -5,15 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GrindForge</title>
 
-<link rel="icon" href="GrindForge.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<audio id="alarmSound" preload="auto">
-  <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
+<audio id="alarmSound">
+  <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
 </audio>
 
 <div class="particles" id="particles"></div>
@@ -21,7 +20,6 @@
 <header class="header">
   <div class="header-content">
     <div class="logo-section">
-      <img src="GrindForge.png" class="logo">
       <div class="brand-title">GrindForge</div>
     </div>
     <div class="header-stats">
@@ -31,7 +29,7 @@
   </div>
 </header>
 
-<main class="dashboard">
+<main class="dashboard" id="dashboard">
 
   <!-- POMODORO PANEL -->
   <section class="panel pomodoro-panel">
@@ -60,56 +58,30 @@
   <aside class="sidebar">
 
     <div class="panel">
-      <h3 class="panel-title">⚙ Quick Settings</h3>
+      <h3 class="panel-title">⚙ Settings</h3>
       <div class="settings-grid">
-        <div><label>Work</label><input type="number" id="workTime" value="25"></div>
-        <div><label>Short Break</label><input type="number" id="shortBreak" value="5"></div>
-        <div><label>Long Break</label><input type="number" id="longBreak" value="15"></div>
-        <div><label>Interval</label><input type="number" id="longBreakInterval" value="4"></div>
+        <div><label>Work</label><input id="workTime" type="number" value="25"></div>
+        <div><label>Break</label><input id="breakTime" type="number" value="5"></div>
       </div>
     </div>
 
     <div class="panel">
-      <h3 class="panel-title">📋 Task Forge</h3>
+      <h3 class="panel-title">📋 Tasks</h3>
       <div class="task-input-container">
-        <input id="taskInput" placeholder="What are you forging today?">
+        <input id="taskInput" placeholder="Task…">
         <button class="btn btn-primary" id="addTaskBtn">Add</button>
       </div>
-      <div class="tasks-list" id="tasksList"></div>
-    </div>
-
-    <div class="panel">
-      <h3 class="panel-title">📊 Grind Stats</h3>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-value" id="totalPomodoros">0</div>
-          <div class="stat-label">Pomodoros</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="totalTime">0h</div>
-          <div class="stat-label">Focus</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="currentStreak">0</div>
-          <div class="stat-label">Streak</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="completedTasks">0</div>
-          <div class="stat-label">Tasks</div>
-        </div>
-      </div>
+      <div id="tasksList" class="tasks-list"></div>
     </div>
 
   </aside>
 </main>
 
-<!-- MINI TASK POPUP -->
-<div id="taskPopup" class="task-popup">
-  <h4>📋 Tasks</h4>
+<!-- TASK POPUP -->
+<div class="task-popup" id="taskPopup">
+  <h4>Tasks</h4>
   <div id="popupTasks"></div>
 </div>
-
-<div class="notification" id="notification"></div>
 
 <script src="script.js"></script>
 </body>
