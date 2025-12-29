@@ -5,84 +5,358 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GrindForge</title>
 
-<link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:#0b0f17;
+  --panel:#0f172a;
+  --panel-soft:#020617;
+  --border:rgba(255,255,255,0.08);
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --accent:#2f81f7;
+  --radius:16px;
+}
+
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  font-family:Inter,system-ui,sans-serif;
+  background:radial-gradient(1200px 600px at 50% -10%,#111827,#020617 70%);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* HEADER */
+.header {
+  position:sticky;
+  top:0;
+  backdrop-filter:blur(16px);
+  background:rgba(11,15,23,0.9);
+  border-bottom:1px solid var(--border);
+  z-index:10;
+}
+
+.header-content {
+  max-width:1200px;
+  margin:auto;
+  padding:16px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.brand-title {
+  font-weight:800;
+  font-size:1.3rem;
+}
+
+.stat-pill {
+  padding:8px 14px;
+  border-radius:999px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  font-size:.85rem;
+  color:var(--muted);
+}
+
+/* DASHBOARD */
+.dashboard {
+  max-width:1200px;
+  margin:auto;
+  padding:32px 24px;
+  display:grid;
+  grid-template-columns:1fr 380px;
+  gap:32px;
+}
+
+/* PANELS */
+.panel {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+}
+
+/* POMODORO */
+.pomodoro-panel {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.pomodoro-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+}
+
+.icon-btn {
+  background:var(--panel-soft);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:6px 10px;
+  cursor:pointer;
+  color:var(--text);
+}
+
+.hero-timer {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:32px;
+}
+
+.timer-mega {
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  background:conic-gradient(var(--accent) var(--progress,0deg),#1f2937 0);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.timer-inner {
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  background:var(--panel);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.timer-display {
+  font-size:3.5rem;
+  font-weight:800;
+}
+
+.phase-badge {
+  font-size:.75rem;
+  letter-spacing:.2em;
+  color:var(--muted);
+}
+
+/* BUTTONS */
+.btn {
+  padding:12px 22px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--text);
+  cursor:pointer;
+}
+
+.btn-primary {
+  background:linear-gradient(135deg,#1f6feb,#2f81f7);
+  border:none;
+}
+
+/* SIDEBAR */
+.sidebar {
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.task-input {
+  display:flex;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.task-input input {
+  flex:1;
+  padding:10px;
+  border-radius:12px;
+  background:var(--panel-soft);
+  border:1px solid var(--border);
+  color:var(--text);
+}
+
+.task {
+  padding:10px;
+  border-radius:12px;
+  background:var(--panel-soft);
+  border:1px solid var(--border);
+  margin-bottom:8px;
+}
+
+/* ===== LOCK IN MODE ===== */
+.focus-overlay {
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(
+      600px 400px at 50% 40%,
+      rgba(255,255,255,0.06),
+      rgba(2,6,23,0.95) 70%
+    );
+  backdrop-filter:blur(14px);
+  opacity:0;
+  pointer-events:none;
+  transition:.4s ease;
+  z-index:40;
+}
+
+.focus-overlay.active {
+  opacity:1;
+  pointer-events:auto;
+}
+
+.focus-mode .pomodoro-panel {
+  position:relative;
+  z-index:60;
+  transform:scale(1.04);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 40px 120px rgba(47,129,247,0.35);
+  transition:.4s ease;
+}
+
+.focus-mode .sidebar,
+.focus-mode .header {
+  opacity:.35;
+  filter:blur(2px);
+  pointer-events:none;
+}
+
+/* TASK POPUP */
+.task-popup {
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  width:260px;
+  background:rgba(15,23,42,0.7);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:14px;
+  padding:14px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  display:none;
+  z-index:70;
+}
+
+.task-popup h4 {
+  margin-bottom:10px;
+  font-size:.85rem;
+  color:var(--muted);
+}
+</style>
 </head>
 
 <body>
 
-<audio id="alarmSound">
-  <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
-</audio>
-
-<div class="particles" id="particles"></div>
+<div class="focus-overlay" id="focusOverlay"></div>
 
 <header class="header">
   <div class="header-content">
-    <div class="logo-section">
-      <div class="brand-title">GrindForge</div>
-    </div>
-    <div class="header-stats">
-      <div class="stat-pill"><span id="headerPomodoros">0</span> Today</div>
-      <div class="stat-pill">Streak: <span id="headerStreak">0</span></div>
-    </div>
+    <div class="brand-title">GrindForge</div>
+    <div class="stat-pill">LOCK IN</div>
   </div>
 </header>
 
-<main class="dashboard" id="dashboard">
+<main class="dashboard">
 
-  <!-- POMODORO PANEL -->
   <section class="panel pomodoro-panel">
     <div class="pomodoro-header">
-      <h3 class="panel-title">⏱ Focus Forge</h3>
-      <button id="maximizeBtn" class="icon-btn">🗖</button>
+      <h3>⏱ Focus Forge</h3>
+      <button class="icon-btn" id="lockBtn">🗖</button>
     </div>
 
     <div class="hero-timer">
-      <div class="timer-mega" id="timerMega">
+      <div class="timer-mega" id="ring">
         <div class="timer-inner">
-          <div class="timer-display" id="timerDisplay">25:00</div>
-          <div class="phase-badge" id="phaseBadge">WORK</div>
+          <div class="timer-display" id="time">25:00</div>
+          <div class="phase-badge">WORK</div>
         </div>
       </div>
 
-      <div class="timer-controls">
-        <button class="btn btn-primary" id="startBtn">Start</button>
-        <button class="btn" id="pauseBtn">Pause</button>
-        <button class="btn" id="resetBtn">Reset</button>
+      <div>
+        <button class="btn btn-primary" id="start">Start</button>
+        <button class="btn" id="pause">Pause</button>
       </div>
     </div>
   </section>
 
-  <!-- SIDEBAR -->
   <aside class="sidebar">
-
     <div class="panel">
-      <h3 class="panel-title">⚙ Settings</h3>
-      <div class="settings-grid">
-        <div><label>Work</label><input id="workTime" type="number" value="25"></div>
-        <div><label>Break</label><input id="breakTime" type="number" value="5"></div>
+      <h3>📋 Tasks</h3>
+      <div class="task-input">
+        <input id="taskInput" placeholder="What are you forging?">
+        <button class="btn btn-primary" id="addTask">Add</button>
       </div>
+      <div id="taskList"></div>
     </div>
-
-    <div class="panel">
-      <h3 class="panel-title">📋 Tasks</h3>
-      <div class="task-input-container">
-        <input id="taskInput" placeholder="Task…">
-        <button class="btn btn-primary" id="addTaskBtn">Add</button>
-      </div>
-      <div id="tasksList" class="tasks-list"></div>
-    </div>
-
   </aside>
+
 </main>
 
-<!-- TASK POPUP -->
 <div class="task-popup" id="taskPopup">
-  <h4>Tasks</h4>
+  <h4>TASKS</h4>
   <div id="popupTasks"></div>
 </div>
 
-<script src="script.js"></script>
+<script>
+let seconds=1500, total=1500, timer=null;
+const time=document.getElementById("time");
+const ring=document.getElementById("ring");
+
+function update(){
+  time.textContent=`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,"0")}`;
+  ring.style.setProperty("--progress",`${360*(1-seconds/total)}deg`);
+}
+
+document.getElementById("start").onclick=()=>{
+  if(timer) return;
+  timer=setInterval(()=>{
+    seconds--; update();
+    if(seconds<=0){ clearInterval(timer); timer=null; }
+  },1000);
+};
+
+document.getElementById("pause").onclick=()=>{ clearInterval(timer); timer=null; };
+
+update();
+
+/* LOCK IN */
+const lockBtn=document.getElementById("lockBtn");
+const overlay=document.getElementById("focusOverlay");
+const popup=document.getElementById("taskPopup");
+
+lockBtn.onclick=()=>{
+  document.body.classList.toggle("focus-mode");
+  overlay.classList.toggle("active");
+  popup.style.display = popup.style.display==="block"?"none":"block";
+  lockBtn.textContent = lockBtn.textContent==="🗖"?"✕":"🗖";
+};
+
+/* TASKS */
+const tasks=[];
+const list=document.getElementById("taskList");
+const pop=document.getElementById("popupTasks");
+
+document.getElementById("addTask").onclick=()=>{
+  const v=document.getElementById("taskInput").value.trim();
+  if(!v) return;
+  tasks.push(v);
+  document.getElementById("taskInput").value="";
+  render();
+};
+
+function render(){
+  list.innerHTML="";
+  pop.innerHTML="";
+  tasks.forEach(t=>{
+    list.innerHTML+=`<div class="task">${t}</div>`;
+    pop.innerHTML+=`<div>• ${t}</div>`;
+  });
+}
+</script>
+
 </body>
 </html>
