@@ -271,7 +271,36 @@ body{
   color:var(--muted);
 }
 .task-placeholder-helper code{ background:rgba(255,255,255,0.03); padding:2px 6px; border-radius:6px; font-family:monospace; color:var(--text); }
- 
+
+/* ================= TASK ITEMS (CHECK + REMOVE) ================= */
+.task-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px;
+  margin-bottom:8px;
+  border-radius:10px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  border:1px solid var(--border);
+}
+.task-text{flex:1;font-weight:600}
+.task-min{opacity:.75;color:var(--muted);margin-left:8px;font-size:.95rem}
+
+/* checkbox (complete) */
+.task-check{
+  width:18px;height:18px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;appearance:none;display:inline-block;position:relative;flex:0 0 18px;
+}
+.task-check:checked{background:linear-gradient(135deg,#1f6feb,#2f81f7);box-shadow:0 6px 14px rgba(47,129,247,.25);border:none}
+.task-check:checked::after{content:'▣';position:absolute;left:2px;top:-3px;color:white;font-size:12px}
+
+/* circular red remove button (bigger, premium) */
+.task-remove{width:36px;height:36px;border-radius:999px;border:none;background:#ef4444;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:0 8px 24px rgba(239,68,68,.28);transition:transform .12s ease,opacity .12s ease}
+.task-remove:hover{transform:scale(1.05);opacity:0.95}
+
+/* ================= STAR TRAIL LAYER ================= */
+#star-layer{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;overflow:visible;z-index:10000;mix-blend-mode:screen}
+.star{position:absolute;border-radius:50%;background:radial-gradient(circle,#ffffff 0%,rgba(255,255,255,0.85) 40%, rgba(255,255,255,0) 100%);transform:translate(-50%,-50%);will-change:transform,opacity}
+@keyframes star-move{from{opacity:1;transform:translate(-50%,-50%) scale(1)} to{opacity:0;transform:translate(-120px,-120px) scale(0.25)}}
 
 /* ================= LOCK IN EXIT ================= */
 .exit-lock{
@@ -476,7 +505,7 @@ function renderTasks(){
     const d = document.createElement('div');
     d.className = 'task-item';
     const mins = t.minutes ? `<span class=\"task-min\"> • ${t.minutes}m</span>` : '';
-    d.innerHTML = `<span>${escapeHtml(t.text)}</span>${mins} <button class=\"task-remove\" data-i=\"${i}\" aria-label=\"Remove task\">×</button>`; 
+    d.innerHTML = `<input type=\"checkbox\" class=\"task-check\" data-i=\"${i}\" aria-label=\"Complete task\"> <span class=\"task-text\">${escapeHtml(t.text)}</span> ${mins} <button class=\"task-remove\" data-i=\"${i}\" aria-label=\"Remove task\">×</button>`;
     tasksListEl.appendChild(d);
     const p = d.cloneNode(true);
     popupTasks.appendChild(p);
@@ -512,20 +541,30 @@ function markDone(idx){
   renderTasks();
 }
 
-// delegate done
-popupTasks.addEventListener('click', e=>{
-  const btn = e.target.closest('button[data-i]');
-  if(!btn) return;
-  const idx = Number(btn.dataset.i);
-  markDone(idx);
-});
+function removeTask(idx){
+  tasks.splice(idx,1);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  renderTasks();
+}
 
-tasksListEl.addEventListener('click', e=>{
-  const btn = e.target.closest('button[data-i]');
-  if(!btn) return;
-  const idx = Number(btn.dataset.i);
-  markDone(idx);
-});
+function handleTaskListClick(e, container){
+  const rem = e.target.closest('.task-remove');
+  if(rem && container.contains(rem)){
+    const idx = Number(rem.dataset.i);
+    removeTask(idx);
+    return;
+  }
+  const chk = e.target.closest('.task-check');
+  if(chk && container.contains(chk)){
+    const idx = Number(chk.dataset.i);
+    markDone(idx);
+    return;
+  }
+}
+
+popupTasks.addEventListener('click', e=>handleTaskListClick(e, popupTasks));
+
+tasksListEl.addEventListener('click', e=>handleTaskListClick(e, tasksListEl));
 
 function renderDailyStats(){
   const today = new Date().toISOString().slice(0,10);
@@ -543,6 +582,41 @@ function renderDailyStats(){
 renderTasks();
 
 update();
+
+// STAR TRAIL: spawn small stars that follow the mouse (works during lock-in too)
+const starLayer = document.createElement('div');
+starLayer.id = 'star-layer';
+document.body.appendChild(starLayer);
+
+function spawnStar(x,y){
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = 4 + Math.random()*10;
+  s.style.width = s.style.height = size+'px';
+  s.style.left = x+'px';
+  s.style.top = y+'px';
+  const dur = 800 + Math.random()*1200;
+  s.style.animation = `star-move ${dur}ms cubic-bezier(.2,.8,.2,1) forwards`;
+  s.style.filter = `blur(${Math.random()*2}px)`;
+  starLayer.appendChild(s);
+  s.addEventListener('animationend', ()=> s.remove());
+}
+
+let starThrottle = 0;
+document.addEventListener('mousemove', e=>{
+  const now = Date.now();
+  if(now - starThrottle > 25){
+    starThrottle = now;
+    for(let i=0;i<2;i++) spawnStar(e.clientX + (Math.random()*24-12), e.clientY + (Math.random()*24-12));
+  }
+});
+
+// touch support
+document.addEventListener('touchmove', e=>{
+  const t = e.touches[0];
+  if(t) spawnStar(t.clientX, t.clientY);
+});
+
 </script>
 
 </body>
