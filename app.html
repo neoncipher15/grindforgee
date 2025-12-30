@@ -296,6 +296,12 @@ body{
 .task-text{flex:1;font-weight:600}
 .task-min{opacity:.75;color:var(--muted);margin-left:8px;font-size:.95rem}
 
+/* Tasks list: show up to 3 tasks, then allow scrolling */
+.tasks-list, #tasksList{max-height:168px;overflow:auto;padding-top:6px;-webkit-overflow-scrolling:touch}
+#tasksList::-webkit-scrollbar, #lockinTasksList::-webkit-scrollbar{width:8px;height:8px}
+#tasksList::-webkit-scrollbar-thumb, #lockinTasksList::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:6px}
+#tasksList, #lockinTasksList{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.06) transparent}
+
 /* checkbox (complete) */
 .task-check{
   width:18px;height:18px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;appearance:none;display:inline-block;position:relative;flex:0 0 18px;
@@ -369,7 +375,7 @@ body{
 
 /* In lock-in, tasks sit above the music box on the right side and maintain a safe gap */
 .lockin-tasks{position:absolute;right:24px;bottom:calc(24px + 120px + 24px);width:360px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);z-index:1003}
-.lockin-tasks #lockinTasksList{max-height:calc(100vh - (24px + 120px + 160px));overflow:auto;padding-top:6px}
+.lockin-tasks #lockinTasksList{max-height:168px;overflow:auto;padding-top:6px;-webkit-overflow-scrolling:touch}
 .lockin-tasks .task-item{margin-bottom:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
 
 /* Responsive: on narrow screens make tasks stretch horizontally and avoid overlapping the music box */
