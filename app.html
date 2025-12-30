@@ -349,10 +349,9 @@ body{
   cursor:pointer;
 }
 
-/* ================= STAR TRAIL LAYER ================= */
-#star-layer{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;overflow:visible;z-index:10000;mix-blend-mode:screen}
-.star{position:absolute;border-radius:50%;background:radial-gradient(circle,#ffffff 0%,rgba(255,255,255,0.95) 40%, rgba(255,255,255,0) 100%);transform:translate(-50%,-50%);will-change:transform,opacity;filter:drop-shadow(0 4px 8px rgba(255,255,255,.08))}
-@keyframes star-move{from{opacity:1;transform:translate(-50%,-50%) scale(1)} to{opacity:0;transform:translate(-120px,-120px) scale(0.25)}}
+/* ================= STAR BACKGROUND LAYER ================= */
+#star-layer{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;overflow:visible;z-index:0;mix-blend-mode:screen;opacity:0.9}
+.star{position:absolute;border-radius:50%;background:radial-gradient(circle,#ffffff 0%,rgba(255,255,255,0.95) 40%, rgba(255,255,255,0) 100%);will-change:transform,opacity;filter:drop-shadow(0 4px 8px rgba(255,255,255,.06));pointer-events:none} 
 
 /* ================= LOCK IN EXIT ================= */
 .exit-lock{
@@ -482,6 +481,9 @@ lockBtn.onclick = ()=>{
     lockin.classList.add('active');
     const hero = lockin.querySelector('.hero-timer');
     if(hero && timerSection && !hero.contains(timerSection)) hero.appendChild(timerSection);
+    // move star layer into lock-in so background is visible there too
+    const sl = document.getElementById('star-layer');
+    if(sl && !lockin.contains(sl)) { lockin.appendChild(sl); sl.style.zIndex = '1'; }
   }
 };
 exitLock.onclick = ()=>{
@@ -490,6 +492,9 @@ exitLock.onclick = ()=>{
     lockin.classList.remove('active');
     const dashboard = document.querySelector('.dashboard');
     if(dashboard && timerSection && !dashboard.contains(timerSection)) dashboard.prepend(timerSection);
+    // move star layer back to body so it is shown behind regular UI
+    const sl = document.getElementById('star-layer');
+    if(sl && !document.body.contains(sl)) { document.body.appendChild(sl); sl.style.zIndex = '0'; }
   }
 };
 
@@ -677,38 +682,74 @@ renderTasks();
 
 update();
 
-// STAR TRAIL: spawn small stars that follow the mouse (works during lock-in too)
-const starLayer = document.createElement('div');
-starLayer.id = 'star-layer';
-document.body.appendChild(starLayer);
+// STAR BACKGROUND: continuous falling stars that respond to mouse movement (background, not trail)
+const starLayer = document.getElementById('star-layer') || (()=>{
+  const l = document.createElement('div'); l.id='star-layer'; l.style.zIndex='0'; document.body.appendChild(l); return l;
+})();
 
-function spawnStar(x,y){
-  const s = document.createElement('div');
-  s.className = 'star';
-  const size = 4 + Math.random()*10;
-  s.style.width = s.style.height = size+'px';
-  s.style.left = x+'px';
-  s.style.top = y+'px';
-  const dur = 800 + Math.random()*1200;
-  s.style.animation = `star-move ${dur}ms cubic-bezier(.2,.8,.2,1) forwards`;
-  s.style.filter = `blur(${Math.random()*2}px)`;
-  starLayer.appendChild(s);
-  s.addEventListener('animationend', ()=> s.remove());
+const STAR_COUNT = 72;
+const stars = [];
+function createStar(){
+  const el = document.createElement('div');
+  el.className = 'star';
+  const size = 1 + Math.random()*6;
+  el.style.width = el.style.height = size + 'px';
+  el.style.opacity = (0.25 + Math.random()*0.7).toString();
+  const x = Math.random()*window.innerWidth;
+  const y = Math.random()*window.innerHeight;
+  el.style.left = x + 'px'; el.style.top = y + 'px';
+  starLayer.appendChild(el);
+  const baseVy = 0.02 + Math.random()*0.12; // pixels per ms
+  return {el, x, y, vx: (Math.random()-0.5)*0.05, vy: baseVy, baseVy, size};
+}
+for(let i=0;i<STAR_COUNT;i++) stars.push(createStar());
+
+let lastFrame = performance.now();
+function updateStars(now){
+  const dt = Math.min(40, now - lastFrame);
+  lastFrame = now;
+  const w = window.innerWidth, h = window.innerHeight;
+  for(const s of stars){
+    s.vy += (s.baseVy - s.vy) * 0.02; // relax back to downward base
+    s.x += s.vx * dt;
+    s.y += s.vy * dt;
+    if(s.y > h + 12){ s.y = -12; s.x = Math.random()*w; }
+    if(s.y < -12){ s.y = h + 12; s.x = Math.random()*w; }
+    if(s.x > w + 12) s.x = -12; if(s.x < -12) s.x = w + 12;
+    s.el.style.left = s.x + 'px'; s.el.style.top = s.y + 'px';
+  }
+  requestAnimationFrame(updateStars);
+}
+requestAnimationFrame(updateStars);
+
+// mouse/touch influence: moving the mouse UP biases stars upward briefly
+let lastPointerY = null, lastPointerX = null;
+function applyPointerInfluence(dy, dx){
+  const influence = Math.max(-1, Math.min(1, -dy/60)); // negative when pointer moves up
+  if(Math.abs(influence) < 0.02) return;
+  for(const s of stars){
+    s.vy += influence * (0.4 + Math.random()*0.8);
+    s.vx += (dx/1000) * (0.2 + Math.random()*0.6);
+  }
 }
 
-let starThrottle = 0;
 document.addEventListener('mousemove', e=>{
-  const now = Date.now();
-  if(now - starThrottle > 25){
-    starThrottle = now;
-    for(let i=0;i<2;i++) spawnStar(e.clientX + (Math.random()*24-12), e.clientY + (Math.random()*24-12));
-  }
+  if(lastPointerY === null){ lastPointerY = e.clientY; lastPointerX = e.clientX; return; }
+  const dy = e.clientY - lastPointerY; const dx = e.clientX - lastPointerX;
+  lastPointerY = e.clientY; lastPointerX = e.clientX; applyPointerInfluence(dy, dx);
 });
 
 // touch support
 document.addEventListener('touchmove', e=>{
-  const t = e.touches[0];
-  if(t) spawnStar(t.clientX, t.clientY);
+  const t = e.touches[0]; if(!t) return;
+  if(lastPointerY === null){ lastPointerY = t.clientY; lastPointerX = t.clientX; return; }
+  const dy = t.clientY - lastPointerY; const dx = t.clientX - lastPointerX;
+  lastPointerY = t.clientY; lastPointerX = t.clientX; applyPointerInfluence(dy, dx);
+});
+
+// ensure stars stay within bounds on resize
+window.addEventListener('resize', ()=>{
+  for(const s of stars){ if(s.x > window.innerWidth) s.x = Math.random()*window.innerWidth; if(s.y > window.innerHeight) s.y = Math.random()*window.innerHeight; }
 });
 
 </script>
