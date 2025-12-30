@@ -378,10 +378,7 @@ body{
 .lockin-tasks #lockinTasksList{max-height:168px;overflow:auto;padding-top:6px;-webkit-overflow-scrolling:touch}
 .lockin-tasks .task-item{margin-bottom:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
 
-/* Responsive: on narrow screens make tasks stretch horizontally and avoid overlapping the music box */
-@media (max-width:700px){
-  .lockin-tasks{left:24px;right:24px;bottom:calc(24px + 120px + 24px);width:auto;}
-}
+
 
 /* ================= STAR BACKGROUND LAYER ================= */
 #star-layer{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;overflow:visible;z-index:-1;mix-blend-mode:screen;opacity:0.95}
@@ -487,15 +484,34 @@ body{
 
 
 
-  <div class="lockin-tasks" id="lockinTasks">
-    <div style="font-weight:700;margin-bottom:8px;color:var(--text)">📝 Tasks</div>
-    <div class="task-entry" style="margin-bottom:8px;">
-      <div class="task-input-wrap" style="flex:1;">
-        <input id="lockinTaskInput" class="task-input" placeholder="Add task, e.g. Write tests — 25m" />
-      </div>
-      <button class="btn" id="lockinAddTaskBtn">Add</button>
+  <!-- Lock‑In floating music button (left bottom) -->
+  <div class="lockin-music-wrapper" id="lockinMusicWrapper">
+    <button class="lockin-music-btn" id="lockinMusicBtn" aria-label="Focus Music" title="Focus Music" type="button">
+      <!-- small headphone SVG -->
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13c0-5 4-8 9-8s9 3 9 8v4a2 2 0 0 1-2 2h-1v-7a3 3 0 0 0-6 0v7h-1a2 2 0 0 1-2-2v-6c0-1.1-.9-2-2-2z"/></svg>
+    </button>
+    <div class="lockin-music-panel" id="lockinMusicPanel" aria-hidden="true">
+      <div style="font-weight:700;margin-bottom:8px;color:var(--text)">🎧 Focus Music</div>
+      <div id="lockinMusicEmbed"></div>
     </div>
-    <div id="lockinTasksList"></div>
+  </div>
+
+  <!-- Lock‑In floating tasks button (right bottom) -->
+  <div class="lockin-tasks-wrapper" id="lockinTasksWrapper">
+    <button class="lockin-tasks-btn" id="lockinTasksBtn" aria-label="Tasks" title="Tasks" type="button">
+      <!-- small note SVG -->
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h16"/></svg>
+    </button>
+    <div class="lockin-tasks-panel" id="lockinTasksPanel">
+      <div style="font-weight:700;margin-bottom:8px;color:var(--text)">📝 Tasks</div>
+      <div class="task-entry" style="margin-bottom:8px;">
+        <div class="task-input-wrap" style="flex:1;">
+          <input id="lockinTaskInput" class="task-input" placeholder="Add task, e.g. Write tests — 25m" />
+        </div>
+        <button class="btn" id="lockinAddTaskBtn">Add</button>
+      </div>
+      <div id="lockinTasksList"></div>
+    </div>
   </div>
 </div>
 
@@ -817,6 +833,61 @@ if(spotifyClearBtn){
     if(spotifyInputEl) spotifyInputEl.value = '';
     renderSpotify();
   });
+}
+
+// ---------- Lock‑In floating control behavior ----------
+function attachSpotifyToLockin(){
+  const lockTarget = document.getElementById('lockinMusicEmbed');
+  if(typeof spotifyIframe !== 'undefined' && spotifyIframe && lockTarget && spotifyIframe.parentElement !== lockTarget) lockTarget.appendChild(spotifyIframe);
+}
+function attachSpotifyToSidebar(){
+  const sideTarget = document.getElementById('spotifyEmbed');
+  if(typeof spotifyIframe !== 'undefined' && spotifyIframe && sideTarget && spotifyIframe.parentElement !== sideTarget) sideTarget.appendChild(spotifyIframe);
+}
+
+const lockinMusicWrapper = document.getElementById('lockinMusicWrapper');
+const lockinMusicBtn = document.getElementById('lockinMusicBtn');
+const lockinMusicPanel = document.getElementById('lockinMusicPanel');
+const lockinTasksWrapper = document.getElementById('lockinTasksWrapper');
+const lockinTasksBtn = document.getElementById('lockinTasksBtn');
+
+if(lockinMusicWrapper){
+  const isTouch = 'ontouchstart' in window;
+  if(isTouch){
+    lockinMusicBtn.addEventListener('click', ()=>{
+      const open = lockinMusicWrapper.classList.toggle('open');
+      if(open) attachSpotifyToLockin(); else attachSpotifyToSidebar();
+    });
+  } else {
+    lockinMusicWrapper.addEventListener('mouseenter', ()=>{ lockinMusicWrapper.classList.add('open'); attachSpotifyToLockin(); });
+    lockinMusicWrapper.addEventListener('mouseleave', ()=>{ lockinMusicWrapper.classList.remove('open'); attachSpotifyToSidebar(); });
+  }
+  // ensure spotify sits in sidebar by default
+  attachSpotifyToSidebar();
+}
+
+if(lockinTasksWrapper){
+  const isTouch = 'ontouchstart' in window;
+  if(isTouch){
+    lockinTasksBtn.addEventListener('click', ()=> lockinTasksWrapper.classList.toggle('open'));
+  } else {
+    lockinTasksWrapper.addEventListener('mouseenter', ()=> lockinTasksWrapper.classList.add('open'));
+    lockinTasksWrapper.addEventListener('mouseleave', ()=> lockinTasksWrapper.classList.remove('open'));
+  }
+}
+
+// ensure Spotify iframe returns to sidebar on exit from lock-in
+const oldExitLockHandler = exitLock.onclick;
+exitLock.onclick = ()=>{
+  if(lockin.classList.contains('active')){
+    // ensure spotify is returned to sidebar
+    attachSpotifyToSidebar();
+    // close any open wrappers
+    if(lockinMusicWrapper) lockinMusicWrapper.classList.remove('open');
+    if(lockinTasksWrapper) lockinTasksWrapper.classList.remove('open');
+  }
+  // call original handler behaviour for moving timer and focus
+  if(typeof oldExitLockHandler === 'function') oldExitLockHandler();
 }
 
 // render on load
