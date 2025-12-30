@@ -379,6 +379,13 @@ body.lockin-active .planner-btn-wrapper{ display:none !important; }
 }
 .premium-select:focus{outline:2px solid rgba(47,129,247,0.18)}
 .premium-select{background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A6B0B9' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat:no-repeat; background-position:right 10px center; background-size:14px 14px;}
+/* Ensure native option dropdown matches dark theme */
+.premium-select option{background:var(--panel);color:var(--text);}
+.premium-select option:hover{background:rgba(47,129,247,0.08);}
+/* hide IE/Edge expand icon */
+.premium-select::-ms-expand{display:none}
+/* small fix to prevent select overlay from being light in some browsers */
+.premium-select{background-clip:padding-box} 
 
 
 /* Tasks list: show up to 3 tasks, then allow scrolling */

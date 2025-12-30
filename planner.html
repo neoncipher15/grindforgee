@@ -23,6 +23,10 @@
 }
 .premium-select:focus{outline:2px solid rgba(47,129,247,0.18)}
 .premium-select{background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A6B0B9' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat:no-repeat; background-position:right 10px center; background-size:14px 14px;}
+.premium-select option{background:var(--panel);color:var(--text);}
+.premium-select option:hover{background:rgba(47,129,247,0.08);}
+.premium-select::-ms-expand{display:none}
+.premium-select{background-clip:padding-box}
 :root{
   --bg:#0b0f17; --panel:#0f172a; --panel-soft:#020617; --border:rgba(255,255,255,.08); --text:#e5e7eb; --muted:#9ca3af; --accent:#2f81f7; --radius:12px;
 }
