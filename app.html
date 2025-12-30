@@ -202,32 +202,32 @@ body{
 }
 .lock-in .timer-display{font-size:6rem}
 
-/* Lock‑In floating controls: music (left) and tasks (right) as circular buttons that expand on hover/click */
-.lockin-music-wrapper, .lockin-tasks-wrapper{position:absolute;z-index:1003}
-.lockin-music-wrapper{left:24px;bottom:24px}
-.lockin-tasks-wrapper{right:24px;bottom:24px}
+/* Floating music button (visible in normal mode) + lock-in tasks button (visible in lock-in) */
+.music-wrapper, .lockin-tasks-wrapper{z-index:1003}
+.music-wrapper{position:fixed;left:18px;bottom:18px}
+.lockin-tasks-wrapper{position:fixed;right:24px;bottom:24px}
 
 .lockin-music-btn, .lockin-tasks-btn{
   width:56px;height:56px;border-radius:999px;border:1px solid rgba(255,255,255,0.06);
-  background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 26px rgba(0,0,0,.5);transition:transform .16s ease, box-shadow .16s ease;
+  background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 26px rgba(0,0,0,.5);transition:transform .18s cubic-bezier(.2,0,.18,1), box-shadow .18s cubic-bezier(.2,0,.18,1);
 }
 .lockin-music-btn:active, .lockin-tasks-btn:active{transform:scale(.98)}
-.lockin-music-wrapper.open .lockin-music-btn, .lockin-tasks-wrapper.open .lockin-tasks-btn{transform:scale(1.06);box-shadow:0 16px 36px rgba(0,0,0,.6)}
+.music-wrapper.open .lockin-music-btn, .lockin-tasks-wrapper.open .lockin-tasks-btn{transform:scale(1.06);box-shadow:0 16px 36px rgba(0,0,0,.6)}
 
-.lockin-music-panel, .lockin-tasks-panel{
-  margin-top:12px;min-width:320px;max-width:380px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);opacity:0;transform:translateY(10px) scale(.98);pointer-events:none;transition:all .18s ease;box-shadow:0 12px 40px rgba(0,0,0,.5);
+.music-panel-floating, .lockin-tasks-panel{
+  margin-top:12px;min-width:320px;max-width:380px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);opacity:0;transform:translateY(10px) scale(.985);pointer-events:none;transition:opacity .22s cubic-bezier(.2,0,.18,1), transform .22s cubic-bezier(.2,0,.18,1);box-shadow:0 12px 40px rgba(0,0,0,.5);transform-origin:left bottom;
 }
-.lockin-music-wrapper.open .lockin-music-panel, .lockin-music-wrapper:hover .lockin-music-panel,
+.music-wrapper.open .music-panel-floating, .music-wrapper:hover .music-panel-floating,
 .lockin-tasks-wrapper.open .lockin-tasks-panel, .lockin-tasks-wrapper:hover .lockin-tasks-panel{
   opacity:1;transform:translateY(0) scale(1);pointer-events:auto;
 }
 
-.lockin-tasks-panel{min-width:320px;}
+.lockin-tasks-panel{min-width:320px;transform-origin:right bottom}
 .lockin-tasks-panel #lockinTasksList{max-height:168px;overflow:auto;padding-top:6px;-webkit-overflow-scrolling:touch}
 
 /* Responsive: on narrow screens let the panels stretch horizontally */
 @media (max-width:700px){
-  .lockin-music-panel, .lockin-tasks-panel{min-width:auto;left:24px;right:24px}
+  .music-panel-floating, .lockin-tasks-panel{min-width:auto;left:24px;right:24px}
 }
 
 /* tiny icon visuals for buttons */
@@ -519,17 +519,7 @@ body{
 
 
 
-  <!-- Lock‑In floating music button (left bottom) -->
-  <div class="lockin-music-wrapper" id="lockinMusicWrapper">
-    <button class="lockin-music-btn" id="lockinMusicBtn" aria-label="Focus Music" title="Focus Music" type="button">
-      <!-- small headphone SVG -->
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13c0-5 4-8 9-8s9 3 9 8v4a2 2 0 0 1-2 2h-1v-7a3 3 0 0 0-6 0v7h-1a2 2 0 0 1-2-2v-6c0-1.1-.9-2-2-2z"/></svg>
-    </button>
-    <div class="lockin-music-panel" id="lockinMusicPanel" aria-hidden="true">
-      <div style="font-weight:700;margin-bottom:8px;color:var(--text)">🎧 Focus Music</div>
-      <div id="lockinMusicEmbed"></div>
-    </div>
-  </div>
+
 
   <!-- Lock‑In floating tasks button (right bottom) -->
   <div class="lockin-tasks-wrapper" id="lockinTasksWrapper">
@@ -547,6 +537,17 @@ body{
       </div>
       <div id="lockinTasksList"></div>
     </div>
+  </div>
+</div>
+
+<!-- Floating music button (visible in normal mode) -->
+<div class="music-wrapper" id="musicWrapper">
+  <button class="lockin-music-btn" id="musicBtn" aria-label="Focus Music" title="Focus Music" type="button">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13c0-5 4-8 9-8s9 3 9 8v4a2 2 0 0 1-2 2h-1v-7a3 3 0 0 0-6 0v7h-1a2 2 0 0 1-2-2v-6c0-1.1-.9-2-2-2z"/></svg>
+  </button>
+  <div class="music-panel-floating" id="musicPanel" aria-hidden="true">
+    <div style="font-weight:700;margin-bottom:8px;color:var(--text)">🎧 Focus Music</div>
+    <div id="musicPanelEmbed"></div>
   </div>
 </div>
 
@@ -870,9 +871,9 @@ if(spotifyClearBtn){
   });
 }
 
-// ---------- Lock‑In floating control behavior ----------
-function attachSpotifyToLockin(){
-  const lockTarget = document.getElementById('lockinMusicEmbed');
+// ---------- Floating music control behavior (visible in normal mode) ----------
+function attachSpotifyToMusicPanel(){
+  const lockTarget = document.getElementById('musicPanelEmbed');
   if(typeof spotifyIframe !== 'undefined' && spotifyIframe && lockTarget && spotifyIframe.parentElement !== lockTarget) lockTarget.appendChild(spotifyIframe);
 }
 function attachSpotifyToSidebar(){
@@ -880,25 +881,28 @@ function attachSpotifyToSidebar(){
   if(typeof spotifyIframe !== 'undefined' && spotifyIframe && sideTarget && spotifyIframe.parentElement !== sideTarget) sideTarget.appendChild(spotifyIframe);
 }
 
-const lockinMusicWrapper = document.getElementById('lockinMusicWrapper');
-const lockinMusicBtn = document.getElementById('lockinMusicBtn');
-const lockinMusicPanel = document.getElementById('lockinMusicPanel');
+const musicWrapper = document.getElementById('musicWrapper');
+const musicBtn = document.getElementById('musicBtn');
+// const musicPanel = document.getElementById('musicPanel'); // not required directly
 const lockinTasksWrapper = document.getElementById('lockinTasksWrapper');
 const lockinTasksBtn = document.getElementById('lockinTasksBtn');
 
-if(lockinMusicWrapper){
+if(musicWrapper){
   const isTouch = 'ontouchstart' in window;
   // always allow click toggle (helps desktop users who click)
-  if(lockinMusicBtn){
-    lockinMusicBtn.addEventListener('click', ()=>{
-      const open = lockinMusicWrapper.classList.toggle('open');
-      console.debug('lockinMusicBtn clicked, open=', open);
-      if(open) attachSpotifyToLockin(); else attachSpotifyToSidebar();
+  if(musicBtn){
+    musicBtn.addEventListener('click', ()=>{
+      const open = musicWrapper.classList.toggle('open');
+      musicBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      console.debug('musicBtn clicked, open=', open);
+      if(open) attachSpotifyToMusicPanel(); else attachSpotifyToSidebar();
     });
+    // ensure correct aria state initially
+    musicBtn.setAttribute('aria-expanded', 'false');
   }
   if(!isTouch){
-    lockinMusicWrapper.addEventListener('mouseenter', ()=>{ console.debug('lockinMusicWrapper mouseenter'); lockinMusicWrapper.classList.add('open'); attachSpotifyToLockin(); });
-    lockinMusicWrapper.addEventListener('mouseleave', ()=>{ console.debug('lockinMusicWrapper mouseleave'); lockinMusicWrapper.classList.remove('open'); attachSpotifyToSidebar(); });
+    musicWrapper.addEventListener('mouseenter', ()=>{ console.debug('musicWrapper mouseenter'); musicWrapper.classList.add('open'); musicBtn.setAttribute('aria-expanded', 'true'); attachSpotifyToMusicPanel(); });
+    musicWrapper.addEventListener('mouseleave', ()=>{ console.debug('musicWrapper mouseleave'); musicWrapper.classList.remove('open'); musicBtn.setAttribute('aria-expanded', 'false'); attachSpotifyToSidebar(); });
   }
   // ensure spotify sits in sidebar by default
   attachSpotifyToSidebar();
@@ -910,12 +914,14 @@ if(lockinTasksWrapper){
   if(lockinTasksBtn){
     lockinTasksBtn.addEventListener('click', ()=>{
       const open = lockinTasksWrapper.classList.toggle('open');
+      lockinTasksBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
       console.debug('lockinTasksBtn clicked, open=', open);
     });
+    lockinTasksBtn.setAttribute('aria-expanded', 'false');
   }
   if(!isTouch){
-    lockinTasksWrapper.addEventListener('mouseenter', ()=>{ console.debug('lockinTasksWrapper mouseenter'); lockinTasksWrapper.classList.add('open'); });
-    lockinTasksWrapper.addEventListener('mouseleave', ()=>{ console.debug('lockinTasksWrapper mouseleave'); lockinTasksWrapper.classList.remove('open'); });
+    lockinTasksWrapper.addEventListener('mouseenter', ()=>{ console.debug('lockinTasksWrapper mouseenter'); lockinTasksWrapper.classList.add('open'); lockinTasksBtn.setAttribute('aria-expanded', 'true'); });
+    lockinTasksWrapper.addEventListener('mouseleave', ()=>{ console.debug('lockinTasksWrapper mouseleave'); lockinTasksWrapper.classList.remove('open'); lockinTasksBtn.setAttribute('aria-expanded', 'false'); });
   }
 }
 
@@ -926,7 +932,7 @@ exitLock.onclick = ()=>{
     // ensure spotify is returned to sidebar
     attachSpotifyToSidebar();
     // close any open wrappers
-    if(lockinMusicWrapper) lockinMusicWrapper.classList.remove('open');
+    if(musicWrapper) musicWrapper.classList.remove('open');
     if(lockinTasksWrapper) lockinTasksWrapper.classList.remove('open');
   }
   // call original handler behaviour for moving timer and focus
