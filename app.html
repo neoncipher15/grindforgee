@@ -684,20 +684,22 @@ const starLayer = document.getElementById('star-layer') || (()=>{
 })();
 
 const STAR_COUNT = 64;
+const STAR_SIZE = 4; // fixed diameter in pixels so all stars have the same area
 const stars = [];
 function createStar(){
   const el = document.createElement('div'); el.className = 'star';
-  const size = 1 + Math.random()*6;
+  const size = STAR_SIZE;
   el.style.width = el.style.height = size + 'px';
-  el.style.opacity = (0.25 + Math.random()*0.7).toString();
-  // subtle twinkle with random offsets
-  el.style.animation = `twinkle ${3 + Math.random()*6}s ease-in-out ${Math.random()*5}s infinite alternate`;
+  // keep a subtle opacity variation to add depth while area remains equal
+  el.style.opacity = (0.45 + Math.random()*0.35).toString();
+  // subtle twinkle with small variation
+  el.style.animation = `twinkle ${4 + Math.random()*4}s ease-in-out ${Math.random()*5}s infinite alternate`;
   const x = Math.random()*window.innerWidth;
   const y = Math.random()*window.innerHeight;
   el.style.left = x + 'px'; el.style.top = y + 'px';
   starLayer.appendChild(el);
   // very slow downward speed (pixels per ms)
-  const baseVy = 0.008 + Math.random()*0.018; 
+  const baseVy = 0.008 + Math.random()*0.02; 
   return {el, x, y, vx: (Math.random()-0.5)*0.02, vy: baseVy, baseVy, size};
 }
 for(let i=0;i<STAR_COUNT;i++) stars.push(createStar());
