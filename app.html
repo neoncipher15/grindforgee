@@ -348,7 +348,16 @@ body{
   border:1px solid var(--border);
 }
 .task-text{flex:1;font-weight:600}
+.priority-dot{width:12px;height:12px;border-radius:999px;display:inline-block;margin-right:10px;flex:0 0 12px;box-shadow:0 6px 12px rgba(0,0,0,.25)}
+.priority-dot.high{background:#ef4444}
+.priority-dot.mid{background:#f59e0b}
+.priority-dot.low{background:#10b981}
 .task-min{opacity:.75;color:var(--muted);margin-left:8px;font-size:.95rem}
+
+/* planner floating button (left bottom) */
+.planner-btn-wrapper{position:fixed;left:12px;bottom:12px;z-index:1005}
+.planner-btn{width:56px;height:56px;border-radius:999px;border:1px solid rgba(255,255,255,0.06);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 12px 34px rgba(0,0,0,.5);text-decoration:none;color:var(--text);font-size:20px}
+.planner-btn:hover{transform:scale(1.06)}
 
 /* Tasks list: show up to 3 tasks, then allow scrolling */
 .tasks-list, #tasksList{max-height:168px;overflow:auto;padding-top:6px;-webkit-overflow-scrolling:touch}
@@ -492,6 +501,11 @@ body{
       <div class="task-input-wrap">
         <input id="taskInput" class="task-input" placeholder="e.g. Plan feature — 25m" />
         </div>
+      <select id="taskPriority" style="margin-right:8px;border-radius:8px;padding:8px;background:var(--panel-soft);border:1px solid var(--border);color:var(--text);">
+        <option value="high">High</option>
+        <option value="mid" selected>Mid</option>
+        <option value="low">Low</option>
+      </select>
       <button class="btn" id="addTaskBtn">Add</button>
     </div>
     <div id="tasksList" class="tasks-list"></div>
@@ -538,6 +552,11 @@ body{
         <div class="task-input-wrap" style="flex:1;">
           <input id="lockinTaskInput" class="task-input" placeholder="Add task, e.g. Write tests — 25m" />
         </div>
+        <select id="lockinTaskPriority" style="margin-right:8px;border-radius:8px;padding:8px;background:var(--panel-soft);border:1px solid var(--border);color:var(--text);">
+          <option value="high">High</option>
+          <option value="mid" selected>Mid</option>
+          <option value="low">Low</option>
+        </select>
         <button class="btn" id="lockinAddTaskBtn">Add</button>
       </div>
       <div id="lockinTasksList"></div>
@@ -673,7 +692,8 @@ function renderTasks(){
     const d = document.createElement('div');
     d.className = 'task-item';
     const mins = t.minutes ? `<span class=\"task-min\"> • ${t.minutes}m</span>` : '';
-    d.innerHTML = `<input type=\"checkbox\" title=\"Complete task\" class=\"task-check\" data-i=\"${i}\" aria-label=\"Complete task\"> <span class=\"task-text\">${escapeHtml(t.text)}</span> ${mins} <button class=\"task-remove\" title=\"Remove task (undo available)\" data-i=\"${i}\" aria-label=\"Remove task\">×</button>`;
+    const pr = t.priority || 'mid';
+    d.innerHTML = `<input type=\"checkbox\" title=\"Complete task\" class=\"task-check\" data-i=\"${i}\" aria-label=\"Complete task\"> <span class=\"priority-dot ${escapeHtml(pr)}\" aria-hidden=\"true\"></span> <span class=\"task-text\">${escapeHtml(t.text)}</span> ${mins} <button class=\"task-remove\" title=\"Remove task (undo available)\" data-i=\"${i}\" aria-label=\"Remove task\">×</button>`;
     tasksListEl.appendChild(d);
     const p = d.cloneNode(true);
     if(lockinList) lockinList.appendChild(p);
@@ -681,9 +701,9 @@ function renderTasks(){
   renderDailyStats();
 }
 
-function addTaskText(raw){
+function addTaskText(raw, priority='mid'){
   const parsed = parseTaskInput(raw);
-  tasks.push({ text: parsed.text, minutes: parsed.minutes, createdAt: Date.now() });
+  tasks.push({ text: parsed.text, minutes: parsed.minutes, priority: priority, createdAt: Date.now() });
   localStorage.setItem('tasks', JSON.stringify(tasks));
   renderTasks();
 }
@@ -691,7 +711,8 @@ function addTaskText(raw){
 addTaskBtn.onclick = ()=>{
   const v = taskInput.value.trim();
   if(!v) return;
-  addTaskText(v);
+  const pr = document.getElementById('taskPriority')?.value || 'mid';
+  addTaskText(v, pr);
   taskInput.value = '';
 };
 
@@ -705,7 +726,8 @@ if(lockinAddTaskBtn){
   lockinAddTaskBtn.addEventListener('click', ()=>{
     const v = lockinTaskInputEl?.value.trim() || '';
     if(!v) return;
-    addTaskText(v);
+    const pr = document.getElementById('lockinTaskPriority')?.value || 'mid';
+    addTaskText(v, pr);
     if(lockinTaskInputEl) lockinTaskInputEl.value = '';
   });
 }
@@ -805,6 +827,25 @@ function renderDailyStats(){
   if(timeEl) timeEl.textContent = `${Math.floor(minutes/60)}h ${minutes%60}m`;
 }
 
+// import scheduled tasks which are due today. Scheduled items are stored in localStorage.scheduledTasks as [{title, date:"YYYY-MM-DD", minutes, priority, added}]
+function importScheduledTasksForToday(){
+  const scheduled = JSON.parse(localStorage.getItem('scheduledTasks')||'[]');
+  const today = new Date().toISOString().slice(0,10);
+  let changed = false;
+  scheduled.forEach((s, idx)=>{
+    if(s.date === today && !s.added){
+      // add to today's tasks with priority
+      tasks.push({ text: s.title, minutes: s.minutes || 0, priority: s.priority || 'mid', createdAt: Date.now(), scheduled: true });
+      scheduled[idx].added = true;
+      changed = true;
+    }
+  });
+  if(changed){
+    localStorage.setItem('scheduledTasks', JSON.stringify(scheduled));
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+}
+
 
 
 // Lock‑in tasks floating button behavior
@@ -844,7 +885,8 @@ exitLock.onclick = ()=>{
   if(typeof oldExitLockHandler === 'function') oldExitLockHandler();
 }
 
-// render on load
+// import scheduled tasks for today and render on load
+importScheduledTasksForToday();
 renderTasks();
 
 update();
@@ -901,6 +943,11 @@ window.addEventListener('resize', ()=>{
 });
 
 </script>
+
+<!-- Planner button (left bottom) -->
+<div class="planner-btn-wrapper">
+  <a class="planner-btn" href="planner.html" title="Open Planner" aria-label="Planner">📅</a>
+</div>
 
 </body>
 </html> 
