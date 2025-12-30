@@ -368,7 +368,8 @@ body{
 .lockin-music{position:absolute;bottom:24px;right:24px;width:360px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);z-index:1003}
 .lockin-music .music-embed{width:100%;height:120px;border-radius:8px;border:none}
 
-.lockin-tasks{position:absolute;bottom:24px;left:24px;width:360px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);z-index:1003}
+/* In lock-in, tasks sit above the music box on the right side */
+.lockin-tasks{position:absolute;right:24px;bottom:160px;width:360px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);z-index:1003}
 .lockin-tasks #lockinTasksList{max-height:240px;overflow:auto;padding-top:6px}
 .lockin-tasks .task-item{margin-bottom:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
 
@@ -481,6 +482,12 @@ body{
 
   <div class="lockin-tasks" id="lockinTasks">
     <div style="font-weight:700;margin-bottom:8px;color:var(--text)">📝 Tasks</div>
+    <div class="task-entry" style="margin-bottom:8px;">
+      <div class="task-input-wrap" style="flex:1;">
+        <input id="lockinTaskInput" class="task-input" placeholder="Add task, e.g. Write tests — 25m" />
+      </div>
+      <button class="btn" id="lockinAddTaskBtn">Add</button>
+    </div>
     <div id="lockinTasksList"></div>
   </div>
 </div>
@@ -529,6 +536,9 @@ lockBtn.onclick = ()=>{
       const lockTarget = document.getElementById('lockinSpotifyEmbed');
       if(lockTarget && spotifyIframe.parentElement !== lockTarget) lockTarget.appendChild(spotifyIframe);
     }
+    // focus lock-in task input so user can quickly add tasks while locked in
+    const lockInput = document.getElementById('lockinTaskInput');
+    if(lockInput) lockInput.focus();
   }
 };
 exitLock.onclick = ()=>{
@@ -542,6 +552,9 @@ exitLock.onclick = ()=>{
       const sideTarget = document.getElementById('spotifyEmbed');
       if(sideTarget && spotifyIframe.parentElement !== sideTarget) sideTarget.appendChild(spotifyIframe);
     }
+    // focus sidebar task input
+    const sideInput = document.getElementById('taskInput');
+    if(sideInput) sideInput.focus();
   }
 };
 
@@ -634,6 +647,21 @@ addTaskBtn.onclick = ()=>{
 
 // allow Enter to add tasks
 if(taskInput) taskInput.addEventListener('keydown', e=>{ if(e.key==="Enter") addTaskBtn.click(); });
+
+// lock-in task input (adds tasks while in lock-in overlay)
+const lockinTaskInputEl = document.getElementById('lockinTaskInput');
+const lockinAddTaskBtn = document.getElementById('lockinAddTaskBtn');
+if(lockinAddTaskBtn){
+  lockinAddTaskBtn.addEventListener('click', ()=>{
+    const v = lockinTaskInputEl?.value.trim() || '';
+    if(!v) return;
+    addTaskText(v);
+    if(lockinTaskInputEl) lockinTaskInputEl.value = '';
+  });
+}
+if(lockinTaskInputEl){
+  lockinTaskInputEl.addEventListener('keydown', e => { if(e.key === "Enter") lockinAddTaskBtn?.click(); });
+}
 
 function markDone(idx){
   const t = tasks[idx];
