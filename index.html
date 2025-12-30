@@ -624,11 +624,22 @@ h1{
   display: block;
 }
 
+.qr-caption{
+  margin-top:10px;
+  font-size:15px;
+  font-weight:700;
+  color:var(--text-gold);
+  text-align:center;
+  font-family:inherit;
+}
+
 @media (max-width:768px){
   .qr-placeholder{ width:180px; height:180px; }
+  .qr-caption{ font-size:14px; }
 }
 @media (max-width:480px){
   .qr-placeholder{ width:140px; height:140px; }
+  .qr-caption{ font-size:13px; }
 }
 
 .footer{
@@ -859,6 +870,7 @@ h1{
       <div class="qr-placeholder">
         <img src="./image.png" alt="QR Code"> 
       </div>
+      <div class="qr-caption">Please donate</div>
     </div>
   </div>
 </footer>
