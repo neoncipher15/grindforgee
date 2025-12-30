@@ -200,7 +200,42 @@ body{
   width:55vmin;
   height:55vmin;
 }
-.lock-in .timer-display{font-size:6rem} 
+.lock-in .timer-display{font-size:6rem}
+
+/* Lock‑In floating controls: music (left) and tasks (right) as circular buttons that expand on hover/click */
+.lockin-music-wrapper, .lockin-tasks-wrapper{position:absolute;z-index:1003}
+.lockin-music-wrapper{left:24px;bottom:24px}
+.lockin-tasks-wrapper{right:24px;bottom:24px}
+
+.lockin-music-btn, .lockin-tasks-btn{
+  width:56px;height:56px;border-radius:999px;border:1px solid rgba(255,255,255,0.06);
+  background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 26px rgba(0,0,0,.5);transition:transform .16s ease, box-shadow .16s ease;
+}
+.lockin-music-btn:active, .lockin-tasks-btn:active{transform:scale(.98)}
+.lockin-music-wrapper.open .lockin-music-btn, .lockin-tasks-wrapper.open .lockin-tasks-btn{transform:scale(1.06);box-shadow:0 16px 36px rgba(0,0,0,.6)}
+
+.lockin-music-panel, .lockin-tasks-panel{
+  margin-top:12px;min-width:320px;max-width:380px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);opacity:0;transform:translateY(10px) scale(.98);pointer-events:none;transition:all .18s ease;box-shadow:0 12px 40px rgba(0,0,0,.5);
+}
+.lockin-music-wrapper.open .lockin-music-panel, .lockin-music-wrapper:hover .lockin-music-panel,
+.lockin-tasks-wrapper.open .lockin-tasks-panel, .lockin-tasks-wrapper:hover .lockin-tasks-panel{
+  opacity:1;transform:translateY(0) scale(1);pointer-events:auto;
+}
+
+.lockin-tasks-panel{min-width:320px;}
+.lockin-tasks-panel #lockinTasksList{max-height:168px;overflow:auto;padding-top:6px;-webkit-overflow-scrolling:touch}
+
+/* Responsive: on narrow screens let the panels stretch horizontally */
+@media (max-width:700px){
+  .lockin-music-panel, .lockin-tasks-panel{min-width:auto;left:24px;right:24px}
+}
+
+/* tiny icon visuals for buttons */
+.lockin-music-btn svg, .lockin-tasks-btn svg{width:20px;height:20px;fill:none;stroke:rgba(166,176,185,0.95);stroke-width:1.6}
+
+/* ensure lockin-tasks internals keep previous styles */
+.lockin-tasks-panel .task-entry{margin-bottom:8px}
+.lockin-tasks-panel .task-item{margin-bottom:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
 
 /* ================= QUICK SETTINGS (PREMIUM) ================= */
 .quick-settings-btn{
@@ -853,14 +888,17 @@ const lockinTasksBtn = document.getElementById('lockinTasksBtn');
 
 if(lockinMusicWrapper){
   const isTouch = 'ontouchstart' in window;
-  if(isTouch){
+  // always allow click toggle (helps desktop users who click)
+  if(lockinMusicBtn){
     lockinMusicBtn.addEventListener('click', ()=>{
       const open = lockinMusicWrapper.classList.toggle('open');
+      console.debug('lockinMusicBtn clicked, open=', open);
       if(open) attachSpotifyToLockin(); else attachSpotifyToSidebar();
     });
-  } else {
-    lockinMusicWrapper.addEventListener('mouseenter', ()=>{ lockinMusicWrapper.classList.add('open'); attachSpotifyToLockin(); });
-    lockinMusicWrapper.addEventListener('mouseleave', ()=>{ lockinMusicWrapper.classList.remove('open'); attachSpotifyToSidebar(); });
+  }
+  if(!isTouch){
+    lockinMusicWrapper.addEventListener('mouseenter', ()=>{ console.debug('lockinMusicWrapper mouseenter'); lockinMusicWrapper.classList.add('open'); attachSpotifyToLockin(); });
+    lockinMusicWrapper.addEventListener('mouseleave', ()=>{ console.debug('lockinMusicWrapper mouseleave'); lockinMusicWrapper.classList.remove('open'); attachSpotifyToSidebar(); });
   }
   // ensure spotify sits in sidebar by default
   attachSpotifyToSidebar();
@@ -868,11 +906,16 @@ if(lockinMusicWrapper){
 
 if(lockinTasksWrapper){
   const isTouch = 'ontouchstart' in window;
-  if(isTouch){
-    lockinTasksBtn.addEventListener('click', ()=> lockinTasksWrapper.classList.toggle('open'));
-  } else {
-    lockinTasksWrapper.addEventListener('mouseenter', ()=> lockinTasksWrapper.classList.add('open'));
-    lockinTasksWrapper.addEventListener('mouseleave', ()=> lockinTasksWrapper.classList.remove('open'));
+  // always allow click to toggle open
+  if(lockinTasksBtn){
+    lockinTasksBtn.addEventListener('click', ()=>{
+      const open = lockinTasksWrapper.classList.toggle('open');
+      console.debug('lockinTasksBtn clicked, open=', open);
+    });
+  }
+  if(!isTouch){
+    lockinTasksWrapper.addEventListener('mouseenter', ()=>{ console.debug('lockinTasksWrapper mouseenter'); lockinTasksWrapper.classList.add('open'); });
+    lockinTasksWrapper.addEventListener('mouseleave', ()=>{ console.debug('lockinTasksWrapper mouseleave'); lockinTasksWrapper.classList.remove('open'); });
   }
 }
 
