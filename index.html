@@ -602,18 +602,19 @@ h1{
 }
 
 .qr-placeholder{
-  width:140px;
-  height:140px;
+  width:240px;
+  height:240px;
   background:rgba(255,255,255,0.05);
   border:2px solid rgba(78,205,196,0.2);
-  border-radius:20px;
+  border-radius:12px;
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:14px;
   color:var(--text-secondary);
-  box-shadow:0 10px 30px rgba(78,205,196,0.15);
+  box-shadow:0 12px 36px rgba(78,205,196,0.16);
   overflow:hidden;
+  padding:8px; /* small padding avoids image touching border */
 }
 
 .qr-placeholder img {
@@ -621,6 +622,13 @@ h1{
   height: 100%;
   object-fit: contain;
   display: block;
+}
+
+@media (max-width:768px){
+  .qr-placeholder{ width:180px; height:180px; }
+}
+@media (max-width:480px){
+  .qr-placeholder{ width:140px; height:140px; }
 }
 
 .footer{
