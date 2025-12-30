@@ -4,8 +4,25 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Planner — GrindForge</title>
+<link rel="icon" type="image/png" href="/GrindForge.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* Premium select (match app) */
+.premium-select{
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  padding:10px 36px 10px 12px;
+  border-radius:12px;
+  border:none;
+  background:linear-gradient(135deg,#0c1320,#071223);
+  box-shadow:0 12px 36px rgba(47,129,247,0.06), inset 0 -2px 0 rgba(255,255,255,0.02);
+  color:var(--text);
+  font-weight:700;
+  cursor:pointer;
+}
+.premium-select:focus{outline:2px solid rgba(47,129,247,0.18)}
+.premium-select{background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A6B0B9' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat:no-repeat; background-position:right 10px center; background-size:14px 14px;}
 :root{
   --bg:#0b0f17; --panel:#0f172a; --panel-soft:#020617; --border:rgba(255,255,255,.08); --text:#e5e7eb; --muted:#9ca3af; --accent:#2f81f7; --radius:12px;
 }
@@ -56,6 +73,11 @@ body{font-family:Inter,system-ui,sans-serif;background:radial-gradient(1200px 60
   <img src="./GrindForge.png" class="brand-logo" alt="GrindForge">
   <div style="font-weight:800;font-size:1.2rem">Planner</div>
 </header>
+<style>
+/* ensure header content does not overlap the fixed back button */
+.header{padding-left:80px}
+@media (max-width:480px){ .header{padding-left:56px} }
+</style>
 
 <main class="container">
   <section class="panel">
@@ -87,7 +109,7 @@ body{font-family:Inter,system-ui,sans-serif;background:radial-gradient(1200px 60
       <input id="taskTitle" placeholder="Task title" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--panel-soft);color:var(--text)" />
       <div class="form-row">
         <input id="taskMinutes" placeholder="Minutes" type="number" min="0" style="padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--panel-soft);color:var(--text)" />
-        <select id="taskPriority" style="padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--panel-soft);color:var(--text)">
+        <select id="taskPriority" class="premium-select" aria-label="Task priority">
           <option value="high">High</option>
           <option value="mid" selected>Mid</option>
           <option value="low">Low</option>
@@ -134,6 +156,10 @@ requestAnimationFrame(updateStars);
 window.addEventListener('resize', ()=>{ for(const s of stars){ if(s.x > window.innerWidth) s.x = Math.random()*window.innerWidth; if(s.y > window.innerHeight) s.y = Math.random()*window.innerHeight; } });
 
 // calendar logic
+// Helpers: use local date components to avoid timezone offsets when creating YYYY-MM-DD strings
+function ymdFromDate(d){ const Y = d.getFullYear(); const M = String(d.getMonth()+1).padStart(2,'0'); const D = String(d.getDate()).padStart(2,'0'); return `${Y}-${M}-${D}`; }
+function dateFromYmd(ymd){ const [Y,M,D] = String(ymd).split('-').map(Number); return new Date(Y, (M||1)-1, D||1); }
+
 let current = new Date(); let selected = new Date();
 const calGrid = document.getElementById('calGrid'); const monthLabel = document.getElementById('monthLabel');
 const prevBtn = document.getElementById('prevMonth'); const nextBtn = document.getElementById('nextMonth'); const todayBtn = document.getElementById('todayBtn');
@@ -163,10 +189,11 @@ function renderCalendar(ref){
 
   const scheduled = loadScheduled();
   for(let d=1; d<=total; d++){
-    const dateStr = new Date(ref.getFullYear(), ref.getMonth(), d).toISOString().slice(0,10);
+    // construct a local YYYY-MM-DD for this cell (avoid timezone shifts)
+    const dateStr = ymdFromDate(new Date(ref.getFullYear(), ref.getMonth(), d));
     const el = document.createElement('div'); el.className='cal-day'; el.dataset.date = dateStr;
-    if(dateStr === new Date().toISOString().slice(0,10)) el.classList.add('today');
-    if(dateStr === selected.toISOString().slice(0,10)) el.classList.add('selected');
+    if(dateStr === ymdFromDate(new Date())) el.classList.add('today');
+    if(dateStr === ymdFromDate(selected)) el.classList.add('selected');
     el.innerHTML = `<div class='date'>${d}</div>`;
 
     const tasks = scheduled.filter(s=>s.date===dateStr);
@@ -186,16 +213,16 @@ function renderCalendar(ref){
   for(let i=0;i<trailing;i++){ const el = document.createElement('div'); el.className='cal-day other-month'; calGrid.appendChild(el); }
 }
 
-function selectDate(dateStr){ selected = new Date(dateStr); document.getElementById('selDate').textContent = selected.toDateString(); document.querySelectorAll('.cal-day.selected').forEach(el=>el.classList.remove('selected')); const cell = document.querySelector(`.cal-day[data-date='${dateStr}']`); if(cell) cell.classList.add('selected'); renderTasksForSelected(); }
+function selectDate(dateStr){ selected = dateFromYmd(dateStr); document.getElementById('selDate').textContent = selected.toDateString(); document.querySelectorAll('.cal-day.selected').forEach(el=>el.classList.remove('selected')); const cell = document.querySelector(`.cal-day[data-date='${dateStr}']`); if(cell) cell.classList.add('selected'); renderTasksForSelected(); }
 
-function renderTasksForSelected(){ tasksForDay.innerHTML = ''; const scheduled = loadScheduled(); const ds = selected.toISOString().slice(0,10); const dayTasks = scheduled.filter(s=>s.date===ds);
+function renderTasksForSelected(){ tasksForDay.innerHTML = ''; const scheduled = loadScheduled(); const ds = ymdFromDate(selected); const dayTasks = scheduled.filter(s=>s.date===ds);
   if(dayTasks.length===0){ tasksForDay.innerHTML = '<div class="small">No tasks for this date</div>'; return; }
   dayTasks.forEach((t, i)=>{
     const d = document.createElement('div'); d.className='task-item'; d.innerHTML = `<div class='task-title'>${escapeHtml(t.title)} <div class='small' style='opacity:.9'>${t.notes?escapeHtml(t.notes):''}</div></div> <div class='small'>${t.minutes?t.minutes+'m':''}</div> <div class='small' style='margin-left:8px'>${t.priority}</div> <button class='btn' data-i='${i}' style='margin-left:8px'>Remove</button>`;
     const btn = d.querySelector('button'); btn.addEventListener('click', ()=>{ removeScheduled(ds, parseInt(btn.dataset.i)); });
     tasksForDay.appendChild(d);
   });
-}
+} 
 
 function removeScheduled(dateStr, idx){ const scheduled = loadScheduled().filter(s=>s.date===dateStr); // we need to remove the correct one globally
   const all = loadScheduled(); let removedIndex = -1; let foundCount = 0; for(let i=0;i<all.length;i++){ if(all[i].date===dateStr){ if(foundCount===idx){ removedIndex = i; break; } foundCount++; } }
@@ -206,18 +233,18 @@ function escapeHtml(str){ return String(str).replace(/[&<>'"]/g, s=>({'&':'&amp;
 
 prevBtn.addEventListener('click', ()=>{ current = new Date(current.getFullYear(), current.getMonth()-1, 1); renderCalendar(current); });
 nextBtn.addEventListener('click', ()=>{ current = new Date(current.getFullYear(), current.getMonth()+1, 1); renderCalendar(current); });
-todayBtn.addEventListener('click', ()=>{ current = new Date(); selected = new Date(); renderCalendar(current); selectDate(new Date().toISOString().slice(0,10)); });
+todayBtn.addEventListener('click', ()=>{ current = new Date(); selected = new Date(); renderCalendar(current); selectDate(ymdFromDate(new Date())); });
 
 // add task for selected
 addBtn.addEventListener('click', ()=>{
   const title = document.getElementById('taskTitle').value.trim(); if(!title){ saveMsg.textContent = 'Please add a title'; return; }
   const minutes = Number(document.getElementById('taskMinutes').value) || 0; const priority = document.getElementById('taskPriority').value || 'mid'; const notes = document.getElementById('taskNotes').value.trim();
-  const all = loadScheduled(); all.push({ title, date: selected.toISOString().slice(0,10), minutes, priority, notes, added: false, createdAt: Date.now() }); saveScheduled(all); renderCalendar(current); renderTasksForSelected(); document.getElementById('taskTitle').value=''; document.getElementById('taskMinutes').value=''; document.getElementById('taskNotes').value=''; saveMsg.textContent='Saved'; setTimeout(()=>saveMsg.textContent='',900);
+  const all = loadScheduled(); all.push({ title, date: ymdFromDate(selected), minutes, priority, notes, added: false, createdAt: Date.now() }); saveScheduled(all); renderCalendar(current); renderTasksForSelected(); document.getElementById('taskTitle').value=''; document.getElementById('taskMinutes').value=''; document.getElementById('taskNotes').value=''; saveMsg.textContent='Saved'; setTimeout(()=>saveMsg.textContent='',900);
 });
 clearBtn.addEventListener('click', ()=>{ document.getElementById('taskTitle').value=''; document.getElementById('taskMinutes').value=''; document.getElementById('taskNotes').value=''; });
 
 // init
-renderCalendar(current); selectDate(new Date().toISOString().slice(0,10));
+renderCalendar(current); selectDate(ymdFromDate(new Date()));
 </script>
 </body>
 </html>
