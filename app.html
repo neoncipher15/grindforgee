@@ -368,6 +368,10 @@ body{
 .lockin-music{position:absolute;bottom:24px;right:24px;width:360px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);z-index:1003}
 .lockin-music .music-embed{width:100%;height:120px;border-radius:8px;border:none}
 
+.lockin-tasks{position:absolute;bottom:24px;left:24px;width:360px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);z-index:1003}
+.lockin-tasks #lockinTasksList{max-height:240px;overflow:auto;padding-top:6px}
+.lockin-tasks .task-item{margin-bottom:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
+
 /* ================= STAR BACKGROUND LAYER ================= */
 #star-layer{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;overflow:visible;z-index:-1;mix-blend-mode:screen;opacity:0.95}
 .star{position:absolute;border-radius:50%;background:radial-gradient(circle,#ffffff 0%,rgba(255,255,255,0.9) 35%, rgba(255,255,255,0) 100%);will-change:transform,opacity;filter:drop-shadow(0 6px 18px rgba(255,255,255,.08));pointer-events:none;box-shadow:0 0 8px rgba(255,255,255,.06);}
@@ -475,7 +479,10 @@ body{
     <div id="lockinSpotifyEmbed"></div>
   </div>
 
-  <div id="popupTasks" class="task-popup"></div>
+  <div class="lockin-tasks" id="lockinTasks">
+    <div style="font-weight:700;margin-bottom:8px;color:var(--text)">📝 Tasks</div>
+    <div id="lockinTasksList"></div>
+  </div>
 </div>
 
 <script>
@@ -517,6 +524,11 @@ lockBtn.onclick = ()=>{
     lockin.classList.add('active');
     const hero = lockin.querySelector('.hero-timer');
     if(hero && timerSection && !hero.contains(timerSection)) hero.appendChild(timerSection);
+    // move persistent spotify iframe (if present) into lockin music box so playback continues
+    if(typeof spotifyIframe !== 'undefined' && spotifyIframe){
+      const lockTarget = document.getElementById('lockinSpotifyEmbed');
+      if(lockTarget && spotifyIframe.parentElement !== lockTarget) lockTarget.appendChild(spotifyIframe);
+    }
   }
 };
 exitLock.onclick = ()=>{
@@ -525,6 +537,11 @@ exitLock.onclick = ()=>{
     lockin.classList.remove('active');
     const dashboard = document.querySelector('.dashboard');
     if(dashboard && timerSection && !dashboard.contains(timerSection)) dashboard.prepend(timerSection);
+    // move persistent spotify iframe back to sidebar
+    if(typeof spotifyIframe !== 'undefined' && spotifyIframe){
+      const sideTarget = document.getElementById('spotifyEmbed');
+      if(sideTarget && spotifyIframe.parentElement !== sideTarget) sideTarget.appendChild(spotifyIframe);
+    }
   }
 };
 
@@ -570,7 +587,7 @@ if(savedLong) longInput.value = savedLong;
 
 // ===== TASKS (structured local implementation) =====
 const tasksListEl = document.getElementById('tasksList');
-const popupTasks = document.getElementById('popupTasks');
+const lockinTasks = document.getElementById('lockinTasks');
 const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
 let tasks = JSON.parse(localStorage.getItem('tasks')||'[]'); // items are {text, minutes, createdAt}
@@ -587,7 +604,8 @@ function parseTaskInput(input){
 
 function renderTasks(){
   tasksListEl.innerHTML = '';
-  popupTasks.innerHTML = '';
+  const lockinList = document.getElementById('lockinTasksList');
+  if(lockinList) lockinList.innerHTML = '';
   tasks.forEach((t, i)=>{
     const d = document.createElement('div');
     d.className = 'task-item';
@@ -595,7 +613,7 @@ function renderTasks(){
     d.innerHTML = `<input type=\"checkbox\" title=\"Complete task\" class=\"task-check\" data-i=\"${i}\" aria-label=\"Complete task\"> <span class=\"task-text\">${escapeHtml(t.text)}</span> ${mins} <button class=\"task-remove\" title=\"Remove task (undo available)\" data-i=\"${i}\" aria-label=\"Remove task\">×</button>`;
     tasksListEl.appendChild(d);
     const p = d.cloneNode(true);
-    popupTasks.appendChild(p);
+    if(lockinList) lockinList.appendChild(p);
   });
   renderDailyStats();
 }
@@ -691,7 +709,8 @@ function handleTaskListClick(e, container){
     return;
   }
 }
-popupTasks.addEventListener('click', e=>handleTaskListClick(e, popupTasks));
+const lockinTasksList = document.getElementById('lockinTasksList');
+if(lockinTasksList) lockinTasksList.addEventListener('click', e=>handleTaskListClick(e, lockinTasksList));
 
 tasksListEl.addEventListener('click', e=>handleTaskListClick(e, tasksListEl));
 
@@ -737,11 +756,24 @@ function embedUrlFromInput(u){
   return DEFAULT_SPOTIFY_EMBED;
 }
 
+// persistent iframe so playback continues between sidebar <-> lock-in
+let spotifyIframe = null;
+function createOrUpdateSpotify(src){
+  if(!spotifyIframe){
+    spotifyIframe = document.createElement('iframe');
+    spotifyIframe.className = 'music-embed';
+    spotifyIframe.setAttribute('frameborder','0');
+    spotifyIframe.setAttribute('allow','autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
+  }
+  if(spotifyIframe.src !== src) spotifyIframe.src = src;
+  const target = lockin.classList.contains('active') ? lockinSpotifyEmbedEl : spotifyEmbedEl;
+  if(target && spotifyIframe.parentElement !== target) target.appendChild(spotifyIframe);
+}
+
 function renderSpotify(){
   const saved = localStorage.getItem('spotify_uri');
   const src = saved ? embedUrlFromInput(saved) : DEFAULT_SPOTIFY_EMBED;
-  spotifyEmbedEl.innerHTML = `<iframe class=\"music-embed\" src=\"${src}\" frameborder=\"0\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\"></iframe>`;
-  lockinSpotifyEmbedEl.innerHTML = `<iframe class=\"music-embed\" src=\"${src}\" frameborder=\"0\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\"></iframe>`;
+  createOrUpdateSpotify(src);
   if(spotifyInputEl) spotifyInputEl.value = localStorage.getItem('spotify_uri') || '';
 }
 
