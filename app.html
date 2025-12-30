@@ -166,14 +166,24 @@ body{
 .lock-in{
   position:fixed;
   inset:0;
-  background:rgba(2,6,23,.95);
+  /* animated gradient background (semi-transparent so stars show through) */
+  background: linear-gradient(120deg, rgba(6,12,28,0.92), rgba(10,18,38,0.88), rgba(18,28,48,0.92), rgba(36,42,60,0.9));
+  background-size:400% 400%;
+  animation: gradientShift 20s ease infinite;
   backdrop-filter:blur(10px);
   z-index:999;
   display:none;
   justify-content:center;
   align-items:center;
+  overflow:hidden;
 }
 .lock-in.active{display:flex}
+
+@keyframes gradientShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
 
 .lock-in .hero-timer{
   position:absolute;
@@ -349,6 +359,15 @@ body{
   cursor:pointer;
 }
 
+/* Music panel (sidebar) */
+.music-panel{margin-top:12px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.music-panel .spotify-input{padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--panel-soft);color:var(--text);width:100%}
+.music-panel .music-embed{width:100%;height:92px;border-radius:8px;border:none;overflow:hidden}
+
+/* Lock-in small music box */
+.lockin-music{position:absolute;bottom:24px;right:24px;width:360px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);z-index:1003}
+.lockin-music .music-embed{width:100%;height:120px;border-radius:8px;border:none}
+
 /* ================= STAR BACKGROUND LAYER ================= */
 #star-layer{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;overflow:visible;z-index:-1;mix-blend-mode:screen;opacity:0.95}
 .star{position:absolute;border-radius:50%;background:radial-gradient(circle,#ffffff 0%,rgba(255,255,255,0.9) 35%, rgba(255,255,255,0) 100%);will-change:transform,opacity;filter:drop-shadow(0 6px 18px rgba(255,255,255,.08));pointer-events:none;box-shadow:0 0 8px rgba(255,255,255,.06);}
@@ -418,6 +437,15 @@ body{
     <div id="tasksList" class="tasks-list"></div>
   </div>
 
+  <div class="panel music-panel" id="musicPanel">
+    <h3 class="panel-title">🎧 Focus Music (Spotify)</h3>
+    <input id="spotifyInput" class="spotify-input" placeholder="Paste Spotify playlist/track URL or URI" />
+    <div style="display:flex;gap:8px;">
+      <button class="btn" id="spotifySaveBtn">Save</button>
+      <button class="btn" id="spotifyClearBtn">Clear</button>
+    </div>
+    <div id="spotifyEmbed" style="margin-top:8px;"></div>
+  </div>
  
 </aside>
 </main>
@@ -441,6 +469,12 @@ body{
       <button class="btn" id="closeSettingsBtn">Close</button>
     </div>
   </div>
+
+  <div class="lockin-music" id="lockinMusic">
+    <div style="font-weight:700;margin-bottom:8px;color:var(--text)">🎧 Focus Music</div>
+    <div id="lockinSpotifyEmbed"></div>
+  </div>
+
   <div id="popupTasks" class="task-popup"></div>
 </div>
 
@@ -674,6 +708,61 @@ function renderDailyStats(){
   if(timeEl) timeEl.textContent = `${Math.floor(minutes/60)}h ${minutes%60}m`;
 }
 
+// ===== SPOTIFY EMBED & MUSIC PANEL =====
+const DEFAULT_SPOTIFY_EMBED = 'https://open.spotify.com/embed/playlist/37i9dQZF1DX4sWSpwq3LiO'; // Deep Focus
+const spotifyInputEl = document.getElementById('spotifyInput');
+const spotifySaveBtn = document.getElementById('spotifySaveBtn');
+const spotifyClearBtn = document.getElementById('spotifyClearBtn');
+const spotifyEmbedEl = document.getElementById('spotifyEmbed');
+const lockinSpotifyEmbedEl = document.getElementById('lockinSpotifyEmbed');
+
+function parseSpotifyUrl(u){
+  if(!u) return null;
+  try{
+    // spotify URI: spotify:playlist:ID
+    const m1 = String(u).match(/spotify:(playlist|track|album|artist):([A-Za-z0-9]+)$/i);
+    if(m1) return {type:m1[1], id:m1[2]};
+    // open.spotify.com links
+    const m2 = String(u).match(/open\.spotify\.com\/(playlist|track|album|artist)\/([A-Za-z0-9]+)(?:\?|$)/i);
+    if(m2) return {type:m2[1], id:m2[2]};
+    // plain id fallback
+    const m3 = String(u).match(/^([A-Za-z0-9]+)$/);
+    if(m3) return {type:'playlist', id:m3[1]};
+  }catch(e){return null}
+  return null;
+}
+function embedUrlFromInput(u){
+  const p = parseSpotifyUrl(u);
+  if(p) return `https://open.spotify.com/embed/${p.type}/${p.id}`;
+  return DEFAULT_SPOTIFY_EMBED;
+}
+
+function renderSpotify(){
+  const saved = localStorage.getItem('spotify_uri');
+  const src = saved ? embedUrlFromInput(saved) : DEFAULT_SPOTIFY_EMBED;
+  spotifyEmbedEl.innerHTML = `<iframe class=\"music-embed\" src=\"${src}\" frameborder=\"0\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\"></iframe>`;
+  lockinSpotifyEmbedEl.innerHTML = `<iframe class=\"music-embed\" src=\"${src}\" frameborder=\"0\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\"></iframe>`;
+  if(spotifyInputEl) spotifyInputEl.value = localStorage.getItem('spotify_uri') || '';
+}
+
+if(spotifySaveBtn){
+  spotifySaveBtn.addEventListener('click', ()=>{
+    const v = spotifyInputEl.value.trim();
+    if(!v) return;
+    localStorage.setItem('spotify_uri', v);
+    renderSpotify();
+  });
+}
+if(spotifyClearBtn){
+  spotifyClearBtn.addEventListener('click', ()=>{
+    localStorage.removeItem('spotify_uri');
+    if(spotifyInputEl) spotifyInputEl.value = '';
+    renderSpotify();
+  });
+}
+
+// render on load
+renderSpotify();
 renderTasks();
 
 update();
