@@ -364,9 +364,8 @@ body{
 .music-panel .spotify-input{padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--panel-soft);color:var(--text);width:100%}
 .music-panel .music-embed{width:100%;height:92px;border-radius:8px;border:none;overflow:hidden}
 
-/* Lock-in small music box */
-.lockin-music{position:absolute;bottom:24px;right:24px;width:360px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);z-index:1003}
-.lockin-music .music-embed{width:100%;height:120px;border-radius:8px;border:none}
+/* Lock-in music removed — music stays in the sidebar in normal mode */
+/* .lockin-music removed to avoid overlap with tasks in Lock‑In mode */
 
 /* In lock-in, tasks sit above the music box on the right side and maintain a safe gap */
 .lockin-tasks{position:absolute;right:24px;bottom:calc(24px + 120px + 24px);width:360px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);z-index:1003}
@@ -376,7 +375,6 @@ body{
 /* Responsive: on narrow screens make tasks stretch horizontally and avoid overlapping the music box */
 @media (max-width:700px){
   .lockin-tasks{left:24px;right:24px;bottom:calc(24px + 120px + 24px);width:auto;}
-  .lockin-music{right:24px;bottom:24px;width:320px}
 }
 
 /* ================= STAR BACKGROUND LAYER ================= */
@@ -481,10 +479,7 @@ body{
     </div>
   </div>
 
-  <div class="lockin-music" id="lockinMusic">
-    <div style="font-weight:700;margin-bottom:8px;color:var(--text)">🎧 Focus Music</div>
-    <div id="lockinSpotifyEmbed"></div>
-  </div>
+
 
   <div class="lockin-tasks" id="lockinTasks">
     <div style="font-weight:700;margin-bottom:8px;color:var(--text)">📝 Tasks</div>
@@ -537,11 +532,7 @@ lockBtn.onclick = ()=>{
     lockin.classList.add('active');
     const hero = lockin.querySelector('.hero-timer');
     if(hero && timerSection && !hero.contains(timerSection)) hero.appendChild(timerSection);
-    // move persistent spotify iframe (if present) into lockin music box so playback continues
-    if(typeof spotifyIframe !== 'undefined' && spotifyIframe){
-      const lockTarget = document.getElementById('lockinSpotifyEmbed');
-      if(lockTarget && spotifyIframe.parentElement !== lockTarget) lockTarget.appendChild(spotifyIframe);
-    }
+
     // focus lock-in task input so user can quickly add tasks while locked in
     const lockInput = document.getElementById('lockinTaskInput');
     if(lockInput) lockInput.focus();
@@ -553,11 +544,7 @@ exitLock.onclick = ()=>{
     lockin.classList.remove('active');
     const dashboard = document.querySelector('.dashboard');
     if(dashboard && timerSection && !dashboard.contains(timerSection)) dashboard.prepend(timerSection);
-    // move persistent spotify iframe back to sidebar
-    if(typeof spotifyIframe !== 'undefined' && spotifyIframe){
-      const sideTarget = document.getElementById('spotifyEmbed');
-      if(sideTarget && spotifyIframe.parentElement !== sideTarget) sideTarget.appendChild(spotifyIframe);
-    }
+
     // focus sidebar task input
     const sideInput = document.getElementById('taskInput');
     if(sideInput) sideInput.focus();
@@ -767,7 +754,6 @@ const spotifyInputEl = document.getElementById('spotifyInput');
 const spotifySaveBtn = document.getElementById('spotifySaveBtn');
 const spotifyClearBtn = document.getElementById('spotifyClearBtn');
 const spotifyEmbedEl = document.getElementById('spotifyEmbed');
-const lockinSpotifyEmbedEl = document.getElementById('lockinSpotifyEmbed');
 
 function parseSpotifyUrl(u){
   if(!u) return null;
@@ -800,7 +786,7 @@ function createOrUpdateSpotify(src){
     spotifyIframe.setAttribute('allow','autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
   }
   if(spotifyIframe.src !== src) spotifyIframe.src = src;
-  const target = lockin.classList.contains('active') ? lockinSpotifyEmbedEl : spotifyEmbedEl;
+  const target = spotifyEmbedEl;
   if(target && spotifyIframe.parentElement !== target) target.appendChild(spotifyIframe);
 }
 
