@@ -205,7 +205,10 @@ body{
 /* Floating music button (visible in normal mode) + lock-in tasks button (visible in lock-in) */
 .music-wrapper, .lockin-tasks-wrapper{z-index:1003}
 .music-wrapper{position:fixed;left:18px;bottom:18px}
-.lockin-tasks-wrapper{position:fixed;right:24px;bottom:24px}
+.lockin-tasks-wrapper{position:fixed;right:12px;bottom:12px}
+
+/* hide music while in lock-in to prevent distraction */
+body.lockin-active .music-wrapper{ display:none !important }
 
 .lockin-music-btn, .lockin-tasks-btn{
   width:56px;height:56px;border-radius:999px;border:1px solid rgba(255,255,255,0.06);
@@ -215,7 +218,28 @@ body{
 .music-wrapper.open .lockin-music-btn, .lockin-tasks-wrapper.open .lockin-tasks-btn{transform:scale(1.06);box-shadow:0 16px 36px rgba(0,0,0,.6)}
 
 .music-panel-floating, .lockin-tasks-panel{
-  margin-top:12px;min-width:320px;max-width:380px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));border-radius:12px;border:1px solid rgba(255,255,255,0.04);opacity:0;transform:translateY(10px) scale(.985);pointer-events:none;transition:opacity .22s cubic-bezier(.2,0,.18,1), transform .22s cubic-bezier(.2,0,.18,1);box-shadow:0 12px 40px rgba(0,0,0,.5);transform-origin:left bottom;
+  margin-top:12px;
+  min-width:320px;
+  max-width:380px;
+  padding:12px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.04);
+  opacity:0;
+  transform:translateY(12px) scale(.985);
+  pointer-events:none;
+  transition:opacity .35s cubic-bezier(.2,0,.18,1), transform .35s cubic-bezier(.2,0,.18,1);
+  box-shadow:0 12px 40px rgba(0,0,0,.5);
+  transform-origin:left bottom;
+}
+
+/* Position lockin panel above the button so it pops up into view smoothly */
+.lockin-tasks-panel{
+  position:absolute;
+  right:0;
+  bottom:70px;
+  transform-origin:right bottom;
+  min-width:320px;
 }
 .music-wrapper.open .music-panel-floating, .music-wrapper:hover .music-panel-floating,
 .lockin-tasks-wrapper.open .lockin-tasks-panel, .lockin-tasks-wrapper:hover .lockin-tasks-panel{
@@ -478,7 +502,7 @@ body{
     <div class="task-entry">
       <div class="task-input-wrap">
         <input id="taskInput" class="task-input" placeholder="e.g. Plan feature — 25m" />
-         </div>
+        </div>
       <button class="btn" id="addTaskBtn">Add</button>
     </div>
     <div id="tasksList" class="tasks-list"></div>
@@ -588,6 +612,8 @@ lockBtn.onclick = ()=>{
   // show lock overlay and move timer into it
   if(!lockin.classList.contains('active')){
     lockin.classList.add('active');
+    document.body.classList.add('lockin-active'); // hide music during lock-in
+    if(musicWrapper) musicWrapper.classList.remove('open'); // ensure music is closed
     const hero = lockin.querySelector('.hero-timer');
     if(hero && timerSection && !hero.contains(timerSection)) hero.appendChild(timerSection);
 
@@ -931,6 +957,8 @@ exitLock.onclick = ()=>{
   if(lockin.classList.contains('active')){
     // ensure spotify is returned to sidebar
     attachSpotifyToSidebar();
+    // remove lock-in body flag so UI returns to normal
+    document.body.classList.remove('lockin-active');
     // close any open wrappers
     if(musicWrapper) musicWrapper.classList.remove('open');
     if(lockinTasksWrapper) lockinTasksWrapper.classList.remove('open');
