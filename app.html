@@ -511,6 +511,11 @@ body.lockin-active .planner-btn-wrapper{ display:none !important; }
     <button class="btn" id="resetBtn">Reset</button>
     <button class="btn" id="lockBtn">LOCK IN</button>
   </div>
+  <div class="phase-buttons" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+    <button class="btn" id="sessionBtn" style="background:linear-gradient(135deg,#1f6feb,#2f81f7);color:#fff;">Session</button>
+    <button class="btn" id="breakBtn" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;">Break</button>
+    <button class="btn" id="longBreakBtn" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;">Long Break</button>
+  </div>
 </section>
 
 <aside class="sidebar">
@@ -559,6 +564,7 @@ body.lockin-active .planner-btn-wrapper{ display:none !important; }
     <label>Work</label><input id="workTime" type="number" value="25">
     <label>Short Break</label><input id="shortBreak" type="number" value="5">
     <label>Long Break</label><input id="longBreak" type="number" value="15">
+    <label>Sessions Before Long Break</label><input id="sessionsBeforeLong" type="number" value="4">
     <div class="settings-actions" style="display:flex;gap:8px;margin-top:8px;">
       <button class="btn" id="saveSettingsBtn">Save</button>
       <button class="btn" id="closeSettingsBtn">Close</button>
@@ -600,7 +606,7 @@ body.lockin-active .planner-btn-wrapper{ display:none !important; }
 let timer=null,secondsLeft=1500,totalSeconds=1500;
 let currentPhase = 'work'; // 'work', 'shortBreak', 'longBreak'
 let pomodorosCompleted = 0;
-const POMODOROS_BEFORE_LONG_BREAK = 4;
+// POMODOROS_BEFORE_LONG_BREAK is defined in settings section and loaded from localStorage
 
 const display=document.getElementById("timerDisplay");
 const mega=document.getElementById("timerMega");
@@ -701,22 +707,44 @@ function start(){
   },1000);
 }
 
-// Optional: Simple notification sound using Web Audio API
+// Alarm sound using Web Audio API - plays a proper alarm sound
 function playNotificationSound(){
   try {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Create oscillator for alarm sound
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
+    
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-    oscillator.frequency.value = 880; // A5
-    oscillator.type = 'sine';
-    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
+    
+    // Alarm pattern: beep-beep-beep
+    const now = audioContext.currentTime;
+    
+    // First beep
+    oscillator.frequency.setValueAtTime(880, now);
+    gainNode.gain.setValueAtTime(0.3, now);
+    gainNode.gain.setValueAtTime(0.3, now + 0.15);
+    gainNode.gain.setValueAtTime(0, now + 0.2);
+    
+    // Second beep
+    oscillator.frequency.setValueAtTime(880, now + 0.25);
+    gainNode.gain.setValueAtTime(0, now + 0.25);
+    gainNode.gain.setValueAtTime(0.3, now + 0.4);
+    gainNode.gain.setValueAtTime(0, now + 0.45);
+    
+    // Third beep (higher pitch)
+    oscillator.frequency.setValueAtTime(1100, now + 0.5);
+    gainNode.gain.setValueAtTime(0, now + 0.5);
+    gainNode.gain.setValueAtTime(0.3, now + 0.65);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+    
+    oscillator.type = 'square';
+    oscillator.start(now);
+    oscillator.stop(now + 1.0);
   } catch(e) {
-    // Audio not supported, ignore
+    console.log('Audio playback failed:', e);
   }
 }
 
@@ -765,6 +793,7 @@ function toggleSettings(){
 const workInput = document.getElementById('workTime');
 const shortInput = document.getElementById('shortBreak');
 const longInput = document.getElementById('longBreak');
+const sessionsBeforeLongInput = document.getElementById('sessionsBeforeLong');
 const saveSettingsBtn = document.getElementById('saveSettingsBtn');
 const closeSettingsBtn = document.getElementById('closeSettingsBtn');
 
@@ -780,9 +809,11 @@ if(saveSettingsBtn){
     const w = Number(workInput.value) || 25;
     const s = Number(shortInput.value) || 5;
     const l = Number(longInput.value) || 15;
+    const sessions = Number(sessionsBeforeLongInput.value) || 4;
     localStorage.setItem('pf_work', w);
     localStorage.setItem('pf_short', s);
     localStorage.setItem('pf_long', l);
+    localStorage.setItem('pf_sessionsBeforeLong', sessions);
     applySettingsToTimer();
     toggleSettings();
   });
@@ -796,6 +827,37 @@ const savedShort = Number(localStorage.getItem('pf_short'));
 if(savedShort) shortInput.value = savedShort;
 const savedLong = Number(localStorage.getItem('pf_long'));
 if(savedLong) longInput.value = savedLong;
+const savedSessionsBeforeLong = Number(localStorage.getItem('pf_sessionsBeforeLong'));
+if(savedSessionsBeforeLong) sessionsBeforeLongInput.value = savedSessionsBeforeLong;
+
+// Load sessions before long break from settings
+let POMODOROS_BEFORE_LONG_BREAK = Number(localStorage.getItem('pf_sessionsBeforeLong')) || 4;
+
+// ===== Manual phase buttons =====
+const sessionBtn = document.getElementById('sessionBtn');
+const breakBtn = document.getElementById('breakBtn');
+const longBreakBtn = document.getElementById('longBreakBtn');
+
+if(sessionBtn){
+  sessionBtn.addEventListener('click', ()=>{
+    pause();
+    setPhase('work');
+  });
+}
+
+if(breakBtn){
+  breakBtn.addEventListener('click', ()=>{
+    pause();
+    setPhase('shortBreak');
+  });
+}
+
+if(longBreakBtn){
+  longBreakBtn.addEventListener('click', ()=>{
+    pause();
+    setPhase('longBreak');
+  });
+}
 
 // ===== TASKS (structured local implementation) =====
 const tasksListEl = document.getElementById('tasksList');
