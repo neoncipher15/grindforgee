@@ -596,9 +596,15 @@ body.lockin-active .planner-btn-wrapper{ display:none !important; }
 
 
 <script>
+// Timer state
 let timer=null,secondsLeft=1500,totalSeconds=1500;
+let currentPhase = 'work'; // 'work', 'shortBreak', 'longBreak'
+let pomodorosCompleted = 0;
+const POMODOROS_BEFORE_LONG_BREAK = 4;
+
 const display=document.getElementById("timerDisplay");
 const mega=document.getElementById("timerMega");
+const phaseBadge=document.getElementById("phaseBadge");
 const lockin=document.getElementById("lockin");
 const timerSection=document.getElementById("timerSection");
 const startBtn = document.getElementById("startBtn");
@@ -613,15 +619,110 @@ function update(){
   display.textContent=format(secondsLeft);
   mega.style.setProperty("--progress",(360*(1-secondsLeft/totalSeconds))+"deg");
 }
+
+// Save state to localStorage
+function saveState(){
+  localStorage.setItem('pf_currentPhase', currentPhase);
+  localStorage.setItem('pf_pomodorosCompleted', pomodorosCompleted);
+}
+
+// Load state from localStorage
+function loadState(){
+  const savedPhase = localStorage.getItem('pf_currentPhase');
+  const savedPomodoros = localStorage.getItem('pf_pomodorosCompleted');
+  if(savedPhase) currentPhase = savedPhase;
+  if(savedPomodoros) pomodorosCompleted = parseInt(savedPomodoros, 10);
+}
+
+// Get duration for a phase
+function getDurationForPhase(phase){
+  const work = Number(localStorage.getItem('pf_work')) || 25;
+  const short = Number(localStorage.getItem('pf_short')) || 5;
+  const long = Number(localStorage.getItem('pf_long')) || 15;
+  switch(phase){
+    case 'work': return work * 60;
+    case 'shortBreak': return short * 60;
+    case 'longBreak': return long * 60;
+    default: return work * 60;
+  }
+}
+
+// Get display name for phase
+function getPhaseDisplayName(phase){
+  switch(phase){
+    case 'work': return 'WORK';
+    case 'shortBreak': return 'SHORT BREAK';
+    case 'longBreak': return 'LONG BREAK';
+    default: return 'WORK';
+  }
+}
+
+// Set phase and update UI
+function setPhase(phase){
+  currentPhase = phase;
+  totalSeconds = getDurationForPhase(phase);
+  secondsLeft = totalSeconds;
+  phaseBadge.textContent = getPhaseDisplayName(phase);
+  update();
+  saveState();
+}
+
+// Switch to next phase and auto-start
+function switchToNextPhase(){
+  if(currentPhase === 'work'){
+    pomodorosCompleted++;
+    saveState();
+    // After 4 pomodoros, take a long break
+    if(pomodorosCompleted % POMODOROS_BEFORE_LONG_BREAK === 0){
+      setPhase('longBreak');
+    } else {
+      setPhase('shortBreak');
+    }
+  } else {
+    // Break is over, go back to work
+    setPhase('work');
+  }
+  // Auto-start the next timer
+  start();
+}
+
 function start(){
   if(timer)return;
   timer=setInterval(()=>{
     secondsLeft--;update();
-    if(secondsLeft<=0){clearInterval(timer);timer=null;}
+    if(secondsLeft<=0){
+      clearInterval(timer);
+      timer=null;
+      // Play notification sound (optional)
+      playNotificationSound();
+      // Auto-switch to next phase
+      switchToNextPhase();
+    }
   },1000);
 }
+
+// Optional: Simple notification sound using Web Audio API
+function playNotificationSound(){
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    oscillator.frequency.value = 880; // A5
+    oscillator.type = 'sine';
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+  } catch(e) {
+    // Audio not supported, ignore
+  }
+}
+
 function pause(){clearInterval(timer);timer=null}
-function doReset(){pause();secondsLeft=totalSeconds;update()} 
+function doReset(){pause();secondsLeft=totalSeconds;update();}
+function doResetAll(){pause();pomodorosCompleted=0;saveState();secondsLeft=totalSeconds;update();}
 
 startBtn.addEventListener('click', start);
 pauseBtn.addEventListener('click', pause);
@@ -845,6 +946,58 @@ tasksListEl.addEventListener('click', e=>handleTaskListClick(e, tasksListEl));
 
 function ymdFromDate(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` }
 
+// Update stats display
+function updateStatsDisplay(){
+  const headerPomodoros = document.getElementById('headerPomodoros');
+  const headerStreak = document.getElementById('headerStreak');
+  const totalPomodorosEl = document.getElementById('totalPomodoros');
+  const currentStreakEl = document.getElementById('currentStreak');
+  
+  if(headerPomodoros) headerPomodoros.textContent = pomodorosCompleted;
+  if(totalPomodorosEl) totalPomodorosEl.textContent = pomodorosCompleted;
+  
+  // Calculate streak from localStorage
+  const streakData = JSON.parse(localStorage.getItem('pf_streakData') || '{"current":0,"lastDate":null}');
+  const today = new Date().toDateString();
+  if(streakData.lastDate !== today){
+    // Check if streak is still valid (consecutive days)
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    if(streakData.lastDate === yesterday.toDateString()){
+      // Streak continues
+    } else if(streakData.lastDate !== today){
+      // Streak broken or new
+      // Keep current streak if it was from today, otherwise reset
+    }
+  }
+  if(headerStreak) headerStreak.textContent = streakData.current;
+  if(currentStreakEl) currentStreakEl.textContent = streakData.current;
+  
+  // Update streak when work session completes
+  updateStreak();
+}
+
+function updateStreak(){
+  const streakData = JSON.parse(localStorage.getItem('pf_streakData') || '{"current":0,"lastDate":null}');
+  const today = new Date().toDateString();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toDateString();
+  
+  if(streakData.lastDate === today){
+    // Already updated today
+  } else if(streakData.lastDate === yesterdayStr){
+    // Continue streak
+    streakData.current++;
+    streakData.lastDate = today;
+  } else {
+    // Start new streak
+    streakData.current = 1;
+    streakData.lastDate = today;
+  }
+  localStorage.setItem('pf_streakData', JSON.stringify(streakData));
+}
+
 function renderDailyStats(){
   const today = ymdFromDate(new Date());
   let done = 0, minutes = 0;
@@ -920,7 +1073,13 @@ exitLock.onclick = ()=>{
 importScheduledTasksForToday();
 renderTasks();
 
+// Load saved timer state
+loadState();
+// Initialize display with saved phase
+setPhase(currentPhase);
 update();
+// Update stats display
+updateStatsDisplay();
 
 // STAR BACKGROUND: continuous slow downward-moving stars (background-only, no pointer follow)
 const starLayer = document.getElementById('star-layer') || (()=>{
