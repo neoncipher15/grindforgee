@@ -3,11 +3,73 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-  
-<title>GrindForge</title>
+<meta name="theme-color" content="#020617" />
+<meta name="robots" content="index, follow" />
+<meta name="googlebot" content="index, follow" />
 
-<link rel="icon" type="image/png" href="/GrindForge.png" />
+<!-- Primary Meta Tags -->
+<title>GrindForge - Ultimate Pomodoro Timer & Productivity App</title>
+<meta name="title" content="GrindForge - Ultimate Pomodoro Timer & Productivity App" />
+<meta name="description" content="Master your focus with GrindForge, the ultimate Pomodoro experience. Features smart timer, task management, lock-in mode, monthly planner, and daily stats. Built for relentless grinders worldwide." />
+<meta name="keywords" content="pomodoro timer, productivity app, focus timer, task management, study timer, work timer, grind, focus, productivity, time management, lock-in mode, todo list, daily stats, monthly planner" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://grindforgee.vercel.app/" />
+<meta property="og:title" content="GrindForge - Ultimate Pomodoro Timer & Productivity App" />
+<meta property="og:description" content="Master your focus with GrindForge, the ultimate Pomodoro experience. Features smart timer, task management, lock-in mode, monthly planner, and daily stats." />
+<meta property="og:image" content="https://grindforgee.vercel.app/GrindForge.png" />
+<meta property="og:site_name" content="GrindForge" />
+<meta property="og:locale" content="en_US" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content="https://grindforgee.vercel.app/" />
+<meta name="twitter:title" content="GrindForge - Ultimate Pomodoro Timer & Productivity App" />
+<meta name="twitter:description" content="Master your focus with GrindForge, the ultimate Pomodoro experience. Features smart timer, task management, lock-in mode, monthly planner, and daily stats." />
+<meta name="twitter:image" content="https://grindforgee.vercel.app/GrindForge.png" />
+
+<!-- Preconnect for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+<link rel="icon" type="image/png" href="/GrindForge.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="/GrindForge.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="/GrindForge.png" />
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Structured Data / JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "GrindForge",
+  "description": "The ultimate Pomodoro experience for relentless grinders. Features smart timer, task management, lock-in mode, monthly planner, and daily stats.",
+  "url": "https://grindforgee.vercel.app/",
+  "image": "https://grindforgee.vercel.app/GrindForge.png",
+  "author": {
+    "@type": "Person",
+    "name": "Shaurya Chauhan",
+    "jobTitle": "Creator & Lead Developer"
+  },
+  "applicationCategory": "Productivity",
+  "operatingSystem": "Web Browser",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Smart Timer",
+    "Todo List",
+    "Lock In Mode",
+    "Monthly Planner",
+    "Daily Stats"
+  ]
+}
+</script>
 
 <script>
       window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -768,103 +830,107 @@ h1{
 </style>
 </head>
 <body>
-<div class="hero-bg"></div>
+<div class="hero-bg" aria-hidden="true"></div>
 
-<header class="header">
-  <nav class="nav-container">
-    <div class="logo-header">
-      <div class="logo-icon"><img src="./GrindForge.png"></div>
-      GrindForge
+<!-- Skip to main content for screen readers -->
+<a href="#main-content" class="skip-link" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Skip to main content</a>
+<style>
+.skip-link:focus{position:fixed;top:0;left:0;width:auto;height:auto;padding:16px 24px;background:var(--accent);color:#fff;z-index:9999;font-weight:600;border-radius:0 0 8px 0;}
+</style>
+
+<header class="header" role="banner">
+  <nav class="nav-container" aria-label="Main navigation">
+    <div class="logo-header" role="img" aria-label="GrindForge logo">
+      <div class="logo-icon"><img src="./GrindForge.png" alt=""></div>
+      <span>GrindForge</span>
     </div>
-    <ul class="nav-links">
-      <li><a href="#home" class="active">Home</a></li>
-      <li><a href="#developer">About</a></li>
-      <li><a href="#features">Features</a></li>
+    <ul class="nav-links" role="menubar">
+      <li role="none"><a href="#home" class="active" role="menuitem" aria-current="page">Home</a></li>
+      <li role="none"><a href="#developer" role="menuitem">About</a></li>
+      <li role="none"><a href="#features" role="menuitem">Features</a></li>
     </ul>
   </nav>
 </header>
 
-<main>
-  <section id="home" class="main-content hero-section">
+<main id="main-content" role="main">
+  <section id="home" class="main-content hero-section" aria-labelledby="hero-title">
     <div class="hero-content">
-      <div class="launch-logo">
-        <div class="logo-icon"><img src="./GrindForge.png"></div>
+      <div class="launch-logo" role="img" aria-label="GrindForge application logo">
+        <div class="logo-icon"><img src="./GrindForge.png" alt=""></div>
       </div>
-      <h1>GrindForge</h1>
+      <h1 id="hero-title">GrindForge</h1>
       <p class="tagline">Master your focus with the ultimate <strong>Pomodoro experience</strong>. <br> <strong>Built for relentless grinders.</strong></p>
       <div class="cta-buttons">
-      <a href="app.html" class="launch-btn" id="launchAppBtn">
-             Launch App 🚀
-      </a>
-
-</div>
-
+        <a href="app.html" class="launch-btn" id="launchAppBtn" role="button" aria-label="Launch GrindForge application">Launch App 🚀</a>
+      </div>
     </div>
   </section>
 
-  <section id="features" class="section">
-    <h2 class="section-title">Premium Features</h2>
+  <section id="features" class="section" aria-labelledby="features-title">
+    <h2 id="features-title" class="section-title">Premium Features</h2>
     <p class="section-subtitle">Everything you need to absolutely crush your daily grind sessions</p>
     
-    <div class="features-grid">
-      <div class="feature">
-        <span class="feature-icon">⏱️</span>
-        <div>Smart Timer</div>
-        
-      </div>
+    <div class="features-grid" role="list">
+      <article class="feature" role="listitem">
+        <span class="feature-icon" aria-hidden="true">⏱️</span>
+        <div role="heading" aria-level="3">Smart Timer</div>
+        <p class="feature-desc">Customizable Pomodoro timer with auto-switching phases</p>
+      </article>
 
-      <div class="feature">
-        <span class="feature-icon">✅</span>
-        <div>Todo List</div>
-         </div>
+      <article class="feature" role="listitem">
+        <span class="feature-icon" aria-hidden="true">✅</span>
+        <div role="heading" aria-level="3">Todo List</div>
+        <p class="feature-desc">Organize tasks with priority levels and completion tracking</p>
+      </article>
 
-      <div class="feature">
-        <span class="feature-icon">🔒</span>
-        <div>Lock In Mode</div>
-        </div>
+      <article class="feature" role="listitem">
+        <span class="feature-icon" aria-hidden="true">🔒</span>
+        <div role="heading" aria-level="3">Lock In Mode</div>
+        <p class="feature-desc">Distraction-free mode to maintain complete focus</p>
+      </article>
 
-      <div class="feature">
-        <span class="feature-icon">📊</span>
-        <div>Monthly Planner</div>
-        </div>
+      <article class="feature" role="listitem">
+        <span class="feature-icon" aria-hidden="true">📅</span>
+        <div role="heading" aria-level="3">Monthly Planner</div>
+        <p class="feature-desc">Plan and track your productivity over months</p>
+      </article>
 
-
-
-      <div class="feature">
-        <span class="feature-icon">📊</span>
-        <div>Daily Stats</div>
-        
-      </div>
+      <article class="feature" role="listitem">
+        <span class="feature-icon" aria-hidden="true">📊</span>
+        <div role="heading" aria-level="3">Daily Stats</div>
+        <p class="feature-desc">Detailed analytics of your productivity sessions</p>
+      </article>
     </div>
   </section>
 
-  <section id="developer" class="section">
+  <section id="developer" class="section" aria-labelledby="developer-title">
     <div class="developers-section">
-      <div class="developer-avatar">🧠</div>
-      <h2 class="developer-name">Shaurya Chauhan</h2>
+      <div class="developer-avatar" role="img" aria-label="Developer avatar">🧠</div>
+      <h2 id="developer-title" class="developer-name">Shaurya Chauhan</h2>
       <p class="developer-title">Creator & Lead Developer</p>
       <p class="developer-desc">
-        Class 7 student and coding prodigy from Noida, UP. Passionate about <strong>mathematics olympiads (IOQM)</strong>, <strong>cybersecurity (Website Hacking)</strong>, and Coding. When no grinding code, you will find me solving math problems, exploring exploitation tactics, or watching anime.
+        Class 7 student and coding prodigy from Noida, UP. Passionate about <strong>mathematics olympiads (IOQM)</strong>, <strong>cybersecurity (Website Hacking)</strong>, and Coding. When not grinding code, you will find me solving math problems, exploring exploitation tactics, or watching anime.
       </p>
     </div>
   </section>
 </main>
 
-<footer class="footer">
+<footer class="footer" role="contentinfo">
   <div class="footer-content">
     <div class="footer-left">
-      <p>&copy; 2025 GrindForge by Shaurya Chauhan. <strong>Built with ❤️ & ⚡ for relentless grinders worldwide.</strong></p>
-      <div class="footer-links">
-        <a href="https://www.youtube.com/@GrindForge-p4f" class="footer-btn youtube" target="_blank">🎥 YouTube</a>
-        
-      </div>
+      <p>&copy; 2025 GrindForge by <a href="#developer" style="color:var(--accent);text-decoration:none;">Shaurya Chauhan</a>. <strong>Built with ❤️ & ⚡ for relentless grinders worldwide.</strong></p>
+      <nav class="footer-links" aria-label="Social links">
+        <a href="https://www.youtube.com/@GrindForge-p4f" class="footer-btn youtube" target="_blank" rel="noopener noreferrer" aria-label="Visit our YouTube channel">
+          <span aria-hidden="true">🎥</span> YouTube
+        </a>
+      </nav>
     </div>
 
     <div class="footer-right">
-      <div class="qr-placeholder">
-        <img src="./image.png" alt="QR Code"> 
+      <div class="qr-placeholder" role="img" aria-label="QR Code for donations">
+        <img src="./image.png" alt="QR Code for donations" loading="lazy"> 
       </div>
-      <div class="qr-caption">Please donate</div>
+      <p class="qr-caption">Please donate</p>
     </div>
   </div>
 </footer>
