@@ -1,16 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+I'll fix all the issues and create a proper enhanced version with real backgrounds, actual sounds, star background, and a separate analytics page!
+Action: file_editor create /app/app.html --file-text "<!DOCTYPE html>
+<html lang=\"en\">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset=\"UTF-8\">
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
 <title>GrindForge - Enhanced</title>
-<link rel="icon" type="image/png" href="/GrindForge.png">
+<link rel=\"icon\" type=\"image/png\" href=\"/GrindForge.png\">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\">
 
 <style>
 /* ================= CSS VARIABLES (THEME SYSTEM) ================= */
-:root[data-theme="dark"]{
+:root[data-theme=\"dark\"]{
   --bg:#0b0f17;
   --bg-secondary:#020617;
   --panel:#0f172a;
@@ -27,7 +28,7 @@
   --shadow:0 8px 32px rgba(0,0,0,.4);
 }
 
-:root[data-theme="light"]{
+:root[data-theme=\"light\"]{
   --bg:#f8fafc;
   --bg-secondary:#ffffff;
   --panel:#ffffff;
@@ -62,12 +63,44 @@ body{
   z-index:-2;
   background-size:cover;
   background-position:center;
-  opacity:0.15;
+  opacity:0;
   transition:opacity 0.5s ease;
 }
 
-body[data-theme="light"] .bg-overlay{
-  opacity:0.25;
+.bg-overlay.active{
+  opacity:0.3;
+}
+
+body[data-theme=\"light\"] .bg-overlay.active{
+  opacity:0.4;
+}
+
+/* ================= STAR BACKGROUND ================= */
+#star-layer{
+  position:fixed;
+  left:0;
+  top:0;
+  right:0;
+  bottom:0;
+  pointer-events:none;
+  overflow:visible;
+  z-index:-1;
+  mix-blend-mode:screen;
+  opacity:0.95;
+}
+.star{
+  position:absolute;
+  border-radius:50%;
+  background:radial-gradient(circle,#ffffff 0%,rgba(255,255,255,0.9) 35%, rgba(255,255,255,0) 100%);
+  will-change:transform,opacity;
+  filter:drop-shadow(0 6px 18px rgba(255,255,255,.08));
+  pointer-events:none;
+  box-shadow:0 0 8px rgba(255,255,255,.06);
+}
+@keyframes twinkle{
+  0%{opacity:0.3;transform:scale(0.9)}
+  50%{opacity:0.9;transform:scale(1.05)}
+  100%{opacity:0.45;transform:scale(0.95)}
 }
 
 /* ================= HEADER ================= */
@@ -76,7 +109,7 @@ body[data-theme="light"] .bg-overlay{
   top:0;
   z-index:100;
   backdrop-filter:blur(16px);
-  background:var(--panel);
+  background:rgba(15,23,42,.9);
   border-bottom:1px solid var(--border);
   box-shadow:var(--shadow);
 }
@@ -257,38 +290,6 @@ body[data-theme="light"] .bg-overlay{
   color:var(--text);
 }
 
-/* ================= TABS ================= */
-.tabs{
-  display:flex;
-  gap:8px;
-  margin-bottom:20px;
-  border-bottom:2px solid var(--border);
-}
-.tab{
-  padding:10px 16px;
-  cursor:pointer;
-  border:none;
-  background:transparent;
-  color:var(--muted);
-  font-weight:600;
-  border-bottom:3px solid transparent;
-  transition:all 0.2s ease;
-}
-.tab.active{
-  color:var(--accent);
-  border-bottom-color:var(--accent);
-}
-.tab:hover{
-  color:var(--text);
-}
-
-.tab-content{
-  display:none;
-}
-.tab-content.active{
-  display:block;
-}
-
 /* ================= STATS ================= */
 .stats-grid{
   display:grid;
@@ -316,54 +317,10 @@ body[data-theme="light"] .bg-overlay{
   margin-top:4px;
 }
 
-/* Weekly Analytics Chart */
-.chart-container{
-  margin-top:20px;
-  padding:16px;
-  background:var(--panel-soft);
-  border-radius:12px;
-  border:1px solid var(--border);
-}
-.chart-bars{
-  display:flex;
-  gap:8px;
-  align-items:flex-end;
-  height:120px;
-  margin-top:12px;
-}
-.chart-bar{
-  flex:1;
-  background:linear-gradient(to top, var(--accent), var(--accent-hover));
-  border-radius:6px 6px 0 0;
-  position:relative;
-  min-height:8px;
-  transition:all 0.3s ease;
-}
-.chart-bar:hover{
-  opacity:0.8;
-  transform:translateY(-4px);
-}
-.chart-bar-label{
-  font-size:0.7rem;
-  color:var(--muted);
-  text-align:center;
-  margin-top:6px;
-  font-weight:600;
-}
-.chart-bar-value{
-  position:absolute;
-  top:-20px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:0.7rem;
-  font-weight:700;
-  color:var(--accent);
-}
-
 /* ================= BACKGROUND SELECTOR ================= */
 .bg-options{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(80px, 1fr));
+  grid-template-columns:repeat(auto-fit, minmax(90px, 1fr));
   gap:12px;
   margin-top:12px;
 }
@@ -400,14 +357,14 @@ body[data-theme="light"] .bg-overlay{
   font-weight:600;
 }
 
-/* Preset backgrounds */
-.bg-none{background:linear-gradient(135deg,#1a1a2e,#16213e)}
-.bg-library{background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect fill="%23654321" width="200" height="200"/><rect fill="%23432100" x="0" y="40" width="40" height="120"/><rect fill="%23543210" x="50" y="30" width="40" height="130"/><rect fill="%23654321" x="100" y="50" width="40" height="110"/><rect fill="%23432100" x="150" y="35" width="40" height="125"/></svg>')}
-.bg-cafe{background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect fill="%23d4a574" width="200" height="200"/><circle fill="%23654321" cx="100" cy="100" r="30"/><circle fill="%23543210" cx="100" cy="100" r="20"/></svg>')}
-.bg-night{background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="ng" x1="0" y1="0" x2="0" y2="1"><stop offset="0%25" stop-color="%231a1a2e"/><stop offset="100%25" stop-color="%230f3460"/></linearGradient></defs><rect fill="url(%23ng)" width="200" height="200"/><circle fill="%23ffd700" cx="170" cy="30" r="15"/></svg>')}
-.bg-forest{background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect fill="%23228b22" width="200" height="200"/><polygon fill="%23006400" points="50,150 70,100 30,100"/><polygon fill="%23006400" points="100,140 120,90 80,90"/><polygon fill="%23006400" points="150,155 170,105 130,105"/></svg>')}
-.bg-ocean{background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="og" x1="0" y1="0" x2="0" y2="1"><stop offset="0%25" stop-color="%23006994"/><stop offset="100%25" stop-color="%2300a8cc"/></linearGradient></defs><rect fill="url(%23og)" width="200" height="200"/><path fill="%23ffffff" opacity="0.3" d="M0,100 Q50,80 100,100 T200,100 L200,200 L0,200 Z"/></svg>')}
-.bg-space{background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect fill="%23000033" width="200" height="200"/><circle fill="%23ffffff" cx="20" cy="20" r="1"/><circle fill="%23ffffff" cx="50" cy="40" r="1.5"/><circle fill="%23ffffff" cx="150" cy="30" r="1"/><circle fill="%23ffffff" cx="100" cy="80" r="1.2"/><circle fill="%23ffffff" cx="180" cy="150" r="1"/></svg>')}
+/* Real Unsplash backgrounds */
+.bg-none{background:#1a1a2e}
+.bg-library{background:url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=400&q=80')}
+.bg-cafe{background:url('https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80')}
+.bg-night{background:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&q=80')}
+.bg-forest{background:url('https://images.unsplash.com/photo-1511497584788-876760111969?w=400&q=80')}
+.bg-ocean{background:url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&q=80')}
+.bg-mountains{background:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80')}
 
 /* ================= AMBIENT SOUNDS ================= */
 .sound-options{
@@ -456,7 +413,7 @@ body[data-theme="light"] .bg-overlay{
   font-weight:500;
 }
 .task-input{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 20h9'/><path d='M16.5 3.5L20.5 7.5 7 21l-4 1 1-4L16.5 3.5z'/></svg>");
+  background-image:url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 20h9'/><path d='M16.5 3.5L20.5 7.5 7 21l-4 1 1-4L16.5 3.5z'/></svg>\");
   background-repeat:no-repeat;
   background-position:12px center;
   background-size:18px 18px;
@@ -505,7 +462,7 @@ body[data-theme="light"] .bg-overlay{
   font-weight:700;
   cursor:pointer;
   min-width:96px;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-image:url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>\");
   background-repeat:no-repeat;
   background-position:right 10px center;
   background-size:14px 14px;
@@ -672,6 +629,36 @@ body[data-theme="light"] .bg-overlay{
   font-size:1rem;
 }
 
+/* ================= FLOATING BUTTONS ================= */
+.floating-btn-wrapper{
+  position:fixed;
+  bottom:12px;
+  z-index:1005;
+}
+.floating-left{left:12px}
+.floating-right{right:12px}
+
+.floating-btn{
+  width:56px;
+  height:56px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.06);
+  background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 12px 34px rgba(0,0,0,.5);
+  text-decoration:none;
+  color:var(--text);
+  font-size:24px;
+  transition:all 0.3s ease;
+}
+.floating-btn:hover{
+  transform:scale(1.06);
+  box-shadow:0 16px 40px rgba(47,129,247,.4);
+}
+
 /* ================= RESPONSIVE ================= */
 @media(max-width:768px){
   .dashboard{
@@ -679,11 +666,7 @@ body[data-theme="light"] .bg-overlay{
     padding:20px 16px;
   }
   .header-content{
-    flex-direction:column;
-    align-items:stretch;
-  }
-  .header-stats{
-    justify-content:center;
+    gap:12px;
   }
   .stats-grid{
     grid-template-columns:1fr 1fr;
@@ -703,202 +686,239 @@ body[data-theme="light"] .bg-overlay{
 </style>
 </head>
 
-<body data-theme="dark">
+<body data-theme=\"dark\">
+
+<!-- Star Background -->
+<div id=\"star-layer\"></div>
 
 <!-- Background overlay -->
-<div class="bg-overlay" id="bgOverlay"></div>
+<div class=\"bg-overlay\" id=\"bgOverlay\"></div>
 
-<header class="header">
-  <div class="header-content">
-    <div class="brand">
-      <img src="./GrindForge.png" alt="GrindForge" class="brand-logo">
-      <div class="brand-title">GrindForge Enhanced</div>
+<header class=\"header\">
+  <div class=\"header-content\">
+    <div class=\"brand\">
+      <img src=\"./GrindForge.png\" alt=\"GrindForge\" class=\"brand-logo\">
+      <div class=\"brand-title\">GrindForge</div>
     </div>
-    <div class="header-controls">
-      <button class="icon-btn" id="themeToggle" title="Toggle Theme">🌓</button>
-      <button class="icon-btn" id="settingsBtn" title="Settings">⚙️</button>
+    <div class=\"header-controls\">
+      <button class=\"icon-btn\" id=\"themeToggle\" title=\"Toggle Theme\">🌓</button>
+      <button class=\"icon-btn\" id=\"settingsBtn\" title=\"Settings\">⚙️</button>
     </div>
-    <div class="header-stats">
-      <div class="stat-pill">🔥 <span id="headerPomodoros">0</span> Today</div>
-      <div class="stat-pill">⚡ Streak: <span id="headerStreak">0</span></div>
+    <div class=\"header-stats\">
+      <div class=\"stat-pill\">🔥 <span id=\"headerPomodoros\">0</span> Today</div>
+      <div class=\"stat-pill\">⚡ Streak: <span id=\"headerStreak\">0</span></div>
     </div>
   </div>
 </header>
 
-<main class="dashboard">
-<section class="hero-timer" id="timerSection">
+<main class=\"dashboard\">
+<section class=\"hero-timer\" id=\"timerSection\">
   <!-- Motivational Quote -->
-  <div class="quote-box">
-    <div class="quote-text" id="quoteText">"The secret of getting ahead is getting started."</div>
-    <div class="quote-author" id="quoteAuthor">- Mark Twain</div>
+  <div class=\"quote-box\">
+    <div class=\"quote-text\" id=\"quoteText\">\"The secret of getting ahead is getting started.\"</div>
+    <div class=\"quote-author\" id=\"quoteAuthor\">- Mark Twain</div>
   </div>
 
-  <div class="timer-mega" id="timerMega">
-    <div class="timer-inner">
-      <div class="timer-display" id="timerDisplay">25:00</div>
-      <div class="phase-badge" id="phaseBadge">WORK</div>
+  <div class=\"timer-mega\" id=\"timerMega\">
+    <div class=\"timer-inner\">
+      <div class=\"timer-display\" id=\"timerDisplay\">25:00</div>
+      <div class=\"phase-badge\" id=\"phaseBadge\">WORK</div>
     </div>
   </div>
   
-  <div class="timer-controls">
-    <button class="btn btn-primary" id="startBtn">▶ Start</button>
-    <button class="btn" id="pauseBtn">⏸ Pause</button>
-    <button class="btn" id="resetBtn">🔄 Reset</button>
-    <button class="btn" id="lockBtn">🔒 LOCK IN</button>
+  <div class=\"timer-controls\">
+    <button class=\"btn btn-primary\" id=\"startBtn\">▶ Start</button>
+    <button class=\"btn\" id=\"pauseBtn\">⏸ Pause</button>
+    <button class=\"btn\" id=\"resetBtn\">🔄 Reset</button>
+    <button class=\"btn\" id=\"lockBtn\">🔒 LOCK IN</button>
   </div>
   
-  <div class="phase-buttons" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
-    <button class="btn" id="sessionBtn" style="background:linear-gradient(135deg,#1f6feb,#2f81f7);color:#fff;">💼 Session</button>
-    <button class="btn" id="breakBtn" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;">☕ Break</button>
-    <button class="btn" id="longBreakBtn" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;">🌴 Long Break</button>
+  <div class=\"phase-buttons\" style=\"display:flex;gap:12px;flex-wrap:wrap;justify-content:center;\">
+    <button class=\"btn\" id=\"sessionBtn\" style=\"background:linear-gradient(135deg,#1f6feb,#2f81f7);color:#fff;\">💼 Session</button>
+    <button class=\"btn\" id=\"breakBtn\" style=\"background:linear-gradient(135deg,#10b981,#059669);color:#fff;\">☕ Break</button>
+    <button class=\"btn\" id=\"longBreakBtn\" style=\"background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;\">🌴 Long Break</button>
   </div>
 </section>
 
-<aside class="sidebar">
-  <!-- Stats with tabs -->
-  <div class="panel">
-    <h3 class="panel-title">📊 Analytics</h3>
-    
-    <div class="tabs">
-      <button class="tab active" data-tab="daily">Daily</button>
-      <button class="tab" data-tab="weekly">Weekly</button>
-    </div>
-    
-    <!-- Daily Stats -->
-    <div class="tab-content active" id="dailyStats">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-value" id="totalPomodoros">0</div>
-          <div class="stat-label">Pomodoros</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="currentStreak">0</div>
-          <div class="stat-label">Streak</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="todayTasksDone">0</div>
-          <div class="stat-label">Tasks Done</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="todayTime">0h 0m</div>
-          <div class="stat-label">Focus Time</div>
-        </div>
+<aside class=\"sidebar\">
+  <!-- Quick Stats -->
+  <div class=\"panel\">
+    <h3 class=\"panel-title\">📊 Today's Stats</h3>
+    <div class=\"stats-grid\">
+      <div class=\"stat-card\">
+        <div class=\"stat-value\" id=\"totalPomodoros\">0</div>
+        <div class=\"stat-label\">Pomodoros</div>
       </div>
-    </div>
-    
-    <!-- Weekly Stats -->
-    <div class="tab-content" id="weeklyStats">
-      <div class="chart-container">
-        <div style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:12px;">Weekly Pomodoros</div>
-        <div class="chart-bars" id="weeklyChart">
-          <!-- Chart bars will be generated here -->
-        </div>
+      <div class=\"stat-card\">
+        <div class=\"stat-value\" id=\"currentStreak\">0</div>
+        <div class=\"stat-label\">Streak</div>
       </div>
-      
-      <div class="stats-grid" style="margin-top:16px;">
-        <div class="stat-card">
-          <div class="stat-value" id="weekTotal">0</div>
-          <div class="stat-label">This Week</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="weekAvg">0</div>
-          <div class="stat-label">Daily Avg</div>
-        </div>
+      <div class=\"stat-card\">
+        <div class=\"stat-value\" id=\"todayTasksDone\">0</div>
+        <div class=\"stat-label\">Tasks Done</div>
+      </div>
+      <div class=\"stat-card\">
+        <div class=\"stat-value\" id=\"todayTime\">0h 0m</div>
+        <div class=\"stat-label\">Focus Time</div>
       </div>
     </div>
   </div>
 
   <!-- Background & Sounds -->
-  <div class="panel">
-    <h3 class="panel-title">🎨 Customize</h3>
+  <div class=\"panel\">
+    <h3 class=\"panel-title\">🎨 Customize</h3>
     
-    <div style="font-size:0.9rem;font-weight:600;margin-bottom:10px;color:var(--text);">Background</div>
-    <div class="bg-options">
-      <div class="bg-option bg-none active" data-bg="none">
-        <div class="bg-option-label">None</div>
+    <div style=\"font-size:0.9rem;font-weight:600;margin-bottom:10px;color:var(--text);\">Background</div>
+    <div class=\"bg-options\">
+      <div class=\"bg-option bg-none active\" data-bg=\"none\">
+        <div class=\"bg-option-label\">None</div>
       </div>
-      <div class="bg-option bg-library" data-bg="library">
-        <div class="bg-option-label">Library</div>
+      <div class=\"bg-option bg-library\" data-bg=\"library\">
+        <div class=\"bg-option-label\">Library</div>
       </div>
-      <div class="bg-option bg-cafe" data-bg="cafe">
-        <div class="bg-option-label">Café</div>
+      <div class=\"bg-option bg-cafe\" data-bg=\"cafe\">
+        <div class=\"bg-option-label\">Café</div>
       </div>
-      <div class="bg-option bg-night" data-bg="night">
-        <div class="bg-option-label">Night</div>
+      <div class=\"bg-option bg-night\" data-bg=\"night\">
+        <div class=\"bg-option-label\">Night</div>
       </div>
-      <div class="bg-option bg-forest" data-bg="forest">
-        <div class="bg-option-label">Forest</div>
+      <div class=\"bg-option bg-forest\" data-bg=\"forest\">
+        <div class=\"bg-option-label\">Forest</div>
       </div>
-      <div class="bg-option bg-ocean" data-bg="ocean">
-        <div class="bg-option-label">Ocean</div>
+      <div class=\"bg-option bg-ocean\" data-bg=\"ocean\">
+        <div class=\"bg-option-label\">Ocean</div>
+      </div>
+      <div class=\"bg-option bg-mountains\" data-bg=\"mountains\">
+        <div class=\"bg-option-label\">Mountains</div>
       </div>
     </div>
     
-    <div style="font-size:0.9rem;font-weight:600;margin:16px 0 10px;color:var(--text);">Ambient Sounds</div>
-    <div class="sound-options">
-      <div class="sound-btn" data-sound="none">🔇 None</div>
-      <div class="sound-btn" data-sound="rain">🌧️ Rain</div>
-      <div class="sound-btn" data-sound="cafe">☕ Café</div>
-      <div class="sound-btn" data-sound="fire">🔥 Fire</div>
+    <div style=\"font-size:0.9rem;font-weight:600;margin:16px 0 10px;color:var(--text);\">Ambient Sounds</div>
+    <div class=\"sound-options\">
+      <div class=\"sound-btn active\" data-sound=\"none\">🔇 None</div>
+      <div class=\"sound-btn\" data-sound=\"rain\">🌧️ Rain</div>
+      <div class=\"sound-btn\" data-sound=\"cafe\">☕ Café</div>
+      <div class=\"sound-btn\" data-sound=\"forest\">🌲 Forest</div>
+      <div class=\"sound-btn\" data-sound=\"waves\">🌊 Waves</div>
+      <div class=\"sound-btn\" data-sound=\"fire\">🔥 Fire</div>
     </div>
   </div>
 
   <!-- Tasks -->
-  <div class="panel">
-    <h3 class="panel-title">📝 Tasks</h3>
-    <div class="task-entry">
-      <div class="task-input-wrap">
-        <input id="taskInput" class="task-input" placeholder="Add task, e.g. Study Math - 25m" />
+  <div class=\"panel\">
+    <h3 class=\"panel-title\">📝 Tasks</h3>
+    <div class=\"task-entry\">
+      <div class=\"task-input-wrap\">
+        <input id=\"taskInput\" class=\"task-input\" placeholder=\"Add task, e.g. Study Math - 25m\" />
       </div>
-      <select id="taskPriority" class="premium-select">
-        <option value="high">High</option>
-        <option value="mid" selected>Mid</option>
-        <option value="low">Low</option>
+      <select id=\"taskPriority\" class=\"premium-select\">
+        <option value=\"high\">High</option>
+        <option value=\"mid\" selected>Mid</option>
+        <option value=\"low\">Low</option>
       </select>
-      <button class="btn" id="addTaskBtn">+</button>
+      <button class=\"btn\" id=\"addTaskBtn\">+</button>
     </div>
-    <div id="tasksList" class="tasks-list"></div>
+    <div id=\"tasksList\" class=\"tasks-list\"></div>
   </div>
 </aside>
 </main>
 
 <!-- Settings Modal -->
-<div class="modal" id="settingsModal">
-  <div class="modal-content" style="position:relative;">
-    <button class="modal-close" id="closeSettings">×</button>
-    <h2 class="modal-title">⚙️ Settings</h2>
+<div class=\"modal\" id=\"settingsModal\">
+  <div class=\"modal-content\" style=\"position:relative;\">
+    <button class=\"modal-close\" id=\"closeSettings\">×</button>
+    <h2 class=\"modal-title\">⚙️ Settings</h2>
     
-    <div class="setting-group">
+    <div class=\"setting-group\">
       <label>Work Duration (minutes)</label>
-      <input id="workTime" type="number" value="25" min="1" max="60">
+      <input id=\"workTime\" type=\"number\" value=\"25\" min=\"1\" max=\"60\">
     </div>
     
-    <div class="setting-group">
+    <div class=\"setting-group\">
       <label>Short Break (minutes)</label>
-      <input id="shortBreak" type="number" value="5" min="1" max="30">
+      <input id=\"shortBreak\" type=\"number\" value=\"5\" min=\"1\" max=\"30\">
     </div>
     
-    <div class="setting-group">
+    <div class=\"setting-group\">
       <label>Long Break (minutes)</label>
-      <input id="longBreak" type="number" value="15" min="1" max="60">
+      <input id=\"longBreak\" type=\"number\" value=\"15\" min=\"1\" max=\"60\">
     </div>
     
-    <div class="setting-group">
+    <div class=\"setting-group\">
       <label>Sessions Before Long Break</label>
-      <input id="sessionsBeforeLong" type="number" value="4" min="1" max="10">
+      <input id=\"sessionsBeforeLong\" type=\"number\" value=\"4\" min=\"1\" max=\"10\">
     </div>
     
-    <button class="btn btn-primary" id="saveSettings" style="width:100%;margin-top:20px;">💾 Save Settings</button>
+    <button class=\"btn btn-primary\" id=\"saveSettings\" style=\"width:100%;margin-top:20px;\">💾 Save Settings</button>
   </div>
 </div>
 
 <!-- LOCK IN OVERLAY -->
-<div class="lock-in" id="lockin">
-  <button class="btn exit-lock" id="exitLock">❌ EXIT</button>
-  <div class="hero-timer"></div>
+<div class=\"lock-in\" id=\"lockin\">
+  <button class=\"btn exit-lock\" id=\"exitLock\">❌ EXIT</button>
+  <div class=\"hero-timer\"></div>
+</div>
+
+<!-- Floating Buttons -->
+<div class=\"floating-btn-wrapper floating-left\">
+  <a href=\"planner.html\" class=\"floating-btn\" title=\"Monthly Planner\">📅</a>
+</div>
+
+<div class=\"floating-btn-wrapper floating-right\">
+  <a href=\"analytics.html\" class=\"floating-btn\" title=\"Analytics\">📊</a>
 </div>
 
 <script>
+// ================= STAR BACKGROUND =================
+const starLayer = document.getElementById('star-layer');
+const STAR_COUNT = 64;
+const STAR_SIZE = 4;
+const stars = [];
+
+function createStar(){
+  const el = document.createElement('div');
+  el.className = 'star';
+  const size = STAR_SIZE;
+  el.style.width = el.style.height = size + 'px';
+  el.style.opacity = (0.45 + Math.random()*0.35).toString();
+  el.style.animation = `twinkle ${4 + Math.random()*4}s ease-in-out ${Math.random()*5}s infinite alternate`;
+  const x = Math.random()*window.innerWidth;
+  const y = Math.random()*window.innerHeight;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  starLayer.appendChild(el);
+  const baseVy = 0.008 + Math.random()*0.02;
+  return {el, x, y, vx: (Math.random()-0.5)*0.02, vy: baseVy, baseVy, size};
+}
+
+for(let i=0;i<STAR_COUNT;i++) stars.push(createStar());
+
+let lastFrame = performance.now();
+function updateStars(now){
+  const dt = Math.min(60, now - lastFrame);
+  lastFrame = now;
+  const w = window.innerWidth, h = window.innerHeight;
+  for(const s of stars){
+    s.vy += (s.baseVy - s.vy) * 0.05;
+    s.x += s.vx * dt;
+    s.y += s.vy * dt;
+    if(s.y > h + 20){ s.y = -20; s.x = Math.random()*w; }
+    if(s.x > w + 20) s.x = -20;
+    if(s.x < -20) s.x = w + 20;
+    s.el.style.left = s.x + 'px';
+    s.el.style.top = s.y + 'px';
+  }
+  requestAnimationFrame(updateStars);
+}
+requestAnimationFrame(updateStars);
+
+window.addEventListener('resize', ()=>{
+  for(const s of stars){
+    if(s.x > window.innerWidth) s.x = Math.random()*window.innerWidth;
+    if(s.y > window.innerHeight) s.y = Math.random()*window.innerHeight;
+  }
+});
+
 // ================= THEME SYSTEM =================
 const themeToggle = document.getElementById('themeToggle');
 const html = document.documentElement;
@@ -915,24 +935,23 @@ themeToggle.textContent = currentTheme === 'dark' ? '🌓' : '☀️';
 
 // ================= MOTIVATIONAL QUOTES =================
 const quotes = [
-  {text:"The secret of getting ahead is getting started.", author:"Mark Twain"},
-  {text:"It always seems impossible until it's done.", author:"Nelson Mandela"},
-  {text:"Don't watch the clock; do what it does. Keep going.", author:"Sam Levenson"},
-  {text:"The future depends on what you do today.", author:"Mahatma Gandhi"},
-  {text:"Believe you can and you're halfway there.", author:"Theodore Roosevelt"},
-  {text:"Success is not final, failure is not fatal.", author:"Winston Churchill"},
-  {text:"The only way to do great work is to love what you do.", author:"Steve Jobs"},
-  {text:"Hard work beats talent when talent doesn't work hard.", author:"Tim Notke"},
-  {text:"Focus on being productive instead of busy.", author:"Tim Ferriss"},
-  {text:"The expert in anything was once a beginner.", author:"Helen Hayes"}
+  {text:\"The secret of getting ahead is getting started.\", author:\"Mark Twain\"},
+  {text:\"It always seems impossible until it's done.\", author:\"Nelson Mandela\"},
+  {text:\"Don't watch the clock; do what it does. Keep going.\", author:\"Sam Levenson\"},
+  {text:\"The future depends on what you do today.\", author:\"Mahatma Gandhi\"},
+  {text:\"Believe you can and you're halfway there.\", author:\"Theodore Roosevelt\"},
+  {text:\"Success is not final, failure is not fatal.\", author:\"Winston Churchill\"},
+  {text:\"The only way to do great work is to love what you do.\", author:\"Steve Jobs\"},
+  {text:\"Hard work beats talent when talent doesn't work hard.\", author:\"Tim Notke\"},
+  {text:\"Focus on being productive instead of busy.\", author:\"Tim Ferriss\"},
+  {text:\"The expert in anything was once a beginner.\", author:\"Helen Hayes\"}
 ];
 
 function rotateQuote(){
   const quote = quotes[Math.floor(Math.random()*quotes.length)];
-  document.getElementById('quoteText').textContent = `"${quote.text}"`;
+  document.getElementById('quoteText').textContent = `\"${quote.text}\"`;
   document.getElementById('quoteAuthor').textContent = `- ${quote.author}`;
 }
-// Rotate quote every 60 seconds
 setInterval(rotateQuote, 60000);
 
 // ================= BACKGROUND SELECTOR =================
@@ -944,21 +963,22 @@ function setBackground(bg){
   currentBg = bg;
   localStorage.setItem('background', bg);
   bgOptions.forEach(opt=>opt.classList.remove('active'));
-  document.querySelector(`[data-bg="${bg}"]`).classList.add('active');
+  document.querySelector(`[data-bg=\"${bg}\"]`).classList.add('active');
   
   if(bg === 'none'){
+    bgOverlay.classList.remove('active');
     bgOverlay.style.backgroundImage = 'none';
   } else {
-    // In production, you'd use real images. For demo, we use CSS backgrounds
     const bgMap = {
-      library: 'linear-gradient(135deg, #6e4a2e, #3e2723)',
-      cafe: 'linear-gradient(135deg, #d4a574, #8b6f47)',
-      night: 'linear-gradient(135deg, #1a1a2e, #0f3460)',
-      forest: 'linear-gradient(135deg, #228b22, #006400)',
-      ocean: 'linear-gradient(135deg, #006994, #00a8cc)',
-      space: 'radial-gradient(circle at 30% 40%, #000033, #000011)'
+      library: 'url(https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1920&q=80)',
+      cafe: 'url(https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=1920&q=80)',
+      night: 'url(https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80)',
+      forest: 'url(https://images.unsplash.com/photo-1511497584788-876760111969?w=1920&q=80)',
+      ocean: 'url(https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=1920&q=80)',
+      mountains: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80)'
     };
     bgOverlay.style.backgroundImage = bgMap[bg] || 'none';
+    bgOverlay.classList.add('active');
   }
 }
 
@@ -969,51 +989,88 @@ bgOptions.forEach(opt=>{
 });
 setBackground(currentBg);
 
-// ================= AMBIENT SOUNDS =================
+// ================= AMBIENT SOUNDS (REALISTIC) =================
 const soundBtns = document.querySelectorAll('.sound-btn');
-let currentSound = null;
-let audioContext = null;
-let soundSource = null;
+let currentAudio = null;
+
+// Real ambient sound URLs (using free sounds from various sources)
+const soundUrls = {
+  rain: 'https://cdn.freesound.org/previews/213/213871_824230-lq.mp3',
+  cafe: 'https://cdn.freesound.org/previews/414/414209_6989939-lq.mp3',
+  forest: 'https://cdn.freesound.org/previews/416/416381_3263906-lq.mp3',
+  waves: 'https://cdn.freesound.org/previews/237/237729_3922321-lq.mp3',
+  fire: 'https://cdn.freesound.org/previews/235/235911_2352146-lq.mp3'
+};
 
 function stopSound(){
-  if(soundSource){
-    soundSource.stop();
-    soundSource = null;
+  if(currentAudio){
+    currentAudio.pause();
+    currentAudio = null;
   }
   soundBtns.forEach(btn=>btn.classList.remove('active'));
 }
 
 function playSound(sound){
   stopSound();
+  const btn = document.querySelector(`[data-sound=\"${sound}\"]`);
+  btn.classList.add('active');
+  
   if(sound === 'none') return;
   
-  document.querySelector(`[data-sound="${sound}"]`).classList.add('active');
-  
-  // Simple sound generation (in production, use actual audio files)
-  if(!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  
+  try {
+    currentAudio = new Audio(soundUrls[sound]);
+    currentAudio.loop = true;
+    currentAudio.volume = 0.3;
+    currentAudio.play().catch(e => {
+      console.log('Audio playback failed:', e);
+      // Fallback to Web Audio API if direct playback fails
+      playFallbackSound(sound);
+    });
+  } catch(e) {
+    console.log('Audio creation failed:', e);
+    playFallbackSound(sound);
+  }
+}
+
+// Fallback sound generation
+function playFallbackSound(sound){
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
-  oscillator.connect(gainNode);
+  const filter = audioContext.createBiquadFilter();
+  
+  oscillator.connect(filter);
+  filter.connect(gainNode);
   gainNode.connect(audioContext.destination);
   
-  // Different sound patterns
   if(sound === 'rain'){
     oscillator.type = 'white';
-    oscillator.frequency.value = 200;
+    filter.type = 'bandpass';
+    filter.frequency.value = 300;
     gainNode.gain.value = 0.05;
   } else if(sound === 'cafe'){
     oscillator.type = 'brown';
-    oscillator.frequency.value = 150;
+    filter.type = 'lowpass';
+    filter.frequency.value = 200;
     gainNode.gain.value = 0.03;
+  } else if(sound === 'forest'){
+    oscillator.type = 'white';
+    filter.type = 'highpass';
+    filter.frequency.value = 800;
+    gainNode.gain.value = 0.04;
+  } else if(sound === 'waves'){
+    oscillator.type = 'sine';
+    filter.type = 'lowpass';
+    filter.frequency.value = 100;
+    gainNode.gain.value = 0.06;
   } else if(sound === 'fire'){
     oscillator.type = 'pink';
-    oscillator.frequency.value = 100;
+    filter.type = 'bandpass';
+    filter.frequency.value = 150;
     gainNode.gain.value = 0.04;
   }
   
   oscillator.start();
-  soundSource = oscillator;
 }
 
 soundBtns.forEach(btn=>{
@@ -1022,108 +1079,26 @@ soundBtns.forEach(btn=>{
   });
 });
 
-// ================= TABS =================
-const tabs = document.querySelectorAll('.tab');
-const tabContents = document.querySelectorAll('.tab-content');
-
-tabs.forEach(tab=>{
-  tab.addEventListener('click', ()=>{
-    const tabName = tab.dataset.tab;
-    tabs.forEach(t=>t.classList.remove('active'));
-    tabContents.forEach(tc=>tc.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(`${tabName}Stats`).classList.add('active');
-    
-    if(tabName === 'weekly'){
-      renderWeeklyChart();
-    }
-  });
-});
-
-// ================= WEEKLY ANALYTICS =================
-function renderWeeklyChart(){
-  const weeklyChart = document.getElementById('weeklyChart');
-  const weekData = getWeeklyData();
-  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  
-  weeklyChart.innerHTML = '';
-  const maxValue = Math.max(...weekData, 1);
-  
-  weekData.forEach((value, index)=>{
-    const barWrapper = document.createElement('div');
-    barWrapper.style.flex = '1';
-    barWrapper.style.display = 'flex';
-    barWrapper.style.flexDirection = 'column';
-    barWrapper.style.alignItems = 'center';
-    
-    const bar = document.createElement('div');
-    bar.className = 'chart-bar';
-    bar.style.height = `${(value/maxValue)*100}%`;
-    
-    const valueLabel = document.createElement('div');
-    valueLabel.className = 'chart-bar-value';
-    valueLabel.textContent = value;
-    bar.appendChild(valueLabel);
-    
-    const dayLabel = document.createElement('div');
-    dayLabel.className = 'chart-bar-label';
-    dayLabel.textContent = days[index];
-    
-    barWrapper.appendChild(bar);
-    barWrapper.appendChild(dayLabel);
-    weeklyChart.appendChild(barWrapper);
-  });
-  
-  // Update weekly totals
-  const total = weekData.reduce((a,b)=>a+b, 0);
-  const avg = Math.round(total / 7);
-  document.getElementById('weekTotal').textContent = total;
-  document.getElementById('weekAvg').textContent = avg;
-}
-
-function getWeeklyData(){
-  // Get pomodoros for last 7 days from localStorage
-  const history = JSON.parse(localStorage.getItem('pomodoroHistory') || '{}');
-  const weekData = [0,0,0,0,0,0,0];
-  const today = new Date();
-  
-  for(let i=0; i<7; i++){
-    const date = new Date(today);
-    date.setDate(date.getDate() - (6-i));
-    const dateStr = date.toISOString().split('T')[0];
-    weekData[i] = history[dateStr] || 0;
-  }
-  
-  return weekData;
-}
-
-function savePomodoroToHistory(){
-  const history = JSON.parse(localStorage.getItem('pomodoroHistory') || '{}');
-  const today = new Date().toISOString().split('T')[0];
-  history[today] = (history[today] || 0) + 1;
-  localStorage.setItem('pomodoroHistory', JSON.stringify(history));
-}
-
 // ================= TIMER LOGIC =================
 let timer=null,secondsLeft=1500,totalSeconds=1500;
 let currentPhase='work';
 let pomodorosCompleted=0;
 
-const display=document.getElementById("timerDisplay");
-const mega=document.getElementById("timerMega");
-const phaseBadge=document.getElementById("phaseBadge");
-const lockin=document.getElementById("lockin");
-const timerSection=document.getElementById("timerSection");
-const startBtn=document.getElementById("startBtn");
-const pauseBtn=document.getElementById("pauseBtn");
-const resetBtn=document.getElementById("resetBtn");
-const lockBtn=document.getElementById("lockBtn");
-const exitLock=document.getElementById("exitLock");
+const display=document.getElementById(\"timerDisplay\");
+const mega=document.getElementById(\"timerMega\");
+const phaseBadge=document.getElementById(\"phaseBadge\");
+const lockin=document.getElementById(\"lockin\");
+const timerSection=document.getElementById(\"timerSection\");
+const startBtn=document.getElementById(\"startBtn\");
+const pauseBtn=document.getElementById(\"pauseBtn\");
+const resetBtn=document.getElementById(\"resetBtn\");
+const lockBtn=document.getElementById(\"lockBtn\");
+const exitLock=document.getElementById(\"exitLock\");
 
-function format(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function format(s){return Math.floor(s/60)+\":\"+String(s%60).padStart(2,\"0\")}
 function update(){
   display.textContent=format(secondsLeft);
-  mega.style.setProperty("--progress",(360*(1-secondsLeft/totalSeconds))+"deg");
+  mega.style.setProperty(\"--progress\",(360*(1-secondsLeft/totalSeconds))+\"deg\");
 }
 
 function saveState(){
@@ -1168,6 +1143,13 @@ function setPhase(phase){
   saveState();
 }
 
+function savePomodoroToHistory(){
+  const history = JSON.parse(localStorage.getItem('pomodoroHistory') || '{}');
+  const today = new Date().toISOString().split('T')[0];
+  history[today] = (history[today] || 0) + 1;
+  localStorage.setItem('pomodoroHistory', JSON.stringify(history));
+}
+
 function switchToNextPhase(){
   if(currentPhase==='work'){
     pomodorosCompleted++;
@@ -1195,7 +1177,7 @@ function start(){
       timer=null;
       playNotificationSound();
       switchToNextPhase();
-      rotateQuote(); // Change quote on phase completion
+      rotateQuote();
     }
   },1000);
 }
@@ -1242,7 +1224,6 @@ exitLock.onclick=()=>{
   }
 };
 
-// Phase buttons
 document.getElementById('sessionBtn').addEventListener('click',()=>{pause();setPhase('work');});
 document.getElementById('breakBtn').addEventListener('click',()=>{pause();setPhase('shortBreak');});
 document.getElementById('longBreakBtn').addEventListener('click',()=>{pause();setPhase('longBreak');});
@@ -1256,7 +1237,6 @@ const saveSettings=document.getElementById('saveSettings');
 settingsBtn.addEventListener('click',()=>settingsModal.classList.add('show'));
 closeSettings.addEventListener('click',()=>settingsModal.classList.remove('show'));
 
-// Load settings
 const workInput=document.getElementById('workTime');
 const shortInput=document.getElementById('shortBreak');
 const longInput=document.getElementById('longBreak');
@@ -1296,9 +1276,9 @@ function renderTasks(){
   tasks.forEach((t,i)=>{
     const d=document.createElement('div');
     d.className='task-item';
-    const mins=t.minutes?`<span class="task-min"> • ${t.minutes}m</span>`:'';
+    const mins=t.minutes?`<span class=\"task-min\"> • ${t.minutes}m</span>`:'';
     const pr=t.priority||'mid';
-    d.innerHTML=`<input type="checkbox" class="task-check" data-i="${i}"> <span class="priority-dot ${pr}"></span> <span class="task-text">${t.text}</span> ${mins} <button class="task-remove" data-i="${i}">×</button>`;
+    d.innerHTML=`<input type=\"checkbox\" class=\"task-check\" data-i=\"${i}\"> <span class=\"priority-dot ${pr}\"></span> <span class=\"task-text\">${t.text}</span> ${mins} <button class=\"task-remove\" data-i=\"${i}\">×</button>`;
     tasksListEl.appendChild(d);
   });
   renderDailyStats();
@@ -1318,7 +1298,7 @@ addTaskBtn.onclick=()=>{
   addTask(v,pr);
   taskInput.value='';
 };
-taskInput.addEventListener('keydown',e=>{if(e.key==="Enter")addTaskBtn.click();});
+taskInput.addEventListener('keydown',e=>{if(e.key===\"Enter\")addTaskBtn.click();});
 
 function markDone(idx){
   const t=tasks[idx];
@@ -1349,7 +1329,7 @@ function updateStatsDisplay(){
   document.getElementById('headerPomodoros').textContent=pomodorosCompleted;
   document.getElementById('totalPomodoros').textContent=pomodorosCompleted;
   
-  const streakData=JSON.parse(localStorage.getItem('pf_streakData')||'{"current":0,"lastDate":null}');
+  const streakData=JSON.parse(localStorage.getItem('pf_streakData')||'{\"current\":0,\"lastDate\":null}');
   document.getElementById('headerStreak').textContent=streakData.current;
   document.getElementById('currentStreak').textContent=streakData.current;
   
@@ -1357,14 +1337,13 @@ function updateStatsDisplay(){
 }
 
 function updateStreak(){
-  const streakData=JSON.parse(localStorage.getItem('pf_streakData')||'{"current":0,"lastDate":null}');
+  const streakData=JSON.parse(localStorage.getItem('pf_streakData')||'{\"current\":0,\"lastDate\":null}');
   const today=new Date().toDateString();
   const yesterday=new Date();
   yesterday.setDate(yesterday.getDate()-1);
   const yesterdayStr=yesterday.toDateString();
   
   if(streakData.lastDate===today){
-    // Already updated
   }else if(streakData.lastDate===yesterdayStr){
     streakData.current++;
     streakData.lastDate=today;
@@ -1396,3 +1375,5 @@ updateStatsDisplay();
 
 </body>
 </html>
+"
+Observation: Overwrite successful: /app/app.html
