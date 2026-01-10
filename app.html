@@ -1,17 +1,16 @@
-I'll fix all the issues and create a proper enhanced version with real backgrounds, actual sounds, star background, and a separate analytics page!
-Action: file_editor create /app/app.html --file-text "<!DOCTYPE html>
-<html lang=\"en\">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset=\"UTF-8\">
-<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-<title>GrindForge - Enhanced</title>
-<link rel=\"icon\" type=\"image/png\" href=\"/GrindForge.png\">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrindForge < title>
+<link rel="icon" type="image png" href="GrindForge.png">
 
-<link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\">
+<link href="https:  fonts.googleapis.com css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ================= CSS VARIABLES (THEME SYSTEM) ================= */
-:root[data-theme=\"dark\"]{
+ * ================= CSS VARIABLES (THEME SYSTEM) ================= * 
+:root[data-theme=  "dark  "]{
   --bg:#0b0f17;
   --bg-secondary:#020617;
   --panel:#0f172a;
@@ -28,7 +27,7 @@ Action: file_editor create /app/app.html --file-text "<!DOCTYPE html>
   --shadow:0 8px 32px rgba(0,0,0,.4);
 }
 
-:root[data-theme=\"light\"]{
+:root[data-theme=  "light  "]{
   --bg:#f8fafc;
   --bg-secondary:#ffffff;
   --panel:#ffffff;
@@ -56,7 +55,7 @@ body{
   position:relative;
 }
 
-/* Background overlay system */
+ * Background overlay system * 
 .bg-overlay{
   position:fixed;
   inset:0;
@@ -71,11 +70,11 @@ body{
   opacity:0.3;
 }
 
-body[data-theme=\"light\"] .bg-overlay.active{
+body[data-theme=  "light  "] .bg-overlay.active{
   opacity:0.4;
 }
 
-/* ================= STAR BACKGROUND ================= */
+ * ================= STAR BACKGROUND ================= * 
 #star-layer{
   position:fixed;
   left:0;
@@ -103,7 +102,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   100%{opacity:0.45;transform:scale(0.95)}
 }
 
-/* ================= HEADER ================= */
+ * ================= HEADER ================= * 
 .header{
   position:sticky;
   top:0;
@@ -153,7 +152,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   font-weight:600;
 }
 
-/* Icon buttons */
+ * Icon buttons * 
 .icon-btn{
   width:40px;
   height:40px;
@@ -174,7 +173,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   transform:translateY(-2px);
 }
 
-/* ================= DASHBOARD ================= */
+ * ================= DASHBOARD ================= * 
 .dashboard{
   max-width:1400px;
   margin:auto;
@@ -185,7 +184,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
 }
 @media(max-width:1100px){.dashboard{grid-template-columns:1fr}}
 
-/* ================= TIMER ================= */
+ * ================= TIMER ================= * 
 .hero-timer{
   display:flex;
   flex-direction:column;
@@ -193,7 +192,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   gap:28px;
 }
 
-/* Motivational quote */
+ * Motivational quote * 
 .quote-box{
   background:var(--panel);
   border:1px solid var(--border);
@@ -247,7 +246,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   font-weight:600;
 }
 
-/* ================= BUTTONS ================= */
+ * ================= BUTTONS ================= * 
 .timer-controls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 .btn{
   padding:12px 22px;
@@ -274,7 +273,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   box-shadow:0 12px 32px rgba(47,129,247,.4);
 }
 
-/* ================= SIDEBAR ================= */
+ * ================= SIDEBAR ================= * 
 .sidebar{display:flex;flex-direction:column;gap:24px}
 .panel{
   background:var(--panel);
@@ -290,7 +289,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   color:var(--text);
 }
 
-/* ================= STATS ================= */
+ * ================= STATS ================= * 
 .stats-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -317,7 +316,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   margin-top:4px;
 }
 
-/* ================= BACKGROUND SELECTOR ================= */
+ * ================= BACKGROUND SELECTOR ================= * 
 .bg-options{
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(90px, 1fr));
@@ -325,7 +324,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   margin-top:12px;
 }
 .bg-option{
-  aspect-ratio:16/10;
+  aspect-ratio:16 10;
   border-radius:10px;
   cursor:pointer;
   border:3px solid transparent;
@@ -357,16 +356,16 @@ body[data-theme=\"light\"] .bg-overlay.active{
   font-weight:600;
 }
 
-/* Real Unsplash backgrounds */
+ * Real Unsplash backgrounds * 
 .bg-none{background:#1a1a2e}
-.bg-library{background:url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=400&q=80')}
-.bg-cafe{background:url('https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80')}
-.bg-night{background:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&q=80')}
-.bg-forest{background:url('https://images.unsplash.com/photo-1511497584788-876760111969?w=400&q=80')}
-.bg-ocean{background:url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&q=80')}
-.bg-mountains{background:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80')}
+.bg-library{background:url('https:  images.unsplash.com photo-1507842217343-583bb7270b66?w=400&q=80')}
+.bg-cafe{background:url('https:  images.unsplash.com photo-1453614512568-c4024d13c247?w=400&q=80')}
+.bg-night{background:url('https:  images.unsplash.com photo-1519681393784-d120267933ba?w=400&q=80')}
+.bg-forest{background:url('https:  images.unsplash.com photo-1511497584788-876760111969?w=400&q=80')}
+.bg-ocean{background:url('https:  images.unsplash.com photo-1505142468610-359e7d316be0?w=400&q=80')}
+.bg-mountains{background:url('https:  images.unsplash.com photo-1506905925346-21bda4d32df4?w=400&q=80')}
 
-/* ================= AMBIENT SOUNDS ================= */
+ * ================= AMBIENT SOUNDS ================= * 
 .sound-options{
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));
@@ -395,7 +394,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   border-color:var(--accent);
 }
 
-/* ================= TASKS ================= */
+ * ================= TASKS ================= * 
 .task-entry{
   display:flex;
   gap:8px;
@@ -413,7 +412,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   font-weight:500;
 }
 .task-input{
-  background-image:url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 20h9'/><path d='M16.5 3.5L20.5 7.5 7 21l-4 1 1-4L16.5 3.5z'/></svg>\");
+  background-image:url(  "data:image svg+xml;utf8,<svg xmlns='http:  www.w3.org 2000 svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 20h9' ><path d='M16.5 3.5L20.5 7.5 7 21l-4 1 1-4L16.5 3.5z' >< svg>  ");
   background-repeat:no-repeat;
   background-position:12px center;
   background-size:18px 18px;
@@ -462,7 +461,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   font-weight:700;
   cursor:pointer;
   min-width:96px;
-  background-image:url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>\");
+  background-image:url(  "data:image svg+xml;utf8,<svg xmlns='http:  www.w3.org 2000 svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6' >< svg>  ");
   background-repeat:no-repeat;
   background-position:right 10px center;
   background-size:14px 14px;
@@ -517,7 +516,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   transform:scale(1.1);
 }
 
-/* ================= LOCK IN MODE ================= */
+ * ================= LOCK IN MODE ================= * 
 .lock-in{
   position:fixed;
   inset:0;
@@ -562,7 +561,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   z-index:1003;
 }
 
-/* ================= MODAL ================= */
+ * ================= MODAL ================= * 
 .modal{
   position:fixed;
   inset:0;
@@ -608,7 +607,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   justify-content:center;
 }
 
-/* Settings inputs */
+ * Settings inputs * 
 .setting-group{
   margin-bottom:20px;
 }
@@ -629,7 +628,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   font-size:1rem;
 }
 
-/* ================= FLOATING BUTTONS ================= */
+ * ================= FLOATING BUTTONS ================= * 
 .floating-btn-wrapper{
   position:fixed;
   bottom:12px;
@@ -659,7 +658,7 @@ body[data-theme=\"light\"] .bg-overlay.active{
   box-shadow:0 16px 40px rgba(47,129,247,.4);
 }
 
-/* ================= RESPONSIVE ================= */
+ * ================= RESPONSIVE ================= * 
 @media(max-width:768px){
   .dashboard{
     grid-template-columns:1fr;
@@ -683,193 +682,193 @@ body[data-theme=\"light\"] .bg-overlay.active{
     font-size:2.5rem;
   }
 }
-</style>
-</head>
+< style>
+< head>
 
-<body data-theme=\"dark\">
+<body data-theme="dark">
 
 <!-- Star Background -->
-<div id=\"star-layer\"></div>
+<div id="star-layer">< div>
 
 <!-- Background overlay -->
-<div class=\"bg-overlay\" id=\"bgOverlay\"></div>
+<div class="bg-overlay" id="bgOverlay">< div>
 
-<header class=\"header\">
-  <div class=\"header-content\">
-    <div class=\"brand\">
-      <img src=\"./GrindForge.png\" alt=\"GrindForge\" class=\"brand-logo\">
-      <div class=\"brand-title\">GrindForge</div>
-    </div>
-    <div class=\"header-controls\">
-      <button class=\"icon-btn\" id=\"themeToggle\" title=\"Toggle Theme\">🌓</button>
-      <button class=\"icon-btn\" id=\"settingsBtn\" title=\"Settings\">⚙️</button>
-    </div>
-    <div class=\"header-stats\">
-      <div class=\"stat-pill\">🔥 <span id=\"headerPomodoros\">0</span> Today</div>
-      <div class=\"stat-pill\">⚡ Streak: <span id=\"headerStreak\">0</span></div>
-    </div>
-  </div>
-</header>
+<header class="header">
+  <div class="header-content">
+    <div class="brand">
+      <img src=". GrindForge.png" alt="GrindForge" class="brand-logo">
+      <div class="brand-title">GrindForge< div>
+    < div>
+    <div class="header-controls">
+      <button class="icon-btn" id="themeToggle" title="Toggle Theme">🌓< button>
+      <button class="icon-btn" id="settingsBtn" title="Settings">⚙️< button>
+    < div>
+    <div class="header-stats">
+      <div class="stat-pill">🔥 <span id="headerPomodoros">0< span> Today< div>
+      <div class="stat-pill">⚡ Streak: <span id="headerStreak">0< span>< div>
+    < div>
+  < div>
+< header>
 
-<main class=\"dashboard\">
-<section class=\"hero-timer\" id=\"timerSection\">
+<main class=  "dashboard  ">
+<section class=  "hero-timer  " id=  "timerSection  ">
   <!-- Motivational Quote -->
-  <div class=\"quote-box\">
-    <div class=\"quote-text\" id=\"quoteText\">\"The secret of getting ahead is getting started.\"</div>
-    <div class=\"quote-author\" id=\"quoteAuthor\">- Mark Twain</div>
-  </div>
+  <div class=  "quote-box  ">
+    <div class=  "quote-text  " id=  "quoteText  ">  "The secret of getting ahead is getting started.  "< div>
+    <div class=  "quote-author  " id=  "quoteAuthor  ">- Mark Twain< div>
+  < div>
 
-  <div class=\"timer-mega\" id=\"timerMega\">
-    <div class=\"timer-inner\">
-      <div class=\"timer-display\" id=\"timerDisplay\">25:00</div>
-      <div class=\"phase-badge\" id=\"phaseBadge\">WORK</div>
-    </div>
-  </div>
+  <div class=  "timer-mega  " id=  "timerMega  ">
+    <div class=  "timer-inner  ">
+      <div class=  "timer-display  " id=  "timerDisplay  ">25:00< div>
+      <div class=  "phase-badge  " id=  "phaseBadge  ">WORK< div>
+    < div>
+  < div>
   
-  <div class=\"timer-controls\">
-    <button class=\"btn btn-primary\" id=\"startBtn\">▶ Start</button>
-    <button class=\"btn\" id=\"pauseBtn\">⏸ Pause</button>
-    <button class=\"btn\" id=\"resetBtn\">🔄 Reset</button>
-    <button class=\"btn\" id=\"lockBtn\">🔒 LOCK IN</button>
-  </div>
+  <div class=  "timer-controls  ">
+    <button class=  "btn btn-primary  " id=  "startBtn  ">▶ Start< button>
+    <button class=  "btn  " id=  "pauseBtn  ">⏸ Pause< button>
+    <button class=  "btn  " id=  "resetBtn  ">🔄 Reset< button>
+    <button class=  "btn  " id=  "lockBtn  ">🔒 LOCK IN< button>
+  < div>
   
-  <div class=\"phase-buttons\" style=\"display:flex;gap:12px;flex-wrap:wrap;justify-content:center;\">
-    <button class=\"btn\" id=\"sessionBtn\" style=\"background:linear-gradient(135deg,#1f6feb,#2f81f7);color:#fff;\">💼 Session</button>
-    <button class=\"btn\" id=\"breakBtn\" style=\"background:linear-gradient(135deg,#10b981,#059669);color:#fff;\">☕ Break</button>
-    <button class=\"btn\" id=\"longBreakBtn\" style=\"background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;\">🌴 Long Break</button>
-  </div>
-</section>
+  <div class=  "phase-buttons  " style=  "display:flex;gap:12px;flex-wrap:wrap;justify-content:center;  ">
+    <button class=  "btn  " id=  "sessionBtn  " style=  "background:linear-gradient(135deg,#1f6feb,#2f81f7);color:#fff;  ">💼 Session< button>
+    <button class=  "btn  " id=  "breakBtn  " style=  "background:linear-gradient(135deg,#10b981,#059669);color:#fff;  ">☕ Break< button>
+    <button class=  "btn  " id=  "longBreakBtn  " style=  "background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;  ">🌴 Long Break< button>
+  < div>
+< section>
 
-<aside class=\"sidebar\">
+<aside class=  "sidebar  ">
   <!-- Quick Stats -->
-  <div class=\"panel\">
-    <h3 class=\"panel-title\">📊 Today's Stats</h3>
-    <div class=\"stats-grid\">
-      <div class=\"stat-card\">
-        <div class=\"stat-value\" id=\"totalPomodoros\">0</div>
-        <div class=\"stat-label\">Pomodoros</div>
-      </div>
-      <div class=\"stat-card\">
-        <div class=\"stat-value\" id=\"currentStreak\">0</div>
-        <div class=\"stat-label\">Streak</div>
-      </div>
-      <div class=\"stat-card\">
-        <div class=\"stat-value\" id=\"todayTasksDone\">0</div>
-        <div class=\"stat-label\">Tasks Done</div>
-      </div>
-      <div class=\"stat-card\">
-        <div class=\"stat-value\" id=\"todayTime\">0h 0m</div>
-        <div class=\"stat-label\">Focus Time</div>
-      </div>
-    </div>
-  </div>
+  <div class=  "panel  ">
+    <h3 class=  "panel-title  ">📊 Today's Stats< h3>
+    <div class=  "stats-grid  ">
+      <div class=  "stat-card  ">
+        <div class=  "stat-value  " id=  "totalPomodoros  ">0< div>
+        <div class=  "stat-label  ">Pomodoros< div>
+      < div>
+      <div class=  "stat-card  ">
+        <div class=  "stat-value  " id=  "currentStreak  ">0< div>
+        <div class=  "stat-label  ">Streak< div>
+      < div>
+      <div class=  "stat-card  ">
+        <div class=  "stat-value  " id=  "todayTasksDone  ">0< div>
+        <div class=  "stat-label  ">Tasks Done< div>
+      < div>
+      <div class=  "stat-card  ">
+        <div class=  "stat-value  " id=  "todayTime  ">0h 0m< div>
+        <div class=  "stat-label  ">Focus Time< div>
+      < div>
+    < div>
+  < div>
 
   <!-- Background & Sounds -->
-  <div class=\"panel\">
-    <h3 class=\"panel-title\">🎨 Customize</h3>
+  <div class=  "panel  ">
+    <h3 class=  "panel-title  ">🎨 Customize< h3>
     
-    <div style=\"font-size:0.9rem;font-weight:600;margin-bottom:10px;color:var(--text);\">Background</div>
-    <div class=\"bg-options\">
-      <div class=\"bg-option bg-none active\" data-bg=\"none\">
-        <div class=\"bg-option-label\">None</div>
-      </div>
-      <div class=\"bg-option bg-library\" data-bg=\"library\">
-        <div class=\"bg-option-label\">Library</div>
-      </div>
-      <div class=\"bg-option bg-cafe\" data-bg=\"cafe\">
-        <div class=\"bg-option-label\">Café</div>
-      </div>
-      <div class=\"bg-option bg-night\" data-bg=\"night\">
-        <div class=\"bg-option-label\">Night</div>
-      </div>
-      <div class=\"bg-option bg-forest\" data-bg=\"forest\">
-        <div class=\"bg-option-label\">Forest</div>
-      </div>
-      <div class=\"bg-option bg-ocean\" data-bg=\"ocean\">
-        <div class=\"bg-option-label\">Ocean</div>
-      </div>
-      <div class=\"bg-option bg-mountains\" data-bg=\"mountains\">
-        <div class=\"bg-option-label\">Mountains</div>
-      </div>
-    </div>
+    <div style=  "font-size:0.9rem;font-weight:600;margin-bottom:10px;color:var(--text);  ">Background< div>
+    <div class=  "bg-options  ">
+      <div class=  "bg-option bg-none active  " data-bg=  "none  ">
+        <div class=  "bg-option-label  ">None< div>
+      < div>
+      <div class=  "bg-option bg-library  " data-bg=  "library  ">
+        <div class=  "bg-option-label  ">Library< div>
+      < div>
+      <div class=  "bg-option bg-cafe  " data-bg=  "cafe  ">
+        <div class=  "bg-option-label  ">Café< div>
+      < div>
+      <div class=  "bg-option bg-night  " data-bg=  "night  ">
+        <div class=  "bg-option-label  ">Night< div>
+      < div>
+      <div class=  "bg-option bg-forest  " data-bg=  "forest  ">
+        <div class=  "bg-option-label  ">Forest< div>
+      < div>
+      <div class=  "bg-option bg-ocean  " data-bg=  "ocean  ">
+        <div class=  "bg-option-label  ">Ocean< div>
+      < div>
+      <div class=  "bg-option bg-mountains  " data-bg=  "mountains  ">
+        <div class=  "bg-option-label  ">Mountains< div>
+      < div>
+    < div>
     
-    <div style=\"font-size:0.9rem;font-weight:600;margin:16px 0 10px;color:var(--text);\">Ambient Sounds</div>
-    <div class=\"sound-options\">
-      <div class=\"sound-btn active\" data-sound=\"none\">🔇 None</div>
-      <div class=\"sound-btn\" data-sound=\"rain\">🌧️ Rain</div>
-      <div class=\"sound-btn\" data-sound=\"cafe\">☕ Café</div>
-      <div class=\"sound-btn\" data-sound=\"forest\">🌲 Forest</div>
-      <div class=\"sound-btn\" data-sound=\"waves\">🌊 Waves</div>
-      <div class=\"sound-btn\" data-sound=\"fire\">🔥 Fire</div>
-    </div>
-  </div>
+    <div style=  "font-size:0.9rem;font-weight:600;margin:16px 0 10px;color:var(--text);  ">Ambient Sounds< div>
+    <div class=  "sound-options  ">
+      <div class=  "sound-btn active  " data-sound=  "none  ">🔇 None< div>
+      <div class=  "sound-btn  " data-sound=  "rain  ">🌧️ Rain< div>
+      <div class=  "sound-btn  " data-sound=  "cafe  ">☕ Café< div>
+      <div class=  "sound-btn  " data-sound=  "forest  ">🌲 Forest< div>
+      <div class=  "sound-btn  " data-sound=  "waves  ">🌊 Waves< div>
+      <div class=  "sound-btn  " data-sound=  "fire  ">🔥 Fire< div>
+    < div>
+  < div>
 
   <!-- Tasks -->
-  <div class=\"panel\">
-    <h3 class=\"panel-title\">📝 Tasks</h3>
-    <div class=\"task-entry\">
-      <div class=\"task-input-wrap\">
-        <input id=\"taskInput\" class=\"task-input\" placeholder=\"Add task, e.g. Study Math - 25m\" />
-      </div>
-      <select id=\"taskPriority\" class=\"premium-select\">
-        <option value=\"high\">High</option>
-        <option value=\"mid\" selected>Mid</option>
-        <option value=\"low\">Low</option>
-      </select>
-      <button class=\"btn\" id=\"addTaskBtn\">+</button>
-    </div>
-    <div id=\"tasksList\" class=\"tasks-list\"></div>
-  </div>
-</aside>
-</main>
+  <div class=  "panel  ">
+    <h3 class=  "panel-title  ">📝 Tasks< h3>
+    <div class=  "task-entry  ">
+      <div class=  "task-input-wrap  ">
+        <input id=  "taskInput  " class=  "task-input  " placeholder=  "Add task, e.g. Study Math - 25m  "  >
+      < div>
+      <select id=  "taskPriority  " class=  "premium-select  ">
+        <option value=  "high  ">High< option>
+        <option value=  "mid  " selected>Mid< option>
+        <option value=  "low  ">Low< option>
+      < select>
+      <button class=  "btn  " id=  "addTaskBtn  ">+< button>
+    < div>
+    <div id=  "tasksList  " class=  "tasks-list  ">< div>
+  < div>
+< aside>
+< main>
 
 <!-- Settings Modal -->
-<div class=\"modal\" id=\"settingsModal\">
-  <div class=\"modal-content\" style=\"position:relative;\">
-    <button class=\"modal-close\" id=\"closeSettings\">×</button>
-    <h2 class=\"modal-title\">⚙️ Settings</h2>
+<div class=  "modal  " id=  "settingsModal  ">
+  <div class=  "modal-content  " style=  "position:relative;  ">
+    <button class=  "modal-close  " id=  "closeSettings  ">×< button>
+    <h2 class=  "modal-title  ">⚙️ Settings< h2>
     
-    <div class=\"setting-group\">
-      <label>Work Duration (minutes)</label>
-      <input id=\"workTime\" type=\"number\" value=\"25\" min=\"1\" max=\"60\">
-    </div>
+    <div class=  "setting-group  ">
+      <label>Work Duration (minutes)< label>
+      <input id=  "workTime  " type=  "number  " value=  "25  " min=  "1  " max=  "60  ">
+    < div>
     
-    <div class=\"setting-group\">
-      <label>Short Break (minutes)</label>
-      <input id=\"shortBreak\" type=\"number\" value=\"5\" min=\"1\" max=\"30\">
-    </div>
+    <div class=  "setting-group  ">
+      <label>Short Break (minutes)< label>
+      <input id=  "shortBreak  " type=  "number  " value=  "5  " min=  "1  " max=  "30  ">
+    < div>
     
-    <div class=\"setting-group\">
-      <label>Long Break (minutes)</label>
-      <input id=\"longBreak\" type=\"number\" value=\"15\" min=\"1\" max=\"60\">
-    </div>
+    <div class=  "setting-group  ">
+      <label>Long Break (minutes)< label>
+      <input id=  "longBreak  " type=  "number  " value=  "15  " min=  "1  " max=  "60  ">
+    < div>
     
-    <div class=\"setting-group\">
-      <label>Sessions Before Long Break</label>
-      <input id=\"sessionsBeforeLong\" type=\"number\" value=\"4\" min=\"1\" max=\"10\">
-    </div>
+    <div class=  "setting-group  ">
+      <label>Sessions Before Long Break< label>
+      <input id=  "sessionsBeforeLong  " type=  "number  " value=  "4  " min=  "1  " max=  "10  ">
+    < div>
     
-    <button class=\"btn btn-primary\" id=\"saveSettings\" style=\"width:100%;margin-top:20px;\">💾 Save Settings</button>
-  </div>
-</div>
+    <button class=  "btn btn-primary  " id=  "saveSettings  " style=  "width:100%;margin-top:20px;  ">💾 Save Settings< button>
+  < div>
+< div>
 
 <!-- LOCK IN OVERLAY -->
-<div class=\"lock-in\" id=\"lockin\">
-  <button class=\"btn exit-lock\" id=\"exitLock\">❌ EXIT</button>
-  <div class=\"hero-timer\"></div>
-</div>
+<div class=  "lock-in  " id=  "lockin  ">
+  <button class=  "btn exit-lock  " id=  "exitLock  ">❌ EXIT< button>
+  <div class=  "hero-timer  ">< div>
+< div>
 
 <!-- Floating Buttons -->
-<div class=\"floating-btn-wrapper floating-left\">
-  <a href=\"planner.html\" class=\"floating-btn\" title=\"Monthly Planner\">📅</a>
-</div>
+<div class=  "floating-btn-wrapper floating-left  ">
+  <a href=  "planner.html  " class=  "floating-btn  " title=  "Monthly Planner  ">📅< a>
+< div>
 
-<div class=\"floating-btn-wrapper floating-right\">
-  <a href=\"analytics.html\" class=\"floating-btn\" title=\"Analytics\">📊</a>
-</div>
+<div class=  "floating-btn-wrapper floating-right  ">
+  <a href=  "analytics.html  " class=  "floating-btn  " title=  "Analytics  ">📊< a>
+< div>
 
 <script>
-// ================= STAR BACKGROUND =================
+   ================= STAR BACKGROUND =================
 const starLayer = document.getElementById('star-layer');
 const STAR_COUNT = 64;
 const STAR_SIZE = 4;
@@ -919,7 +918,7 @@ window.addEventListener('resize', ()=>{
   }
 });
 
-// ================= THEME SYSTEM =================
+   ================= THEME SYSTEM =================
 const themeToggle = document.getElementById('themeToggle');
 const html = document.documentElement;
 let currentTheme = localStorage.getItem('theme') || 'dark';
@@ -933,28 +932,28 @@ themeToggle.addEventListener('click', ()=>{
 });
 themeToggle.textContent = currentTheme === 'dark' ? '🌓' : '☀️';
 
-// ================= MOTIVATIONAL QUOTES =================
+   ================= MOTIVATIONAL QUOTES =================
 const quotes = [
-  {text:\"The secret of getting ahead is getting started.\", author:\"Mark Twain\"},
-  {text:\"It always seems impossible until it's done.\", author:\"Nelson Mandela\"},
-  {text:\"Don't watch the clock; do what it does. Keep going.\", author:\"Sam Levenson\"},
-  {text:\"The future depends on what you do today.\", author:\"Mahatma Gandhi\"},
-  {text:\"Believe you can and you're halfway there.\", author:\"Theodore Roosevelt\"},
-  {text:\"Success is not final, failure is not fatal.\", author:\"Winston Churchill\"},
-  {text:\"The only way to do great work is to love what you do.\", author:\"Steve Jobs\"},
-  {text:\"Hard work beats talent when talent doesn't work hard.\", author:\"Tim Notke\"},
-  {text:\"Focus on being productive instead of busy.\", author:\"Tim Ferriss\"},
-  {text:\"The expert in anything was once a beginner.\", author:\"Helen Hayes\"}
+  {text:  "The secret of getting ahead is getting started.  ", author:  "Mark Twain  "},
+  {text:  "It always seems impossible until it's done.  ", author:  "Nelson Mandela  "},
+  {text:  "Don't watch the clock; do what it does. Keep going.  ", author:  "Sam Levenson  "},
+  {text:  "The future depends on what you do today.  ", author:  "Mahatma Gandhi  "},
+  {text:  "Believe you can and you're halfway there.  ", author:  "Theodore Roosevelt  "},
+  {text:  "Success is not final, failure is not fatal.  ", author:  "Winston Churchill  "},
+  {text:  "The only way to do great work is to love what you do.  ", author:  "Steve Jobs  "},
+  {text:  "Hard work beats talent when talent doesn't work hard.  ", author:  "Tim Notke  "},
+  {text:  "Focus on being productive instead of busy.  ", author:  "Tim Ferriss  "},
+  {text:  "The expert in anything was once a beginner.  ", author:  "Helen Hayes  "}
 ];
 
 function rotateQuote(){
   const quote = quotes[Math.floor(Math.random()*quotes.length)];
-  document.getElementById('quoteText').textContent = `\"${quote.text}\"`;
+  document.getElementById('quoteText').textContent = `  "${quote.text}  "`;
   document.getElementById('quoteAuthor').textContent = `- ${quote.author}`;
 }
 setInterval(rotateQuote, 60000);
 
-// ================= BACKGROUND SELECTOR =================
+   ================= BACKGROUND SELECTOR =================
 const bgOptions = document.querySelectorAll('.bg-option');
 const bgOverlay = document.getElementById('bgOverlay');
 let currentBg = localStorage.getItem('background') || 'none';
@@ -963,19 +962,19 @@ function setBackground(bg){
   currentBg = bg;
   localStorage.setItem('background', bg);
   bgOptions.forEach(opt=>opt.classList.remove('active'));
-  document.querySelector(`[data-bg=\"${bg}\"]`).classList.add('active');
+  document.querySelector(`[data-bg=  "${bg}  "]`).classList.add('active');
   
   if(bg === 'none'){
     bgOverlay.classList.remove('active');
     bgOverlay.style.backgroundImage = 'none';
   } else {
     const bgMap = {
-      library: 'url(https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1920&q=80)',
-      cafe: 'url(https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=1920&q=80)',
-      night: 'url(https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80)',
-      forest: 'url(https://images.unsplash.com/photo-1511497584788-876760111969?w=1920&q=80)',
-      ocean: 'url(https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=1920&q=80)',
-      mountains: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80)'
+      library: 'url(https:  images.unsplash.com photo-1507842217343-583bb7270b66?w=1920&q=80)',
+      cafe: 'url(https:  images.unsplash.com photo-1453614512568-c4024d13c247?w=1920&q=80)',
+      night: 'url(https:  images.unsplash.com photo-1519681393784-d120267933ba?w=1920&q=80)',
+      forest: 'url(https:  images.unsplash.com photo-1511497584788-876760111969?w=1920&q=80)',
+      ocean: 'url(https:  images.unsplash.com photo-1505142468610-359e7d316be0?w=1920&q=80)',
+      mountains: 'url(https:  images.unsplash.com photo-1506905925346-21bda4d32df4?w=1920&q=80)'
     };
     bgOverlay.style.backgroundImage = bgMap[bg] || 'none';
     bgOverlay.classList.add('active');
@@ -989,17 +988,17 @@ bgOptions.forEach(opt=>{
 });
 setBackground(currentBg);
 
-// ================= AMBIENT SOUNDS (REALISTIC) =================
+   ================= AMBIENT SOUNDS (REALISTIC) =================
 const soundBtns = document.querySelectorAll('.sound-btn');
 let currentAudio = null;
 
-// Real ambient sound URLs (using free sounds from various sources)
+   Real ambient sound URLs (using free sounds from various sources)
 const soundUrls = {
-  rain: 'https://cdn.freesound.org/previews/213/213871_824230-lq.mp3',
-  cafe: 'https://cdn.freesound.org/previews/414/414209_6989939-lq.mp3',
-  forest: 'https://cdn.freesound.org/previews/416/416381_3263906-lq.mp3',
-  waves: 'https://cdn.freesound.org/previews/237/237729_3922321-lq.mp3',
-  fire: 'https://cdn.freesound.org/previews/235/235911_2352146-lq.mp3'
+  rain: 'https:  cdn.freesound.org previews 213 213871_824230-lq.mp3',
+  cafe: 'https:  cdn.freesound.org previews 414 414209_6989939-lq.mp3',
+  forest: 'https:  cdn.freesound.org previews 416 416381_3263906-lq.mp3',
+  waves: 'https:  cdn.freesound.org previews 237 237729_3922321-lq.mp3',
+  fire: 'https:  cdn.freesound.org previews 235 235911_2352146-lq.mp3'
 };
 
 function stopSound(){
@@ -1012,7 +1011,7 @@ function stopSound(){
 
 function playSound(sound){
   stopSound();
-  const btn = document.querySelector(`[data-sound=\"${sound}\"]`);
+  const btn = document.querySelector(`[data-sound=  "${sound}  "]`);
   btn.classList.add('active');
   
   if(sound === 'none') return;
@@ -1023,7 +1022,7 @@ function playSound(sound){
     currentAudio.volume = 0.3;
     currentAudio.play().catch(e => {
       console.log('Audio playback failed:', e);
-      // Fallback to Web Audio API if direct playback fails
+         Fallback to Web Audio API if direct playback fails
       playFallbackSound(sound);
     });
   } catch(e) {
@@ -1032,7 +1031,7 @@ function playSound(sound){
   }
 }
 
-// Fallback sound generation
+   Fallback sound generation
 function playFallbackSound(sound){
   const audioContext = new (window.AudioContext || window.webkitAudioContext)();
   const oscillator = audioContext.createOscillator();
@@ -1079,26 +1078,26 @@ soundBtns.forEach(btn=>{
   });
 });
 
-// ================= TIMER LOGIC =================
+   ================= TIMER LOGIC =================
 let timer=null,secondsLeft=1500,totalSeconds=1500;
 let currentPhase='work';
 let pomodorosCompleted=0;
 
-const display=document.getElementById(\"timerDisplay\");
-const mega=document.getElementById(\"timerMega\");
-const phaseBadge=document.getElementById(\"phaseBadge\");
-const lockin=document.getElementById(\"lockin\");
-const timerSection=document.getElementById(\"timerSection\");
-const startBtn=document.getElementById(\"startBtn\");
-const pauseBtn=document.getElementById(\"pauseBtn\");
-const resetBtn=document.getElementById(\"resetBtn\");
-const lockBtn=document.getElementById(\"lockBtn\");
-const exitLock=document.getElementById(\"exitLock\");
+const display=document.getElementById(  "timerDisplay  ");
+const mega=document.getElementById(  "timerMega  ");
+const phaseBadge=document.getElementById(  "phaseBadge  ");
+const lockin=document.getElementById(  "lockin  ");
+const timerSection=document.getElementById(  "timerSection  ");
+const startBtn=document.getElementById(  "startBtn  ");
+const pauseBtn=document.getElementById(  "pauseBtn  ");
+const resetBtn=document.getElementById(  "resetBtn  ");
+const lockBtn=document.getElementById(  "lockBtn  ");
+const exitLock=document.getElementById(  "exitLock  ");
 
-function format(s){return Math.floor(s/60)+\":\"+String(s%60).padStart(2,\"0\")}
+function format(s){return Math.floor(s 60)+  ":  "+String(s%60).padStart(2,  "0  ")}
 function update(){
   display.textContent=format(secondsLeft);
-  mega.style.setProperty(\"--progress\",(360*(1-secondsLeft/totalSeconds))+\"deg\");
+  mega.style.setProperty(  "--progress  ",(360*(1-secondsLeft totalSeconds))+  "deg  ");
 }
 
 function saveState(){
@@ -1228,7 +1227,7 @@ document.getElementById('sessionBtn').addEventListener('click',()=>{pause();setP
 document.getElementById('breakBtn').addEventListener('click',()=>{pause();setPhase('shortBreak');});
 document.getElementById('longBreakBtn').addEventListener('click',()=>{pause();setPhase('longBreak');});
 
-// ================= SETTINGS MODAL =================
+   ================= SETTINGS MODAL =================
 const settingsModal=document.getElementById('settingsModal');
 const settingsBtn=document.getElementById('settingsBtn');
 const closeSettings=document.getElementById('closeSettings');
@@ -1256,7 +1255,7 @@ saveSettings.addEventListener('click',()=>{
   settingsModal.classList.remove('show');
 });
 
-// ================= TASKS =================
+   ================= TASKS =================
 const tasksListEl=document.getElementById('tasksList');
 const taskInput=document.getElementById('taskInput');
 const addTaskBtn=document.getElementById('addTaskBtn');
@@ -1264,7 +1263,7 @@ let tasks=JSON.parse(localStorage.getItem('tasks')||'[]');
 let completedTasks=JSON.parse(localStorage.getItem('completedTasks')||'[]');
 
 function parseTaskInput(input){
-  const m=String(input).trim().match(/^(.*?)\s*(?:[—–-]\s*)?(\d+)?\s*m?\s*$/i);
+  const m=String(input).trim().match( ^(.*?)  s*(?:[—–-]  s*)?(  d+)?  s*m?  s*$ i);
   if(!m)return{text:String(input).trim(),minutes:0};
   const minutes=m[2]?parseInt(m[2],10):0;
   const text=(m[1]||'').trim()||input.trim();
@@ -1276,9 +1275,9 @@ function renderTasks(){
   tasks.forEach((t,i)=>{
     const d=document.createElement('div');
     d.className='task-item';
-    const mins=t.minutes?`<span class=\"task-min\"> • ${t.minutes}m</span>`:'';
+    const mins=t.minutes?`<span class=  "task-min  "> • ${t.minutes}m< span>`:'';
     const pr=t.priority||'mid';
-    d.innerHTML=`<input type=\"checkbox\" class=\"task-check\" data-i=\"${i}\"> <span class=\"priority-dot ${pr}\"></span> <span class=\"task-text\">${t.text}</span> ${mins} <button class=\"task-remove\" data-i=\"${i}\">×</button>`;
+    d.innerHTML=`<input type=  "checkbox  " class=  "task-check  " data-i=  "${i}  "> <span class=  "priority-dot ${pr}  ">< span> <span class=  "task-text  ">${t.text}< span> ${mins} <button class=  "task-remove  " data-i=  "${i}  ">×< button>`;
     tasksListEl.appendChild(d);
   });
   renderDailyStats();
@@ -1298,7 +1297,7 @@ addTaskBtn.onclick=()=>{
   addTask(v,pr);
   taskInput.value='';
 };
-taskInput.addEventListener('keydown',e=>{if(e.key===\"Enter\")addTaskBtn.click();});
+taskInput.addEventListener('keydown',e=>{if(e.key===  "Enter  ")addTaskBtn.click();});
 
 function markDone(idx){
   const t=tasks[idx];
@@ -1329,7 +1328,7 @@ function updateStatsDisplay(){
   document.getElementById('headerPomodoros').textContent=pomodorosCompleted;
   document.getElementById('totalPomodoros').textContent=pomodorosCompleted;
   
-  const streakData=JSON.parse(localStorage.getItem('pf_streakData')||'{\"current\":0,\"lastDate\":null}');
+  const streakData=JSON.parse(localStorage.getItem('pf_streakData')||'{  "current  ":0,  "lastDate  ":null}');
   document.getElementById('headerStreak').textContent=streakData.current;
   document.getElementById('currentStreak').textContent=streakData.current;
   
@@ -1337,7 +1336,7 @@ function updateStatsDisplay(){
 }
 
 function updateStreak(){
-  const streakData=JSON.parse(localStorage.getItem('pf_streakData')||'{\"current\":0,\"lastDate\":null}');
+  const streakData=JSON.parse(localStorage.getItem('pf_streakData')||'{  "current  ":0,  "lastDate  ":null}');
   const today=new Date().toDateString();
   const yesterday=new Date();
   yesterday.setDate(yesterday.getDate()-1);
@@ -1362,18 +1361,16 @@ function renderDailyStats(){
     if(d===today){done++;minutes+=(c.minutes||0);}
   });
   document.getElementById('todayTasksDone').textContent=done;
-  document.getElementById('todayTime').textContent=`${Math.floor(minutes/60)}h ${minutes%60}m`;
+  document.getElementById('todayTime').textContent=`${Math.floor(minutes 60)}h ${minutes%60}m`;
 }
 
-// Initialize
+   Initialize
 loadState();
 setPhase(currentPhase);
 update();
 renderTasks();
 updateStatsDisplay();
-</script>
+< script>
 
-</body>
-</html>
-"
-Observation: Overwrite successful: /app/app.html
+< body>
+< html>
