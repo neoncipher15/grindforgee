@@ -240,16 +240,83 @@ body{
 .hero-bg{
   position:fixed;
   inset:0;
-  background:
-    radial-gradient(circle at 20% 80%, rgba(88,166,255,0.35) 0%, transparent 45%),
-    radial-gradient(circle at 80% 20%, rgba(31,111,235,0.35) 0%, transparent 45%),
-    linear-gradient(160deg, var(--bg) 0%, var(--bg-secondary) 85%);
+  background:var(--bg);
   z-index:-1;
+  overflow:hidden;
 }
 
-@keyframes bgShift {
-  0% { transform: scale(1) rotate(0deg); }
-  100% { transform: scale(1.1) rotate(1deg); }
+.hero-bg::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(88,166,255,0.03) 2px, rgba(88,166,255,0.03) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(88,166,255,0.03) 2px, rgba(88,166,255,0.03) 4px);
+  opacity:0.6;
+}
+
+.hero-bg::after{
+  content:'';
+  position:absolute;
+  inset:-50%;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(88,166,255,0.15) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(31,111,235,0.12) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(110,240,201,0.08) 0%, transparent 50%);
+  animation:meshMove 20s ease-in-out infinite;
+  filter:blur(60px);
+}
+
+@keyframes meshMove {
+  0%, 100% { transform: translate(0%, 0%) rotate(0deg) scale(1); }
+  33% { transform: translate(5%, -5%) rotate(2deg) scale(1.1); }
+  66% { transform: translate(-5%, 5%) rotate(-2deg) scale(0.95); }
+}
+
+.floating-orb{
+  position:fixed;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:1;
+  filter:blur(40px);
+  opacity:0.4;
+  animation:floatOrb linear infinite;
+}
+
+.orb-1{
+  width:300px;
+  height:300px;
+  background:radial-gradient(circle, rgba(88,166,255,0.4), transparent 70%);
+  top:10%;
+  left:10%;
+  animation-duration:25s;
+}
+
+.orb-2{
+  width:250px;
+  height:250px;
+  background:radial-gradient(circle, rgba(110,240,201,0.3), transparent 70%);
+  top:60%;
+  right:15%;
+  animation-duration:30s;
+  animation-delay:-10s;
+}
+
+.orb-3{
+  width:200px;
+  height:200px;
+  background:radial-gradient(circle, rgba(31,111,235,0.35), transparent 70%);
+  bottom:20%;
+  left:30%;
+  animation-duration:28s;
+  animation-delay:-15s;
+}
+
+@keyframes floatOrb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(50px, -30px) scale(1.1); }
+  50% { transform: translate(-30px, 50px) scale(0.9); }
+  75% { transform: translate(40px, 30px) scale(1.05); }
 }
 
 .main-content{
@@ -830,6 +897,13 @@ h1{
 </style>
 </head>
 <body>
+
+<div class="hero-bg" aria-hidden="true">
+  <div class="floating-orb orb-1"></div>
+  <div class="floating-orb orb-2"></div>
+  <div class="floating-orb orb-3"></div>
+</div>
+  
 <div class="hero-bg" aria-hidden="true"></div>
 
 <!-- Skip to main content for screen readers -->
