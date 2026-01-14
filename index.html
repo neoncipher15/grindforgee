@@ -421,19 +421,27 @@ body {
   margin: 48px 0;
 }
 
+/* Developer Avatar - SQUARE with hover effect */
 .developer-avatar {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  border-radius: 16px;
   background: var(--header-gradient);
   margin: 0 auto 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 36px;
+  font-size: 40px;
   color: #ffffff;
   font-weight: 800;
   box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.developer-avatar:hover {
+  transform: scale(1.1) rotate(3deg);
+  box-shadow: 0 16px 40px rgba(102, 126, 234, 0.5);
 }
 
 .developer-name {
