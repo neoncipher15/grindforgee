@@ -62,48 +62,34 @@
 <script defer src="/_vercel/insights/script.js"></script>
   
 <style>
-/* CSS Variables - Monochrome Black & White */
+/* CSS Variables */
 :root {
   --bg: #ffffff;
-  --bg-secondary: #f5f5f5;
-  --card: rgba(0, 0, 0, 0.03);
-  --glass: rgba(255, 255, 255, 0.8);
-  --glass-dark: rgba(0, 0, 0, 0.1);
+  --bg-secondary: #f8f9fa;
+  --text: #1a1a2e;
+  --text-secondary: #4a4a68;
+  --border: rgba(0, 0, 0, 0.08);
   
-  --text: #111111;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  
-  --border: rgba(0, 0, 0, 0.1);
-  --border-light: rgba(0, 0, 0, 0.05);
-  
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
   
   --radius: 16px;
   --radius-lg: 24px;
   
-  --gradient: linear-gradient(135deg, #111111, #333333);
+  /* Colorful header gradient */
+  --header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  --header-gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 50%, #3d3d5c 100%);
 }
 
 [data-theme="dark"] {
-  --bg: #0a0a0a;
-  --bg-secondary: #111111;
-  --card: rgba(255, 255, 255, 0.03);
-  --glass: rgba(20, 20, 20, 0.85);
-  --glass-dark: rgba(255, 255, 255, 0.05);
-  
+  --bg: #0f0f1a;
+  --bg-secondary: #1a1a2e;
   --text: #ffffff;
-  --text-secondary: #a0a0a0;
-  --text-muted: #666666;
-  
+  --text-secondary: #b0b0c0;
   --border: rgba(255, 255, 255, 0.1);
-  --border-light: rgba(255, 255, 255, 0.05);
   
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
-  
-  --gradient: linear-gradient(135deg, #ffffff, #cccccc);
 }
 
 /* Reset & Base */
@@ -127,20 +113,20 @@ body {
   overflow-x: hidden;
 }
 
-/* Header */
+/* Header - Colorful and taller */
 .header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  background: var(--header-gradient);
+  padding: 20px 0;
   z-index: 1000;
-  padding: 16px 0;
   transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .header {
+  background: var(--header-gradient-dark);
 }
 
 .nav-container {
@@ -150,70 +136,64 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
+/* Logo */
 .logo {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 800;
-  color: var(--text);
+  color: #ffffff;
   text-decoration: none;
   letter-spacing: -0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.logo-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: var(--gradient);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
+.logo img {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.logo-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-
-[data-theme="dark"] .logo-icon img {
-  filter: brightness(0) invert(0);
-}
-
+/* Nav Links - Centered */
 .nav-links {
   display: flex;
-  gap: 32px;
+  gap: 40px;
   list-style: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .nav-links a {
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  font-weight: 500;
-  font-size: 15px;
-  transition: color 0.2s ease;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
   position: relative;
+  padding: 8px 0;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-  color: var(--text);
+  color: #ffffff;
 }
 
 .nav-links a::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: 0;
   left: 0;
   width: 0;
-  height: 2px;
-  background: var(--text);
-  transition: width 0.2s ease;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 2px;
+  transition: width 0.3s ease;
 }
 
 .nav-links a:hover::after,
@@ -226,20 +206,21 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--glass);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
   transition: all 0.3s ease;
-  color: var(--text);
+  color: #ffffff;
 }
 
 .theme-toggle:hover {
-  background: var(--bg-secondary);
-  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1);
+  border-color: #ffffff;
 }
 
 .theme-toggle svg {
@@ -275,7 +256,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 120px 24px 80px;
+  padding: 140px 24px 80px;
   text-align: center;
   position: relative;
 }
@@ -285,15 +266,15 @@ body {
 }
 
 .app-logo {
-  width: 120px;
-  height: 120px;
-  border-radius: 28px;
-  background: var(--gradient);
-  margin: 0 auto 32px;
+  width: 140px;
+  height: 140px;
+  border-radius: 32px;
+  background: var(--header-gradient);
+  margin: 0 auto 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 24px;
   box-shadow: var(--shadow-lg);
   transition: transform 0.3s ease;
 }
@@ -306,25 +287,20 @@ body {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-
-[data-theme="dark"] .app-logo img {
-  filter: brightness(0) invert(0);
 }
 
 .hero h1 {
-  font-size: clamp(40px, 8vw, 64px);
+  font-size: clamp(44px, 9vw, 72px);
   font-weight: 800;
   letter-spacing: -2px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   color: var(--text);
 }
 
 .hero .tagline {
-  font-size: clamp(18px, 3vw, 22px);
+  font-size: clamp(18px, 3vw, 24px);
   color: var(--text-secondary);
-  margin-bottom: 40px;
+  margin-bottom: 48px;
   line-height: 1.7;
 }
 
@@ -337,13 +313,13 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  padding: 18px 48px;
-  font-size: 18px;
+  padding: 20px 52px;
+  font-size: 20px;
   font-weight: 700;
-  color: var(--bg);
-  background: var(--gradient);
+  color: #ffffff;
+  background: var(--header-gradient);
   border: none;
-  border-radius: 50px;
+  border-radius: 60px;
   cursor: pointer;
   text-decoration: none;
   transition: all 0.3s ease;
@@ -351,13 +327,13 @@ body {
 }
 
 .cta-button:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
 }
 
 .cta-button svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   fill: currentColor;
   transition: transform 0.3s ease;
 }
@@ -374,7 +350,7 @@ body {
 }
 
 .section-title {
-  font-size: clamp(32px, 6vw, 48px);
+  font-size: clamp(36px, 7vw, 52px);
   font-weight: 800;
   text-align: center;
   margin-bottom: 16px;
@@ -397,27 +373,26 @@ body {
 }
 
 .feature {
-  background: var(--card);
-  border: 1px solid var(--border-light);
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 32px;
   transition: all 0.3s ease;
 }
 
 .feature:hover {
-  background: var(--bg-secondary);
   transform: translateY(-4px);
   box-shadow: var(--shadow);
 }
 
 .feature-icon {
-  font-size: 40px;
+  font-size: 44px;
   margin-bottom: 20px;
   display: block;
 }
 
 .feature h3 {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   margin-bottom: 12px;
   color: var(--text);
@@ -439,21 +414,21 @@ body {
 }
 
 .developer-avatar {
-  width: 100px;
-  height: 100px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  background: var(--gradient);
+  background: var(--header-gradient);
   margin: 0 auto 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
-  color: var(--bg);
+  font-size: 44px;
+  color: #ffffff;
   font-weight: 800;
 }
 
 .developer-name {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 800;
   margin-bottom: 8px;
   color: var(--text);
@@ -513,11 +488,11 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 24px;
-  font-size: 14px;
+  padding: 14px 28px;
+  font-size: 15px;
   font-weight: 600;
-  color: var(--bg);
-  background: var(--gradient);
+  color: #ffffff;
+  background: var(--header-gradient);
   border-radius: 50px;
   text-decoration: none;
   transition: all 0.3s ease;
@@ -567,12 +542,12 @@ body {
   }
   
   .hero {
-    padding: 100px 20px 60px;
+    padding: 120px 20px 60px;
   }
   
   .app-logo {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
   
   .section {
@@ -595,9 +570,7 @@ body {
 <header class="header">
   <nav class="nav-container">
     <a href="#" class="logo">
-      <div class="logo-icon">
-        <img src="./GrindForge.png" alt="GrindForge">
-      </div>
+      <img src="./GrindForge.png" alt="GrindForge">
       GrindForge
     </a>
     <ul class="nav-links">
